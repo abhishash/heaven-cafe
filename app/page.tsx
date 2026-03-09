@@ -28,16 +28,14 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-background">
       {/* Featured Products Section */}
-      <div className='bg-primary'>
 
       <ImageCarousel options={homePageBannerLists} />
-      </div>
       
-      <Categpries />
+      <Categpries title="Order our best food options" />
 
       <section className="py-16 px-4">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold mb-12 text-primary text-balance">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-primary text-balance">
             Our Favorites
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

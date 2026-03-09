@@ -4,6 +4,8 @@ import { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { useBreakpoint } from '../hooks/useBreakpoint';
+import Link from 'next/link';
 
 interface FoodCategory {
   id: number;
@@ -30,10 +32,20 @@ const foodCategories: FoodCategory[] = [
   { id: 16, name: 'Momos', image: 'https://images.unsplash.com/photo-1604908177522-402e7d1b4776?w=500' },
 ];
 
-export default function Categories() {
+export default function Categories({title}: {title: string}) {
 
+  const { isMobile, isTablet, isDesktop } = useBreakpoint();
+
+let itemsPerPage = 12;
+
+if (isMobile) {
+  itemsPerPage = 4;
+} else if (isTablet) {
+  itemsPerPage = 8;
+} else if (isDesktop) {
+  itemsPerPage = 12;
+}
   const scrollRef = useRef<HTMLDivElement>(null);
-  const itemsPerPage = 12;
 
   const pages = [];
   for (let i = 0; i < foodCategories.length; i += itemsPerPage) {
@@ -55,17 +67,17 @@ export default function Categories() {
   };
 
   return (
-    <section className="px-8 py-12 bg-background">
+    <section className="px-2 sm:px-0 py-12 bg-background">
 
       <div className="mx-auto container">
 
         {/* Header */}
         <div className="mb-10 flex justify-between items-center">
-          <h2 className="text-3xl text-primary font-bold">
-            Order our best food options
+          <h2 className="text-2xl sm:text-3xl text-primary font-bold">
+            {title}
           </h2>
 
-          <div className="flex gap-2">
+          <div className="hidden sm:flex gap-2">
             <Button variant="outline" size="icon" onClick={scrollLeft}>
               <ChevronLeft className="h-5 w-5" />
             </Button>
@@ -77,49 +89,62 @@ export default function Categories() {
         </div>
 
         {/* Slider */}
-        <div
-          ref={scrollRef}
-          className="flex overflow-x-auto scroll-smooth gap-6 scrollbar-hide"
-        >
+      {/* Slider Wrapper */}
+<div className="relative">
 
-          {pages.map((page, index) => (
+  {/* Left Shadow */}
+  <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-background to-transparent z-10" />
 
-            <div
-              key={index}
-              className="grid grid-cols-6 grid-rows-2 gap-6 min-w-full"
-            >
+  {/* Right Shadow */}
+  <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-background to-transparent z-10" />
 
-              {page.map((category) => (
+  {/* Slider */}
+  <div
+    ref={scrollRef}
+    className="flex overflow-x-auto scroll-smooth gap-6 scrollbar-hide"
+  >
 
-                <div
-                  key={category.id}
-                  className="flex flex-col items-center hover:scale-105 transition"
-                >
+    {pages.map((page, index) => (
 
-                  <div className="h-40 w-40 overflow-hidden rounded-xl shadow-lg">
+      <div
+        key={index}
+        className="grid grid-cols-2 sm:grid-cols-6 grid-rows-2 gap-4 sm:gap-6 min-w-full"
+      >
 
-                    <Image
-                      src={category.image}
-                      alt={category.name}
-                      width={40}
-                      height={40}
-                      className="h-full w-full object-cover"
-                    />
+        {page.map((category) => (
 
-                  </div>
+          <Link
+          href="/type/noodles"
+            key={category.id}
+            className="flex flex-col items-center hover:scale-105 transition"
+          >
 
-                  <h3 className="mt-2 text-sm font-medium">
-                    {category.name}
-                  </h3>
+            <div className="h-40 w-40 overflow-hidden rounded-xl shadow-lg">
 
-                </div>
-
-              ))}
+              <Image
+                src={category.image}
+                alt={category.name}
+                width={40}
+                height={40}
+                className="h-full w-full object-cover"
+              />
 
             </div>
 
-          ))}
-        </div>
+            <h3 className="mt-2 text-lg font-medium">
+              {category.name}
+            </h3>
+
+          </Link>
+
+        ))}
+
+      </div>
+
+    ))}
+
+  </div>
+</div>
       </div>
     </section>
   );

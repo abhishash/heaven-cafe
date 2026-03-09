@@ -48,17 +48,17 @@ export default function ProductCarousel({ title }: { title: string }) {
     };
 
     return (
-        <section className="bg-gradient-to-b from-slate-50 to-white px-8 py-12">
+        <section className="bg-gradient-to-b from-slate-50 to-white px-2 sm:px-0 py-12">
 
             <div className="mx-auto container">
 
                 {/* Header */}
                 <div className="mb-10 flex items-center justify-between">
-                    <h2 className="text-3xl font-bold text-primary">
-                        {title}
-                    </h2>
+                    <h2 className="text-2xl sm:text-3xl text-primary font-bold">
+            {title}
+          </h2>
 
-                    <div className="flex gap-2">
+                    <div className="hidden sm:flex gap-2">
                         <Button
                             variant="outline"
                             size="icon"
@@ -80,9 +80,16 @@ export default function ProductCarousel({ title }: { title: string }) {
                 </div>
 
                 {/* Scroll Container */}
+                <div className='relative'>
+                 {/* Left Shadow */}
+  <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-background to-transparent z-10" />
+
+  {/* Right Shadow */}
+  <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-background to-transparent z-10" />
+
                 <div
                     ref={scrollRef}
-                    className="flex gap-8 overflow-x-auto scroll-smooth scrollbar-hide"
+                    className="flex gap-4 sm:gap-8 overflow-x-auto scroll-smooth scrollbar-hide"
                 >
 
                     {foodCategories.map((category) => (
@@ -111,6 +118,8 @@ export default function ProductCarousel({ title }: { title: string }) {
                     ))}
 
                 </div>
+                </div>
+ 
 
             </div>
 
