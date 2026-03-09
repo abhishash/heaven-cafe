@@ -8,6 +8,8 @@ import ImageCarousel from '@/components/shared/image-carousel';
 import { fetchHandler, methods } from '@/lib/fetch-handler';
 import { BannerDataTypes, HomePageDataTypes } from '@/lib/types';
 import { HOMEPAGE_SLIDERS } from '@/lib/constants';
+import Image from 'next/image';
+import HeroSection from '@/components/home/hero-section';
 
 export default async function Home() {
   const featuredProducts = products.filter((p) => p.featured);
@@ -30,8 +32,12 @@ export default async function Home() {
       {/* Featured Products Section */}
 
       <ImageCarousel options={homePageBannerLists} />
-      
+      {/* Hero Section */}
+
+
       <Categpries title="Order our best food options" />
+
+      <HeroSection />
 
       <section className="py-16 px-4">
         <div className="container mx-auto">
@@ -56,7 +62,7 @@ export default async function Home() {
             Browse our complete menu and find exactly what you're craving.
           </p>
           <Link href="/menu">
-            <Button size="lg" className="bg-primary text-primary-foreground hover:opacity-90 font-bold">
+            <Button size="lg" className="bg-primary cursor-pointer text-primary-foreground hover:opacity-90 font-bold">
               Explore Full Menu
             </Button>
           </Link>

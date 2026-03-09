@@ -22,7 +22,12 @@ export default function OrderTypeModal() {
       setOrderType(storedType);
       setOpen(false); // don't show modal
     } else {
-      setOpen(true); // show modal
+      // open modal after 3 seconds
+      const timer = setTimeout(() => {
+        setOpen(true);
+      }, 3000);
+
+      return () => clearTimeout(timer); // cleanup
     }
   }, []);
 
@@ -38,8 +43,8 @@ export default function OrderTypeModal() {
         <DialogHeader>
           <DialogTitle className="text-center flex gap-y-3 justify-center flex-col items-center">
             <Image
-              src="/logo/website-logo.png"
-              alt="website-logo"
+              src="/logo/main-logo.png"
+              alt="main-logo"
               width={200}
               height={120}
             />

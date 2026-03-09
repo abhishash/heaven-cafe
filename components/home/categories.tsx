@@ -67,7 +67,7 @@ if (isMobile) {
   };
 
   return (
-    <section className="px-2 sm:px-0 py-12 bg-background">
+    <section className="px-2 sm:px-0 py-6 sm:py-12 bg-background">
 
       <div className="mx-auto container">
 
