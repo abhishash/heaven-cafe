@@ -1,16 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, User } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import OrderTypeModal from './pop-up/Order-type-modal';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { SearchBar } from './Search-bar';
+import { useSession } from 'next-auth/react';
 
 export default function Header() {
   const { getTotalItems } = useCart();
   const totalItems = getTotalItems();
+  const { data: session } = useSession();
 
   return (
     <header className="bg-primary shadow-lg">
@@ -31,6 +33,9 @@ export default function Header() {
           </Link>
           <Link href="/menu" className="text-primary-foreground hover:opacity-80 font-medium transition">
             Menu
+          </Link>
+          <Link href={session?.user?.accessToken ? "/customer/profile" : "/login"}>
+            <User className="text-primary-foreground hover:opacity-80 transition" />
           </Link>
           <Link href="/cart" className="relative">
             <ShoppingCart className="text-primary-foreground hover:opacity-80 transition" size={24} />

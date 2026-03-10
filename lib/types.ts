@@ -65,6 +65,12 @@ export interface CategoryResponse {
   data: Category[];
 }
 
+/* API Response */
+export interface FavCategoryResponse {
+  status: boolean;
+  data: Category;
+}
+
 // ------ Product Details API ---------//
 
 export interface ProductResponse {

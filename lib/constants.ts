@@ -47,6 +47,11 @@ export const HOME_CATEGORIES = {
     method: "GET",
 }
 
+export const FAVOURITE_CATEGORIES = {
+    endpoint: "favourite-category",
+    method: "GET",
+}
+
 export const CATEGORIES = {
     endpoint: "category",
     method: "GET",

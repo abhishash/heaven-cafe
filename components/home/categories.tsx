@@ -6,50 +6,28 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 import Link from 'next/link';
+import { Category } from '@/lib/types';
+import { SafeImage } from '../shared/safe-image';
+import { motion } from 'framer-motion';
 
-interface FoodCategory {
-  id: number;
-  name: string;
-  image: string;
-}
-
-const foodCategories: FoodCategory[] = [
-  { id: 1, name: 'Desserts', image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500' },
-  { id: 2, name: 'Pizza', image: 'https://images.unsplash.com/photo-1548365328-9f547fb0953d?w=500' },
-  { id: 3, name: 'Biryani', image: 'https://images.unsplash.com/photo-1563379091339-03246963d51a?w=500' },
-  { id: 4, name: 'Burger', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500' },
-  { id: 5, name: 'Chinese', image: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500' },
-  { id: 6, name: 'South Indian', image: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=500' },
-  { id: 7, name: 'Dosa', image: 'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=500' },
-  { id: 8, name: 'Paratha', image: 'https://images.unsplash.com/photo-1626078299034-7f6d2d7b6b03?w=500' },
-  { id: 9, name: 'Pasta', image: 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500' },
-  { id: 10, name: 'Pav Bhaji', image: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500' },
-  { id: 11, name: 'Salad', image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500' },
-  { id: 12, name: 'Pastry', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500' },
-  { id: 13, name: 'Ice Cream', image: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=500' },
-  { id: 14, name: 'Sandwich', image: 'https://images.unsplash.com/photo-1553909489-cd47e0907980?w=500' },
-  { id: 15, name: 'Rolls', image: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500' },
-  { id: 16, name: 'Momos', image: 'https://images.unsplash.com/photo-1604908177522-402e7d1b4776?w=500' },
-];
-
-export default function Categories({title}: {title: string}) {
+export default function Categories({ title, categories }: { title: string, categories: Category[] }) {
 
   const { isMobile, isTablet, isDesktop } = useBreakpoint();
 
-let itemsPerPage = 12;
+  let itemsPerPage = 12;
 
-if (isMobile) {
-  itemsPerPage = 4;
-} else if (isTablet) {
-  itemsPerPage = 8;
-} else if (isDesktop) {
-  itemsPerPage = 12;
-}
+  if (isMobile) {
+    itemsPerPage = 4;
+  } else if (isTablet) {
+    itemsPerPage = 8;
+  } else if (isDesktop) {
+    itemsPerPage = 12;
+  }
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const pages = [];
-  for (let i = 0; i < foodCategories.length; i += itemsPerPage) {
-    pages.push(foodCategories.slice(i, i + itemsPerPage));
+  for (let i = 0; i < categories.length; i += itemsPerPage) {
+    pages.push(categories.slice(i, i + itemsPerPage));
   }
 
   const scrollLeft = () => {
@@ -88,63 +66,68 @@ if (isMobile) {
           </div>
         </div>
 
-        {/* Slider */}
-      {/* Slider Wrapper */}
-<div className="relative">
+        {/* Slider Wrapper */}
+        <div className="relative">
 
-  {/* Left Shadow */}
-  <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-background to-transparent z-10" />
+          {/* Left Shadow */}
+          <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-background to-transparent z-10" />
 
-  {/* Right Shadow */}
-  <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-background to-transparent z-10" />
+          {/* Right Shadow */}
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-background to-transparent z-10" />
 
-  {/* Slider */}
-  <div
-    ref={scrollRef}
-    className="flex overflow-x-auto scroll-smooth gap-6 scrollbar-hide"
-  >
-
-    {pages.map((page, index) => (
-
-      <div
-        key={index}
-        className="grid grid-cols-2 sm:grid-cols-6 grid-rows-2 gap-4 sm:gap-6 min-w-full"
-      >
-
-        {page.map((category) => (
-
-          <Link
-          href="/menu/noodles"
-            key={category.id}
-            className="flex flex-col items-center hover:scale-105 transition"
+          {/* Slider */}
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto scroll-smooth gap-6 scrollbar-hide"
           >
 
-            <div className="h-40 w-40 overflow-hidden rounded-xl shadow-lg">
 
-              <Image
-                src={category.image}
-                alt={category.name}
-                width={40}
-                height={40}
-                className="h-full w-full object-cover"
-              />
 
-            </div>
+            {pages.map((page, index) => (
 
-            <h3 className="mt-2 text-lg font-medium">
-              {category.name}
-            </h3>
+              <div
+                key={index}
+                className="grid grid-cols-2 sm:grid-cols-6 grid-rows-2 gap-4 sm:gap-6 min-w-full"
+              >
 
-          </Link>
+                {page.map((category) => (
+                  <motion.div
+                    key={category.url}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    whileHover={{ y: -6 }}
+                    transition={{ duration: 0.3 }}
+                    className=" transition-shadow duration-300 overflow-hidden cursor-pointer h-full"
+                  >
+                    <Link
+                      href={`/menu/${category.url}"`}
+                      className="flex flex-col items-center hover:scale-105 transition"
+                    >
+                      <div className="h-40 w-40 overflow-hidden rounded-xl shadow-lg">
+                        <SafeImage
+                          src={category.image}
+                          alt={category.name}
+                          width={40}
+                          height={40}
+                          className="h-full w-full object-fill"
+                        />
+                      </div>
 
-        ))}
+                      <h3 className="mt-2 text-lg font-medium">
+                        {category.name}
+                      </h3>
+                    </Link>
+                  </motion.div>
 
-      </div>
+                ))}
 
-    ))}
+              </div>
 
-  </div>
-</div>
+            ))}
+
+
+          </div>
+        </div>
       </div>
     </section>
   );

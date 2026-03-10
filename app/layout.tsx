@@ -2,9 +2,11 @@ import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import { CartProvider } from '@/context/CartContext'
-import Header from '@/components/Header'
 import QueryProvider from './providers/query-provider'
-import { Footer } from '@/components/footer'
+import { Toaster } from '@/components/ui/sonner'
+import SessionProviders from './providers/session-providers'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/auth'
 
 export const metadata: Metadata = {
   title: 'FastBite - Fast Food E-Commerce',
@@ -34,16 +36,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en">
       <body className="font-sans antialiased">
-        <QueryProvider >
-          <CartProvider>
-            <Header />
-            {children}
-            <Footer />
-          </CartProvider>
-        </QueryProvider>
+        <SessionProviders session={session}>
+
+          <QueryProvider >
+            <CartProvider>
+              {children}
+              <Toaster richColors={true} theme="light" closeButton={true} />
+            </CartProvider>
+          </QueryProvider>
+        </SessionProviders>
         <Analytics />
       </body>
     </html>
