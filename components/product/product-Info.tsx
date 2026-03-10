@@ -1,99 +1,46 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { useCart } from '@/context/CartContext';
-import { products } from '@/lib/products';
-import { Plus, Minus } from 'lucide-react';
+import { Product } from "@/lib/products";
+import { formatPrice } from "@/lib/utils";
+import HtmlRender from "../shared/html-render";
+import { useState } from "react";
+import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
+import { Minus, Plus } from "lucide-react";
+import { Button } from "../ui/button";
 
-interface ProductDetailPageProps {
-  params: Promise<{ id: string }>;
+interface ProductInfoProps {
+  product: Product;
+  productUrl: string;
 }
 
-export default function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const resolvedParams = params;
-  const [quantity, setQuantity] = useState(1);
+
+
+const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
+ const [quantity, setQuantity] = useState(1);
   const [customization, setCustomization] = useState('');
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
   const router = useRouter();
-
-  // Get product ID from params
-  const getProductId = async () => {
-    const { id } = await resolvedParams;
-    return id;
-  };
-
-  const [productId, setProductId] = useState<string | null>(null);
-
-  if (productId === null) {
-    getProductId().then(setProductId);
-  }
-
-  const product = productId ? products.find((p) => p.id === productId) : null;
-
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Product not found</h1>
-          <Button onClick={() => router.push('/menu')}>
-            Back to Menu
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   const handleAddToCart = () => {
     addItem(product, quantity, customization);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };
+    return (
 
-  return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <Button
-          variant="outline"
-          className="mb-8"
-          onClick={() => router.back()}
-        >
-          ← Back
-        </Button>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-lg p-8 shadow-lg">
-          {/* Product Image */}
-          <div className="flex items-center justify-center">
-            <div className="relative w-full h-96 bg-gray-100 rounded-lg overflow-hidden">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
-
-          {/* Product Details */}
-          <div className="flex flex-col">
+        <div className="flex flex-col">
             <div className="mb-6">
               <span className="text-sm font-semibold text-orange-500 bg-orange-50 px-3 py-1 rounded">
                 {product.category}
               </span>
               <h1 className="text-4xl font-bold mt-4 text-gray-800">{product.name}</h1>
               <p className="text-2xl font-bold text-orange-600 mt-2">
-                ${product.price.toFixed(2)}
+                {formatPrice(product.price, "INR")}
               </p>
             </div>
-
-            <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-              {product.description}
-            </p>
-
+            <HtmlRender html={product?.description}  />
             {/* Customization */}
             <div className="mb-8">
               <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -116,7 +63,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
               <div className="flex items-center border border-gray-300 rounded-lg w-fit">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-2 hover:bg-gray-100"
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
                 >
                   <Minus size={20} />
                 </button>
@@ -134,7 +81,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
             <div className="mb-8 bg-gray-50 p-4 rounded-lg">
               <div className="flex justify-between mb-2">
                 <span className="text-gray-600">Subtotal ({quantity}x)</span>
-                <span className="font-semibold">${(product.price * quantity).toFixed(2)}</span>
+                <span className="font-semibold">{ formatPrice(product.price, "INR" )}</span>
               </div>
             </div>
 
@@ -142,7 +89,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
             <Button
               onClick={handleAddToCart}
               size="lg"
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-6"
+              className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-6"
             >
               {added ? '✓ Added to Cart!' : 'Add to Cart'}
             </Button>
@@ -150,13 +97,13 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
             <Button
               variant="outline"
               onClick={() => router.push('/menu')}
-              className="w-full mt-3 text-lg"
+              className="w-full mt-3 text-lg cursor-pointer"
             >
               Continue Shopping
             </Button>
           </div>
-        </div>
-      </div>
-    </main>
-  );
+    )
+
 }
+
+export default ProductInfo

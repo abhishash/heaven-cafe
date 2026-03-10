@@ -1,5 +1,5 @@
 export const imageBaseUrl = process.env.ASSET_ENDPOINS;
-export const imageNotFound = '/icon/placeholder.jpg';
+export const imageNotFound = '/logo/website-logo.png';
 
 export const HOMEPAGE_SLIDERS = {
     endpoint: "slider",

@@ -114,7 +114,7 @@ if (isMobile) {
         {page.map((category) => (
 
           <Link
-          href="/type/noodles"
+          href="/menu/noodles"
             key={category.id}
             className="flex flex-col items-center hover:scale-105 transition"
           >

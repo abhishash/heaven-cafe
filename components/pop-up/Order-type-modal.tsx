@@ -43,7 +43,7 @@ export default function OrderTypeModal() {
         <DialogHeader>
           <DialogTitle className="text-center flex gap-y-3 justify-center flex-col items-center">
             <Image
-              src="/logo/main-logo.png"
+              src="/logo/header-logo.png"
               alt="main-logo"
               width={200}
               height={120}
