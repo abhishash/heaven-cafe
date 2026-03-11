@@ -109,11 +109,11 @@ export default function Categories({ title, categories }: { title: string, categ
                           alt={category.name}
                           width={40}
                           height={40}
-                          className="h-full w-full object-fill"
+                          className="h-full w-full object-contain"
                         />
                       </div>
 
-                      <h3 className="mt-2 text-lg font-medium">
+                      <h3 className="mt-2 text-lg text-center font-medium">
                         {category.name}
                       </h3>
                     </Link>

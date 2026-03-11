@@ -7,12 +7,18 @@ import { Badge } from '@/components/ui/badge';
 import { ProductTypes } from '@/lib/types';
 import { imageBaseUrl } from '@/lib/constants';
 import { formatPrice } from '@/lib/utils';
+import HtmlRender from './shared/html-render';
 
 interface ProductCardProps {
   product: ProductTypes;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const discountPercentage = Math.round(
+    ((parseFloat(product.ac_price) - parseFloat(product.price)) /
+      parseFloat(product.ac_price)) *
+    100,
+  );
   return (
     <Link href={`/product/${product.url}`}>
       <motion.div
@@ -23,7 +29,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer h-full flex flex-col"
       >
         {/* Image */}
-        <div className="relative w-full h-40 bg-gray-100 overflow-hidden">
+        <div className="relative w-full h-48 bg-gray-100 overflow-hidden">
           <motion.div
             whileHover={{ scale: 1.08 }}
             transition={{ duration: 0.3 }}
@@ -33,14 +39,14 @@ export default function ProductCard({ product }: ProductCardProps) {
               src={`${imageBaseUrl}${product.image}`}
               alt={product.name}
               fill
-              className="object-cover"
+              className="object-contain object-center"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </motion.div>
 
-          {product?.discount && (
+          {discountPercentage && (
             <Badge className="absolute top-2 right-2 bg-orange-500 hover:bg-orange-600">
-              {product.discount} %
+              {discountPercentage} % Off
             </Badge>
           )}
         </div>
@@ -50,10 +56,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <h3 className="font-bold text-lg text-gray-800 line-clamp-2">
             {product.name}
           </h3>
-
-          <p className="text-gray-600 text-sm line-clamp-2 mt-1 flex-1">
-            {product.name}
-          </p>
+          <HtmlRender html={product.short_description} className='line-clamp-2 text-xs text-gray-600' />
 
           <div className="flex items-center justify-between mt-4">
             <span className="text-2xl font-bold text-orange-600">

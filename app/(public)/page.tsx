@@ -66,20 +66,23 @@ export default async function Home() {
       {/* Hero Section */}
       <HeroSection />
       {/* Favorite And Extra Product Banners */}
-      {data?.map((item, index) => (
-        <section key={index} className="py-16 px-4">
-          <div className="container mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-primary text-balance">
-              {item?.name}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {item?.products?.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+      <Suspense fallback={"loading...."}>
+        {data?.map((item, index) => (
+          <section key={index} className="py-16 px-4">
+            <div className="container mx-auto">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-primary text-balance">
+                {item?.name}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {item?.products?.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      ))}
+          </section>
+        ))}
+      </Suspense>
+
 
       {/* Call to Action */}
       <section className="bg-secondary container mx-auto px-4 rounded-2xl sm:px-6 lg:px-8 py-20  py-16 px-4">

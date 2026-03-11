@@ -14,8 +14,8 @@ export default function Header() {
   const totalItems = getTotalItems();
 
   return (
-    <header className="bg-primary shadow-xl fixed w-full top-0 z-10">
-      <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2 sm:py-4 flex items-center justify-between">
+    <header className="bg-primary shadow-xl fixed w-full top-0 z-40">
+      <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <div className="text-primary-foreground font-bold text-2xl">
             <Image src="/logo/final-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />

@@ -32,6 +32,7 @@ export interface ProductTypes {
   slug: string | null;
   discount: string | null;
   brand: string;
+  short_description: string;
   id: number;
 }
 
