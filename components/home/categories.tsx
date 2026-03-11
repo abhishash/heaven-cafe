@@ -45,12 +45,12 @@ export default function Categories({ title, categories }: { title: string, categ
   };
 
   return (
-    <section className="px-2 sm:px-0 py-6 sm:py-12 bg-background">
+    <section className="px-0 sm:px-0 py-4 sm:py-12 bg-background">
 
-      <div className="mx-auto container px-4 sm:px-6 lg:px-8 py-20">
+      <div className="mx-auto container px-0 sm:px-6 lg:px-8 py-2 sm:py-20">
 
         {/* Header */}
-        <div className="mb-10 flex justify-between items-center">
+        <div className="mb-6 px-4 sm:px-0 sm:mb-10 flex justify-between items-center">
           <h2 className="text-2xl sm:text-3xl text-primary font-bold">
             {title}
           </h2>
@@ -70,10 +70,10 @@ export default function Categories({ title, categories }: { title: string, categ
         <div className="relative">
 
           {/* Left Shadow */}
-          <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-background to-transparent z-10" />
+          <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-background to-transparent z-[9]" />
 
           {/* Right Shadow */}
-          <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-background to-transparent z-10" />
+          <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-background to-transparent z-[9]" />
 
           {/* Slider */}
           <div

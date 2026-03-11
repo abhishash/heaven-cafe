@@ -10,6 +10,7 @@ import Image from 'next/image';
 import HeroSection from '@/components/home/hero-section';
 import FavouriteCategory from '@/components/shared/favourite-category';
 import { ArrowRight } from 'lucide-react';
+import { isArray } from '@/lib/type-guards';
 
 export default async function Home() {
 
@@ -48,13 +49,17 @@ export default async function Home() {
 
   return (
     <>
-      {/* Featured Products Section */}
+      {/* main image banner Section */}
+      {
+        isArray(homePageBannerLists) ? <ImageCarousel options={homePageBannerLists} /> : null
+      }
+      {/* main category section */}
+      {
+        isArray(categoryResponse?.data) ?
+          <Categpries title="Order our best food options" categories={categoryResponse?.data} /> : null
+      }
 
-      <ImageCarousel options={homePageBannerLists} />
-
-      <Categpries title="Order our best food options" categories={categoryResponse?.data} />
       {/* Hero Section */}
-
       <HeroSection />
       {/* Favorite And Extra Product Banners */}
       {data?.map((item, index) => (
