@@ -1,12 +1,15 @@
 import { isArray } from '@/lib/type-guards'
 import { fetchHandler, methods } from '@/lib/fetch-handler'
-import { ProductResponse, ProductTypes } from '@/lib/types'
+import { Category, ProductDataTypesList, ProductResponse, ProductTypes, SubCategory } from '@/lib/types'
 import { CATALOG_DETAIL } from '@/lib/constants'
 import ProductCard from '@/components/ProductCard'
 import CategoryFilter from '@/components/shared/category-filter'
 import Link from 'next/link'
 import { ArrowLeftIcon } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import BackPath from '@/components/shared/back-path'
+import { isObject } from 'framer-motion'
+import { Suspense } from 'react'
 
 
 export default async function CatalogPage({ params }: {
@@ -15,7 +18,7 @@ export default async function CatalogPage({ params }: {
 
   const { url } = await params;
 
-  const productResponse = await fetchHandler<ProductResponse>({
+  const productResponse = await fetchHandler<ProductDataTypesList>({
     endpoint: `${CATALOG_DETAIL.endpoint}/${url}`,
     method: CATALOG_DETAIL?.method as methods,
   });
@@ -26,25 +29,28 @@ export default async function CatalogPage({ params }: {
     return notFound();
   }
 
-  const categories = productResponse?.categories ?? [];
+  const categories: Category[] = productResponse?.categories ?? [];
 
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
 
         {/* Category Filter */}
-        <div className="mb-12">
+        <Suspense fallback="loading...">
 
-          <h2 className="text-lg font-semibold mb-4 text-gray-700">Filter by Category</h2>
-
-          {
-            isArray(categories) ? <div className="flex flex-wrap gap-2"> <> <Link href='/menu' className='flex border font-semibold rounded-sm px-3 h-fit py-2 border-primary text-primary items-center gap-x-2'><ArrowLeftIcon className='size-4 text-primary' /> Back to Menu</Link>
-              <CategoryFilter categories={categories} />
-            </>
-            </div> : ""
-          }
-
-        </div>
+          <div className="mb-12">
+            <div className='flex items-center gap-4 mb-8'>
+              <BackPath />
+              <h2 className="text-lg font-semibold text-gray-700">{categories?.[0]?.name}</h2>
+            </div>
+            {
+              isObject(categories?.[0]) ? <div className="flex flex-nowrap no-scrollbar hide-scrollbar scrollbar-none overflow-x-auto gap-2"> <>
+                <CategoryFilter categories={categories?.[0]?.subcategories as Category[]} />
+              </>
+              </div> : ""
+            }
+          </div>
+        </Suspense>
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

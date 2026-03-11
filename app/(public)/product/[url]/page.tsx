@@ -6,6 +6,8 @@ import ProductImageGallery from '@/components/product/product-image-gallery';
 import ProductInfo from '@/components/product/product-Info';
 import BackPath from '@/components/shared/back-path';
 import RoutePath from '@/components/shared/route-path';
+import { notFound } from 'next/navigation';
+import { isObject } from '@/lib/type-guards';
 
 interface ProductDetailPageProps {
   params: Promise<{ url: string }>;
@@ -14,8 +16,6 @@ interface ProductDetailPageProps {
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { url} = await params;
   
-  
-
    const productResponse = await fetchHandler<ProductResponse>({
     endpoint: `${PRODUCTS_DETAIL.endpoint}/${url}`,
     method: PRODUCTS_DETAIL?.method as methods,
@@ -26,15 +26,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const aplusBanner = productResponse?.aplus;
 
 
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Product not found</h1>
-          <RoutePath href="/menu" />
-        </div>
-      </div>
-    );
+  if (!isObject(product)) {
+    return notFound();
   }
 
 
@@ -42,7 +35,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-5xl mx-auto">
 
-        <BackPath />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-lg p-8 shadow-lg">
           {/* Product Image */}

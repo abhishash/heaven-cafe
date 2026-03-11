@@ -8,7 +8,7 @@ const BackPath = () => {
     return (
         <Button
           variant="outline"
-          className="mb-8 cursor-pointer"
+          className="cursor-pointer"
           onClick={() => router.back()}
         >
           ← Back
