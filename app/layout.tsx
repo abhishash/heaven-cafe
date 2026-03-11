@@ -7,6 +7,11 @@ import { Toaster } from '@/components/ui/sonner'
 import SessionProviders from './providers/session-providers'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/auth'
+import { Geist } from 'next/font/google'
+ 
+const geist = Geist({
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
   title: 'FastBite - Fast Food E-Commerce',
@@ -39,7 +44,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang="en">
-      <body className="font-sans antialiased">
+      <body className={`${geist.className} antialiased"`}>
         <SessionProviders session={session}>
 
           <QueryProvider >
