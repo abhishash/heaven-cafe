@@ -96,7 +96,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
   return (
     <section className="w-full pb-8 px-0 sm:px-0 sm:pb-12">
       <div
-        className="group relative w-full overflow-hidden bg-green-50 aspect-[16/7]"
+        className="group relative w-full overflow-hidden bg-green-50 aspect-video sm:aspect-[16/7]"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
