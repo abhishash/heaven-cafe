@@ -47,7 +47,7 @@ export default async function Home() {
   const { data }: { data: ProductsDataTypes[] } = res;
 
   return (
-    <main className="min-h-screen bg-background">
+    <>
       {/* Featured Products Section */}
 
       <ImageCarousel options={homePageBannerLists} />
@@ -113,7 +113,7 @@ export default async function Home() {
               </p>
             </div>
             <div className="text-center">
-            <div className="text-4xl flex justify-center mb-4">
+              <div className="text-4xl flex justify-center mb-4">
                 <Image src="/images/wallet.gif" alt='fast-delivery' height={80} width={80} />
               </div>
               <h3 className="text-xl font-bold mb-2 text-primary">Easy Payment</h3>
@@ -125,7 +125,7 @@ export default async function Home() {
         </div>
       </section>
 
-       {/* CTA Section */}
+      {/* CTA Section */}
       <section className="bg-gradient-to-r my-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 from-secondary to-secondary rounded-2xl">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h3 className="text-3xl font-bold text-primary mb-4">
@@ -142,6 +142,6 @@ export default async function Home() {
           </Link>
         </div>
       </section>
-    </main>
+    </>
   );
 }

@@ -14,8 +14,8 @@ export default function Header() {
   const totalItems = getTotalItems();
 
   return (
-    <header className="bg-primary shadow-lg">
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
+    <header className="bg-primary shadow-xl fixed w-full top-0 z-10">
+      <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2 sm:py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <div className="text-primary-foreground font-bold text-2xl">
             <Image src="/logo/final-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />
@@ -36,7 +36,7 @@ export default function Header() {
           <Link href="/cart" className="relative">
             <ShoppingCart className="text-primary-foreground hover:opacity-80 transition" size={24} />
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-primary-foreground text-primary text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-primary-foreground text-primary text-[11px] sm:text-xs font-bold rounded-full sm:w-6 w-5 h-5 sm:h-6 flex items-center justify-center">
                 {totalItems}
               </span>
             )}

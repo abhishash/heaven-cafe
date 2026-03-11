@@ -96,7 +96,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
   return (
     <section className="w-full pb-8 px-0 sm:px-0 sm:pb-12">
       <div
-        className="group relative w-full overflow-hidden bg-green-50 aspect-video"
+        className="group relative w-full overflow-hidden bg-green-50 aspect-[16/7]"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
@@ -111,9 +111,8 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
           return (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-700 ${
-                isActive ? "opacity-100" : "opacity-0"
-              }`}
+              className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-0"
+                }`}
             >
               <div className="relative h-full w-full">
                 <Shimmer className="h-full w-full" />
@@ -124,9 +123,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                   fill
                   className="object-fill object-center"
                   priority={index === 0}
-                  sizes="(max-width: 640px) 100vw, 
-                     (max-width: 1024px) 100vw, 
-                     100vw"
+                  sizes="100vw"
                 />
               </div>
             </div>
@@ -139,11 +136,10 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
               <button
                 key={index}
                 onClick={() => handleDotClick(index)}
-                className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  index === currentIndex
+                className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${index === currentIndex
                     ? "w-8 bg-white"
                     : "w-2.5 bg-white/50 hover:bg-white/80 hover:w-4"
-                }`}
+                  }`}
                 type="button"
                 aria-label={`Go to slide ${index + 1}`}
                 aria-current={index === currentIndex}

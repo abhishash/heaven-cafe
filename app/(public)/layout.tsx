@@ -34,11 +34,11 @@ export default async function RootLayout({
 }>) {
   return (
     <>
-
       <Header />
-      {children}
+      <main className="min-h-screen mt-16.5 sm:mt-20.5 bg-background">
+        {children}
+      </main>
       <Footer />
     </>
-
   )
 }
