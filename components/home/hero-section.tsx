@@ -3,18 +3,17 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 const HeroSection = () => {
   return (
     <>
-    
-
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-20">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-4">
+              <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
                 <span className="text-primary">Taste Heaven</span> in Every Bite
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed">
@@ -43,7 +42,7 @@ const HeroSection = () => {
                 <p className="text-muted-foreground">Happy Customers</p>
               </div>
               <div>
-                <p className="text-3xl font-bold text-primary">500+</p>
+                <p className="text-3xl font-bold text-primary">10+</p>
                 <p className="text-muted-foreground">Menu Items</p>
               </div>
               <div>
@@ -59,8 +58,8 @@ const HeroSection = () => {
               {/* Decorative card */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl backdrop-blur-sm"></div>
               <div className="absolute inset-4 bg-card rounded-2xl border-2 oberflow-hidden border-primary/30 flex items-center justify-center">
-                <div className="text-center">
-                  <span className="text-8xl">🍕</span>
+                <div className="text-center flex items-center flex-col">
+                  <Image src="/images/fast-food.png" alt="fast food image" width={120} height={120} />
                   <p className="text-2xl font-bold text-foreground mt-4">Fresh & Delicious</p>
                   <p className="text-muted-foreground">Premium quality ingredients</p>
                 </div>

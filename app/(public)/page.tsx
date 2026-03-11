@@ -11,6 +11,8 @@ import HeroSection from '@/components/home/hero-section';
 import FavouriteCategory from '@/components/shared/favourite-category';
 import { ArrowRight } from 'lucide-react';
 import { isArray } from '@/lib/type-guards';
+import { Suspense } from 'react';
+import CategorySkeleton from '@/components/home/placeholder/category-skeleton';
 
 export default async function Home() {
 
@@ -54,10 +56,12 @@ export default async function Home() {
         isArray(homePageBannerLists) ? <ImageCarousel options={homePageBannerLists} /> : null
       }
       {/* main category section */}
-      {
-        isArray(categoryResponse?.data) ?
-          <Categpries title="Order our best food options" categories={categoryResponse?.data} /> : null
-      }
+      <Suspense fallback={<CategorySkeleton title='Order our best food options' />}>
+        {
+          isArray(categoryResponse?.data) ?
+            <Categpries title="Order our best food options" categories={categoryResponse?.data} /> : null
+        }
+      </Suspense>
 
       {/* Hero Section */}
       <HeroSection />
@@ -77,9 +81,6 @@ export default async function Home() {
         </section>
       ))}
 
-      {/* Categories Banners */}
-      <FavouriteCategory />
-
       {/* Call to Action */}
       <section className="bg-secondary container mx-auto px-4 rounded-2xl sm:px-6 lg:px-8 py-20  py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
@@ -94,6 +95,11 @@ export default async function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Favorite Category */}
+      <Suspense fallback={<CategorySkeleton length={2} title="Favourite Daily Products" />}>
+        <FavouriteCategory />
+      </Suspense>
 
       {/* Features Section */}
       <section className="">

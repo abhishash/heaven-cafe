@@ -50,7 +50,7 @@ export default function Categories({ title, categories }: { title: string, categ
       <div className="mx-auto container px-0 sm:px-6 lg:px-8 py-2 sm:py-20">
 
         {/* Header */}
-        <div className="mb-6 px-4 sm:px-0 sm:mb-10 flex justify-between items-center">
+        <div className="mb-6 px-2 sm:px-0 sm:mb-10 flex justify-between items-center">
           <h2 className="text-2xl sm:text-3xl text-primary font-bold">
             {title}
           </h2>
