@@ -47,7 +47,7 @@ export default function Categories({ title, categories }: { title: string, categ
   return (
     <section className="px-2 sm:px-0 py-6 sm:py-12 bg-background">
 
-      <div className="mx-auto container">
+      <div className="mx-auto container px-4 sm:px-6 lg:px-8 py-20">
 
         {/* Header */}
         <div className="mb-10 flex justify-between items-center">

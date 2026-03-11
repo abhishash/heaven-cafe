@@ -9,6 +9,7 @@ import { CATEGORIES, HOMEPAGE_PRODUCTS, HOMEPAGE_SLIDERS } from '@/lib/constants
 import Image from 'next/image';
 import HeroSection from '@/components/home/hero-section';
 import FavouriteCategory from '@/components/shared/favourite-category';
+import { ArrowRight } from 'lucide-react';
 
 export default async function Home() {
 
@@ -50,9 +51,9 @@ export default async function Home() {
       {/* Featured Products Section */}
 
       <ImageCarousel options={homePageBannerLists} />
-      {/* Hero Section */}
 
       <Categpries title="Order our best food options" categories={categoryResponse?.data} />
+      {/* Hero Section */}
 
       <HeroSection />
       {/* Favorite And Extra Product Banners */}
@@ -75,7 +76,7 @@ export default async function Home() {
       <FavouriteCategory />
 
       {/* Call to Action */}
-      <section className="bg-secondary py-16 px-4">
+      <section className="bg-secondary container mx-auto px-4 rounded-2xl sm:px-6 lg:px-8 py-20  py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4 text-primary">Ready to Order?</h2>
           <p className="text-lg mb-8 text-muted-foreground">
@@ -90,8 +91,8 @@ export default async function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
+      <section className="">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 ">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="text-4xl flex justify-center mb-4">
@@ -121,6 +122,24 @@ export default async function Home() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+       {/* CTA Section */}
+      <section className="bg-gradient-to-r my-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 from-secondary to-secondary rounded-2xl">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h3 className="text-3xl font-bold text-primary mb-4">
+            Ready to Experience Heaven?
+          </h3>
+          <p className="text-primary/90 mb-8 text-lg">
+            Sign up today and enjoy exclusive deals on your first order.
+          </p>
+          <Link href="/register">
+            <Button size="lg" className='cursor-pointer h-14 text-lg'  >
+              Create Account
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
         </div>
       </section>
     </main>

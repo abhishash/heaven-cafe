@@ -11,10 +11,17 @@ import { useRouter } from "next/navigation";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, Lock, Mail, Phone, User } from "lucide-react";
+import Image from "next/image";
 
 type FormValues = {
   phone: string;
   password: string;
+  confirmPassword: string;
   email: string;
   communication: boolean;
   name: string;
@@ -22,7 +29,8 @@ type FormValues = {
 };
 
 export default function RegisterPage() {
-
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false);
   const [isOtp, setIsOtp] = useState(false);
   const router = useRouter();
@@ -61,7 +69,7 @@ export default function RegisterPage() {
         email: data?.email,
       })?.then(async (res) => {
         if (res?.status) {
-          // setIsOtp(true);
+           setIsOtp(true);
           try {
             const response = await signIn("credentials", {
               username: data.email,
@@ -105,84 +113,182 @@ export default function RegisterPage() {
 
 
   return (
-    <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+    
+    <div className="w-full max-w-md">
+        {/* Logo and Header */}
+        <div className="text-center mb-4">
+          <Link href="/" className="flex justify-center items-center gap-2">
+                        <div className="text-primary-foreground font-bold text-2xl">
+                            <Image src="/logo/header-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />
+                        </div>
+                    </Link>
+          <p className="text-muted-foreground mt-2">Join us for delicious flavors!</p>
+          
+        </div>
 
-      <h2 className="text-3xl font-bold text-gray-800 mb-6">
-        Create Account
-      </h2>
+        {/* Register Card */}
+        <Card className="border-2 border-muted shadow-lg">
+           <div className="p-4 sm:p-8">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+              {/* Full Name Field */}
+              {
+                isOtp ? <div className="flex justify-center">
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {
+             <Controller
+               name="otp"
+               control={control}
+               rules={{ required: true }}
+               render={({ field }) => (
+                 <InputOTP
+                   maxLength={6}
+                   value={field.value}
+                   onChange={field.onChange}
+                 >
+                   <InputOTPGroup>
+                     <InputOTPSlot index={0} />
+                     <InputOTPSlot index={1} />
+                     <InputOTPSlot index={2} />
+                     <InputOTPSlot index={3} />
+                   </InputOTPGroup>
+                 </InputOTP>
+               )}
+             />
+           </div> :  <>
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-foreground font-semibold">
+                  Full Name
+                </Label>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    id="fullName"
+                    type="text"
+                    placeholder="John Doe"
+                     {...register("name", { required: "Name is required" })}
+                    className="pl-10 bg-background border-muted focus:border-primary h-12"
+                    required
+                  />
+                </div>
+              </div>
 
-          isOtp ? <div className="flex justify-center">
+              {/* Email Field */}
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-foreground font-semibold">
+                  Email Address
+                </Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    {...register("email", { required: "Email is required" })}
+                    className="pl-10 bg-background border-muted focus:border-primary h-12"
+                    required
+                  />
+                </div>
+              </div>
 
-            <Controller
-              name="otp"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <InputOTP
-                  maxLength={6}
-                  value={field.value}
-                  onChange={field.onChange}
-                >
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                  </InputOTPGroup>
-                </InputOTP>
-              )}
-            />
-          </div> : <>
-            <input
-              type="text"
-              placeholder="Full Name"
-              {...register("name", { required: "Name is required" })}
-              className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-primary"
-            />
+              {/* Phone Field */}
+              <div className="space-y-2">
+                <Label htmlFor="phone" className="text-foreground font-semibold">
+                  Phone Number
+                </Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    id="phone"
+                    type="tel"
+                    placeholder="+1 (555) 000-0000"
+                    {...register("phone", { required: "Phone is required" })}
+                    className="pl-10 bg-background border-muted focus:border-primary h-12"
+                    required
+                  />
+                </div>
+              </div>
 
-            <input
-              type="email"
-              placeholder="Email"
-              {...register("email", { required: "Email is required" })}
-              className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-primary"
-            />
-            <input
-              type="text"
-              placeholder="Phone"
-              {...register("phone", { required: "Phone is required" })}
-              className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-primary"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              {...register("password", { required: "Password is required" })}
-              className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-primary"
-            />
-          </>
-        }
-        <button
-          disabled={isPending || isOtpPending || loading}
-          className="w-full bg-primary text-white p-3 rounded-lg font-semibold hover:opacity-90"
-        >{
-            isPending || isOtpPending || loading ? "Loading..." : isOtp ? "Verify Account" : "Create Account"
-          }
+              {/* Password Field */}
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-foreground font-semibold">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                   {...register("password", { required: "Password is required" })}
+                    className="pl-10 pr-10 bg-background border-muted focus:border-primary h-12"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
 
-        </button>
+              {/* Confirm Password Field */}
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-foreground font-semibold">
+                  Confirm Password
+                </Label>
+              </div>
+</>
+              }
+              
+              {/* Register Button */}
+              <Button
+                type="submit"
+                 disabled={isPending || isOtpPending || loading}
+                className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base transition-all duration-200"
+              >
+                { isPending || isOtpPending || loading ? "Loading..." : isOtp ? "Creating Account..." : "Create Account"}
+              </Button>
+            </form>
 
-      </form>
+            {/* Divider */}
+            <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-muted"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-card text-muted-foreground">Or sign up with</span>
+              </div>
+            </div>
 
-      <p className="text-sm mt-4">
-        Already have an account?{" "}
-        <Link
-          href="/login"
-          className="text-[#FF4D00] font-medium"
-        >
-          Login
-        </Link>
-      </p>
-    </div>
+            {/* Social Buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="outline" className="h-11 border-muted bg-background hover:bg-muted">
+                <span className="text-lg">🍎</span>
+              </Button>
+              <Button variant="outline" className="h-11 border-muted bg-background hover:bg-muted">
+                <span className="text-lg">📱</span>
+              </Button>
+            </div>
+
+            {/* Sign In Link */}
+            <p className="text-center text-muted-foreground mt-6">
+              Already have an account?{' '}
+              <Link
+                href="/login"
+                className="text-primary hover:text-secondary font-semibold transition-colors"
+              >
+                Sign in
+              </Link>
+            </p>
+          </div>
+          
+          
+        </Card>
+      </div>
   );
 }
