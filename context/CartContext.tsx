@@ -48,17 +48,41 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = (product: Product, quantity: number, customization?: string) => {
     setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
+      const existIndex = prevItems.findIndex(
+        (item) => item.id === product.id
+      );
 
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+      let updatedItems;
+
+      if (existIndex !== -1) {
+        // 🔥 Replace entire object like redux
+        updatedItems = [...prevItems];
+        updatedItems[existIndex] = {
+          ...product,
+          quantity: Number(quantity),
+          customization,
+        };
+      } else {
+        updatedItems = [
+          ...prevItems,
+          {
+            ...product,
+            quantity: Number(quantity),
+            customization,
+          },
+        ];
       }
 
-      return [...prevItems, { ...product, quantity, customization }];
+      // 🔥 Recalculate total
+      const totalAmount = updatedItems.reduce(
+        (acc, item) => acc + item.quantity,
+        0
+      );
+
+      // if you have separate total state
+      // setTotalAmount(totalAmount);
+
+      return updatedItems;
     });
   };
 

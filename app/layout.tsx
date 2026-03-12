@@ -8,7 +8,8 @@ import SessionProviders from './providers/session-providers'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/auth'
 import { Geist } from 'next/font/google'
- 
+import ReduxProvider from './providers/redux-provider'
+
 const geist = Geist({
   subsets: ['latin'],
 })
@@ -46,13 +47,14 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${geist.className} antialiased"`}>
         <SessionProviders session={session}>
-
-          <QueryProvider >
-            <CartProvider>
-              {children}
-              <Toaster richColors={true} theme="light" closeButton={true} />
-            </CartProvider>
-          </QueryProvider>
+          <ReduxProvider>
+            <QueryProvider >
+              <CartProvider>
+                {children}
+                <Toaster richColors={true} theme="light" closeButton={true} />
+              </CartProvider>
+            </QueryProvider>
+          </ReduxProvider>
         </SessionProviders>
         <Analytics />
       </body>
