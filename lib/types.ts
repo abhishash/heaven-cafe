@@ -170,6 +170,7 @@ export interface CartItem {
   cart_id: number;
   name: string;
   price: number;
+  customization? : string;
   image?: string;
   qty: number;
   product_id: string;

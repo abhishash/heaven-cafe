@@ -6,23 +6,87 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 import { Trash2, Plus, Minus } from 'lucide-react';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/lib/redux/store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/lib/redux/store';
 import { isArray } from '@/lib/type-guards';
 import { SafeImage } from '@/components/shared/safe-image';
 import { formatPrice } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
+import { useMutation } from '@tanstack/react-query';
+import { fetchHandler } from '@/lib/fetch-handler';
+import { addToCart, removeFromCart } from '@/lib/redux/slice/cartSlice';
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, getTotalPrice, clearCart } = useCart();
+  const { items, getTotalPrice, clearCart } = useCart();
   const router = useRouter();
   const totalPrice = getTotalPrice();
-  const { totalAmount, loading } = useSelector(
-    (state: RootState) => state.cart
-  );
-  const cart = useSelector((state: RootState) => state.cart.items);
-  console.log(cart)
+  const { data: session } = useSession();
 
-  if (isArray(cart)) {
+  const cart = useSelector((state: RootState) => state.cart.items);
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (payload: {
+      product_id: string;
+      qty: number;
+      type: "custom" | "remove" | "add";
+    }) =>
+      fetchHandler({
+        endpoint: "cart/add",
+        method: "POST",
+        data: payload,
+        token: session?.user?.accessToken,
+      }),
+  });
+
+  const dispatch = useDispatch();
+
+  const updateQuantity = async (type: "add" | "remove", id: string) => {
+    try {
+      await mutateAsync({
+        product_id: id,
+        qty: 1,
+        type: type,
+      }).then((res) => {
+        if (res?.status) {
+          dispatch(addToCart({ ...res?.data })); // ✅ Redux update
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Error adding to cart");
+    }
+  }
+
+
+  const { mutateAsync: removeCartItem, isPending: isRemoveCartLoading } = useMutation({
+    mutationFn: (payload: {
+      cart_id: number;
+    }) =>
+      fetchHandler({
+        endpoint: "cart/remove",
+        method: "DELETE",
+        data: payload,
+        token: session?.user?.accessToken,
+      }),
+  });
+
+  const removeItem = async (id: number) => {
+    try {
+      await removeCartItem({
+        cart_id: id,
+      }).then((res) => {
+        if (res?.status) {
+          dispatch(removeFromCart(res?.remove_cart_id)); // ✅ Redux update
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Error adding to cart");
+    }
+  }
+
+
+  if (!isArray(cart)) {
     return (
       <main className="min-h-screen bg-gray-50 py-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
@@ -62,8 +126,8 @@ export default function CartPage() {
                     <SafeImage
                       src={item.image}
                       alt={item.name}
-                      width={24}
-                      height={24}
+                      width={96}
+                      height={96}
                       className="object-cover"
                     />
                   </div>
@@ -71,39 +135,42 @@ export default function CartPage() {
                   {/* Product Details */}
                   <div className="flex-1">
                     <h3 className="font-bold text-lg text-gray-800">{item.name}</h3>
-                    {/* <p className="text-gray-600 text-sm mt-1">{item.}</p> */}
 
-                    {/* {item.customization && (
+                    {item?.customization && (
                       <p className="text-sm text-orange-600 mt-2 italic">
                         Note: {item.customization}
                       </p>
-                    )} */}
+                    )}
 
-                    <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center gap-x-2 justify-between mt-4">
                       <span className="font-bold text-orange-600">
                         {formatPrice(item.price, "INR")}
                       </span>
 
                       {/* Quantity Controls */}
                       <div className="flex items-center gap-2">
-                        <button
-                          // onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="p-1 hover:bg-gray-100 rounded"
-                        >
-                          <Minus size={16} />
-                        </button>
-                        <span className="w-8 text-center font-semibold">{item.qty}</span>
-                        <button
-                          // onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="p-1 hover:bg-gray-100 rounded"
-                        >
-                          <Plus size={16} />
-                        </button>
+                        <div className='flex items-center border border-gray-700 rounded-full gap-x-2'>
+                          <button
+                            onClick={() => { item?.qty === 1 ? removeItem(item?.cart_id) : updateQuantity("remove", item.product_id) }}
+
+                            className="p-1 hover:bg-gray-100 rounded"
+                          >
+                            <Minus size={16} />
+                          </button>
+                          <span className="w-8 text-center font-semibold">{item.qty}</span>
+                          <button
+                            onClick={() => updateQuantity("add", item?.id.toString())}
+                            className="p-1 hover:bg-gray-100 rounded"
+                          >
+                            <Plus size={16} />
+                          </button>
+                        </div>
+
 
                         {/* Remove Button */}
                         <button
-                          // onClick={() => removeItem(item.id)}
-                          className="ml-4 p-2 text-red-500 hover:bg-red-50 rounded"
+                          // onClick={() => removeItem("remove", item.id.toString())}
+                          className="sm:ml-4 ml-0 p-2 text-red-500 hover:bg-red-50 rounded"
                         >
                           <Trash2 size={18} />
                         </button>

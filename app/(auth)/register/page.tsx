@@ -25,12 +25,10 @@ type FormValues = {
   email: string;
   communication: boolean;
   name: string;
-  otp: string;
 };
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false);
   const [isOtp, setIsOtp] = useState(false);
   const router = useRouter();
@@ -52,61 +50,38 @@ export default function RegisterPage() {
       })
   });
 
-  const { mutateAsync: verifyOtp, isPending: isOtpPending } = useMutation({
-    mutationFn: (payload: { email: string, otp: string }) =>
-      fetchHandler({
-        endpoint: "verify-otp",
-        method: "POST",
-        data: payload,
-      })
-  });
+  
 
   const onSubmit = async (data: FormValues) => {
     setLoading(true)
-    if (isOtp) {
-      verifyOtp({
-        otp: data?.otp,
-        email: data?.email,
-      })?.then(async (res) => {
-        if (res?.status) {
-          setIsOtp(true);
-          try {
-            const response = await signIn("credentials", {
-              username: data.email,
-              password: data.password,
-              redirect: false,
-              callbackUrl: "/",
-            });
 
-            if (response?.ok) {
-              router.push("/");
-            } else {
-              toast.warning(response?.error);
-            }
-          } catch (error) {
-            toast.warning("Something went wrong");
-          } finally {
-            setLoading(false);
+    const payload = { name: data?.name, phone: data?.phone, email: data?.email, password: data?.password };
+    mutateAsync(payload)?.then(async (res) => {
+      if (res?.status) {
+        toast.success(res?.message);
+        try {
+          const response = await signIn("credentials", {
+            username: data.email,
+            password: data.password,
+            redirect: false,
+            callbackUrl: "/",
+          });
+
+          if (response?.ok) {
+            router.push("/");
+          } else {
+            toast.warning(response?.error);
           }
-        } else {
-          toast.warning(res?.message);
+        } catch (error) {
+          toast.warning("Something went wrong");
+        } finally {
+          setLoading(false);
         }
-      }).catch((error) => {
-        toast.warning("Something went wrong");
-      });
-    } else {
-      const payload = { name: data?.name, phone: data?.phone, email: data?.email, password: data?.password };
-      mutateAsync(payload)?.then((res) => {
-        if (res?.status) {
-          setIsOtp(true);
-          toast.success("OTP has been send your registered email");
-          return;
-        }
-        toast.error(res?.errors?.email?.[0]);
-      }).catch((error) => {
-        toast.error("Something Wrong");
-      });
-    }
+      }
+    }).catch((error) => {
+      toast.error("Something Wrong");
+    });
+
     setLoading(false)
   };
 
@@ -130,127 +105,104 @@ export default function RegisterPage() {
         <div className="p-4 sm:p-8">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Full Name Field */}
-            {
-              isOtp ? <div className="flex justify-center">
-
-                <Controller
-                  name="otp"
-                  control={control}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <InputOTP
-                      maxLength={6}
-                      value={field.value}
-                      onChange={field.onChange}
-                    >
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                      </InputOTPGroup>
-                    </InputOTP>
-                  )}
+            <div className="space-y-2">
+              <Label htmlFor="fullName" className="text-foreground font-semibold">
+                Full Name
+              </Label>
+              <div className="relative">
+                <User className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="John Doe"
+                  {...register("name", { required: "Name is required" })}
+                  className="pl-10 bg-background border-muted focus:border-primary h-12"
+                  required
                 />
-              </div> : <>
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-foreground font-semibold">
-                    Full Name
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      id="fullName"
-                      type="text"
-                      placeholder="John Doe"
-                      {...register("name", { required: "Name is required" })}
-                      className="pl-10 bg-background border-muted focus:border-primary h-12"
-                      required
-                    />
-                  </div>
-                </div>
+              </div>
+            </div>
 
-                {/* Email Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-foreground font-semibold">
-                    Email Address
-                  </Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      {...register("email", { required: "Email is required" })}
-                      className="pl-10 bg-background border-muted focus:border-primary h-12"
-                      required
-                    />
-                  </div>
-                </div>
+            {/* Email Field */}
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-foreground font-semibold">
+                Email Address
+              </Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  {...register("email", { required: "Email is required" })}
+                  className="pl-10 bg-background border-muted focus:border-primary h-12"
+                  required
+                />
+              </div>
+            </div>
 
-                {/* Phone Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-foreground font-semibold">
-                    Phone Number
-                  </Label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      id="phone"
-                      type="tel"
-                      placeholder="+1 (555) 000-0000"
-                      {...register("phone", { required: "Phone is required" })}
-                      className="pl-10 bg-background border-muted focus:border-primary h-12"
-                      required
-                    />
-                  </div>
-                </div>
+            {/* Phone Field */}
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-foreground font-semibold">
+                Phone Number
+              </Label>
+              <div className="relative">
+                <Phone className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="+1 (555) 000-0000"
+                  {...register("phone", { required: "Phone is required" })}
+                  className="pl-10 bg-background border-muted focus:border-primary h-12"
+                  required
+                />
+              </div>
+            </div>
 
-                {/* Password Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-foreground font-semibold">
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
-                      {...register("password", { required: "Password is required" })}
-                      className="pl-10 pr-10 bg-background border-muted focus:border-primary h-12"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
-                    </button>
-                  </div>
-                </div>
+            {/* Password Field */}
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-foreground font-semibold">
+                Password
+              </Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  {...register("password", { required: "Password is required" })}
+                  className="pl-10 pr-10 bg-background border-muted focus:border-primary h-12"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
+            </div>
 
-                {/* Confirm Password Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-foreground font-semibold">
-                    Confirm Password
-                  </Label>
-                </div>
-              </>
-            }
+            {/* Confirm Password Field */}
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword" className="text-foreground font-semibold">
+                Confirm Password
+              </Label>
+            </div>
+
+
 
             {/* Register Button */}
             <Button
               type="submit"
-              disabled={isPending || isOtpPending || loading}
+              disabled={isPending || loading}
               className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base transition-all duration-200"
             >
-              {isPending || isOtpPending || loading ? "Loading..." : isOtp ? "Creating Account..." : "Create Account"}
+              {isPending || loading ? "Loading..." : isOtp ? "Creating Account..." : "Create Account"}
             </Button>
           </form>
 
@@ -285,8 +237,6 @@ export default function RegisterPage() {
             </Link>
           </p>
         </div>
-
-
       </Card>
     </div>
   );

@@ -20,6 +20,8 @@ const cartSlice = createSlice({
         (item) => item.cart_id === action.payload.cart_id
       );
 
+      console.log(existIndex);
+
       // console.log( JSON.parse(JSON.stringify(exist)), action.payload  )
 
       if (existIndex !== -1) {

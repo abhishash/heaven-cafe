@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
 import { useSession } from "next-auth/react";
-import { addToCart } from "@/lib/redux/store/cartSlice";
+import { addToCart, removeFromCart } from "@/lib/redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 
 
@@ -44,7 +44,6 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
   });
 
   const handleAddToCart = async () => {
-    // addItem(product, quantity, customization);
     try {
       await mutateAsync({
         product_id: parseInt(product?.id),
@@ -53,7 +52,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
         type: "custom",
       }).then((res) => {
         if (res?.status) {
-          dispatch(addToCart({ ...res?.data , customization}));
+          dispatch(addToCart({ ...res?.data, customization }));
         }
       });
     } catch (error) {
@@ -61,6 +60,34 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
       alert("Error adding to cart");
     }
   };
+
+
+  const { mutateAsync: removeCartItem, isPending: isRemoveCartLoading } = useMutation({
+    mutationFn: (payload: {
+      cart_id: number;
+    }) =>
+      fetchHandler({
+        endpoint: "cart/remove",
+        method: "DELETE",
+        data: payload,
+        token: session?.user?.accessToken,
+      }),
+  });
+
+  const removeItem = async (id: number) => {
+    try {
+      await removeCartItem({
+        cart_id: id,
+      }).then((res) => {
+        if (res?.status) {
+          dispatch(removeFromCart(res?.remove_cart_id)); // ✅ Redux update
+        }
+      });
+    } catch (error) {
+      console.error(error);
+      alert("Error adding to cart");
+    }
+  }
   return (
 
     <div className="flex flex-col">
