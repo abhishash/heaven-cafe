@@ -14,6 +14,16 @@ export default function OrderTypeModal() {
   const [open, setOpen] = useState(false);
   const [orderType, setOrderType] = useState<string | null>(null);
 
+  const handleOpenChange = (isOpen: boolean) => {
+    // If modal is closing AND no selection made
+    if (!isOpen && !orderType) {
+      setOrderType("dine-in"); // default value
+      localStorage.setItem("orderType", "dine-in");
+    }
+
+    setOpen(isOpen);
+  };
+
   // Check localStorage on page load
   useEffect(() => {
     const storedType = localStorage.getItem("orderType");
@@ -38,7 +48,7 @@ export default function OrderTypeModal() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog defaultOpen={false} open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle className="text-center flex gap-y-3 justify-center flex-col items-center">
