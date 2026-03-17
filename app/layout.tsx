@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
-import { CartProvider } from '@/context/CartContext'
 import QueryProvider from './providers/query-provider'
 import { Toaster } from '@/components/ui/sonner'
 import SessionProviders from './providers/session-providers'
@@ -9,6 +8,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/auth'
 import { Geist } from 'next/font/google'
 import ReduxProvider from './providers/redux-provider'
+import CartProvider from '@/context/CartProvider'
 
 const geist = Geist({
   subsets: ['latin'],

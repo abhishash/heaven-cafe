@@ -190,6 +190,7 @@ export interface CartState {
   items: CartItem[];
   loading: boolean;
   totalAmount: number;
+  initialized: boolean;
 }
 
 export interface UserAddress {

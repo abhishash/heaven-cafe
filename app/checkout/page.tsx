@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -12,18 +11,19 @@ import CashOnDeliveryForm, {
 } from "@/components/CashOnDeliveryForm";
 import RazorpayCheckout from "@/components/RazorpayCheckout";
 import Checkout from "@/components/Checkout";
+import { useDispatch } from "react-redux";
 
 type PaymentMethod = "cod" | "stripe" | "razorpay";
 
 export default function CheckoutPage() {
-  const { cart, total, clearCart } = useCart();
+  const { } = useDispatch();
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
     null,
   );
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const subtotal = total;
+  const subtotal = 3;
   const deliveryFee = 5;
   const finalTotal = subtotal + deliveryFee;
   const orderId = `ORD-${Date.now()}`;
@@ -34,14 +34,9 @@ export default function CheckoutPage() {
       // Simulate order placement
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      console.log("COD Order:", {
-        orderId,
-        amount: finalTotal,
-        details,
-        items: cart,
-      });
+   
 
-      clearCart();
+      // clearCart();
       router.push(`/order-confirmation?orderId=${orderId}&method=cod`);
     } catch (error) {
       console.error("Error placing order:", error);
@@ -51,12 +46,12 @@ export default function CheckoutPage() {
   };
 
   const handleStripeSuccess = () => {
-    clearCart();
+    // clearCart();
     router.push(`/order-confirmation?orderId=${orderId}&method=stripe`);
   };
 
   const handleRazorpaySuccess = (paymentId: string) => {
-    clearCart();
+    // clearCart();
     router.push(
       `/order-confirmation?orderId=${orderId}&paymentId=${paymentId}&method=razorpay`,
     );
@@ -66,34 +61,34 @@ export default function CheckoutPage() {
     console.error("Razorpay error:", error);
   };
 
-  if (cart.length === 0) {
-    return (
-      <main className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <Link
-            href="/cart"
-            className="inline-flex items-center gap-2 text-primary hover:underline mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Cart
-          </Link>
+  // if (cart.length === 0) {
+  //   return (
+  //     <main className="min-h-screen bg-background">
+  //       <div className="container mx-auto px-4 py-8">
+  //         <Link
+  //           href="/cart"
+  //           className="inline-flex items-center gap-2 text-primary hover:underline mb-8"
+  //         >
+  //           <ArrowLeft className="w-4 h-4" />
+  //           Back to Cart
+  //         </Link>
 
-          <div className="text-center py-12">
-            <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
-            <p className="text-muted-foreground mb-6">
-              Add items to your cart before checking out
-            </p>
-            <Link
-              href="/menu"
-              className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition"
-            >
-              Continue Shopping
-            </Link>
-          </div>
-        </div>
-      </main>
-    );
-  }
+  //         <div className="text-center py-12">
+  //           <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
+  //           <p className="text-muted-foreground mb-6">
+  //             Add items to your cart before checking out
+  //           </p>
+  //           <Link
+  //             href="/menu"
+  //             className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition"
+  //           >
+  //             Continue Shopping
+  //           </Link>
+  //         </div>
+  //       </div>
+  //     </main>
+  //   );
+  // }
 
   return (
     <main className="min-h-screen bg-background py-8 px-4">
@@ -129,10 +124,10 @@ export default function CheckoutPage() {
                   />
                 )}
 
-                {paymentMethod === "stripe" && (
+                {/* {paymentMethod === "stripe" && (
                   // <StripeCheckout onSuccess={handleStripeSuccess} />
                   <Checkout onSuccess={handleStripeSuccess} />
-                )}
+                )} */}
 
                 {paymentMethod === "razorpay" && (
                   <RazorpayCheckout
@@ -152,7 +147,7 @@ export default function CheckoutPage() {
           <div className="bg-card rounded-lg p-6 h-fit sticky top-24 border border-border">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
             <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
-              {cart.map((item) => (
+              {/* {cart.map((item) => (
                 <div
                   key={item.productId}
                   className="flex justify-between text-sm"
@@ -167,7 +162,7 @@ export default function CheckoutPage() {
                     ${(item.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
-              ))}
+              ))} */}
             </div>
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between mb-2">

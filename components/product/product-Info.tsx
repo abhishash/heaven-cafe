@@ -4,7 +4,6 @@ import { Product } from "@/lib/products";
 import { formatPrice } from "@/lib/utils";
 import HtmlRender from "../shared/html-render";
 import { useState } from "react";
-import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import { Minus, Plus } from "lucide-react";
 import { Button } from "../ui/button";
@@ -13,6 +12,7 @@ import { fetchHandler } from "@/lib/fetch-handler";
 import { useSession } from "next-auth/react";
 import { addToCart, removeFromCart } from "@/lib/redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 
 interface ProductInfoProps {
@@ -24,7 +24,6 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const [customization, setCustomization] = useState('');
   const [added, setAdded] = useState(false);
-  const { addItem } = useCart();
   const router = useRouter();
   const { data: session } = useSession();
   const dispatch = useDispatch();
@@ -44,21 +43,20 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
   });
 
   const handleAddToCart = async () => {
-    try {
-      await mutateAsync({
-        product_id: parseInt(product?.id),
-        qty: quantity || 1,
-        // price: (product?.ac_price),
-        type: "custom",
-      }).then((res) => {
-        if (res?.status) {
-          dispatch(addToCart({ ...res?.data, customization }));
-        }
-      });
-    } catch (error) {
-      console.error(error);
-      alert("Error adding to cart");
-    }
+    await mutateAsync({
+      product_id: parseInt(product?.id),
+      qty: quantity || 1,
+      // price: (product?.ac_price),
+      type: "custom",
+    }).then((res) => {
+      if (res?.status) {
+        dispatch(addToCart({ ...res?.data, customization }));
+      } else {
+        toast.warning(res?.message);
+      }
+    }).catch((err) => {
+      toast.error(err?.message);
+    })
   };
 
 

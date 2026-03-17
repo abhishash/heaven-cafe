@@ -2,16 +2,16 @@
 
 import Link from 'next/link';
 import { ShoppingCart, User } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
 import OrderTypeModal from './pop-up/Order-type-modal';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { SearchBar } from './Search-bar';
 import { useSession } from 'next-auth/react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/lib/redux/store';
 
 export default function Header() {
-  const { getTotalItems } = useCart();
-  const totalItems = getTotalItems();
+  const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
 
   return (
     <header className="bg-primary shadow-xl fixed w-full top-0 z-40">

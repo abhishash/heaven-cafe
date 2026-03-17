@@ -4,7 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { useCart } from '@/context/CartContext';
 import { Trash2, Plus, Minus } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
@@ -17,9 +16,7 @@ import { fetchHandler } from '@/lib/fetch-handler';
 import { addToCart, removeFromCart } from '@/lib/redux/slice/cartSlice';
 
 export default function CartPage() {
-  const { items, getTotalPrice, clearCart } = useCart();
   const router = useRouter();
-  const totalPrice = getTotalPrice();
   const { data: session } = useSession();
 
   const cart = useSelector((state: RootState) => state.cart.items);
@@ -190,7 +187,7 @@ export default function CartPage() {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={clearCart}
+                // onClick={clearCart}
                 className="text-red-500 hover:text-red-600"
               >
                 Clear Cart
@@ -206,7 +203,7 @@ export default function CartPage() {
               <div className="space-y-4 mb-6 border-b border-gray-200 pb-6">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+                  {/* <span className="font-semibold">${totalPrice.toFixed(2)}</span> */}
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Delivery Fee</span>
@@ -215,7 +212,7 @@ export default function CartPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax</span>
                   <span className="font-semibold">
-                    ${((totalPrice + 3.99) * 0.08).toFixed(2)}
+                    {/* ${((totalPrice + 3.99) * 0.08).toFixed(2)} */}
                   </span>
                 </div>
               </div>
@@ -223,7 +220,7 @@ export default function CartPage() {
               <div className="flex justify-between mb-6">
                 <span className="text-lg font-bold text-gray-800">Total</span>
                 <span className="text-2xl font-bold text-orange-600">
-                  ${(totalPrice + 3.99 + (totalPrice + 3.99) * 0.08).toFixed(2)}
+                  {/* ${(totalPrice + 3.99 + (totalPrice + 3.99) * 0.08).toFixed(2)} */}
                 </span>
               </div>
 
