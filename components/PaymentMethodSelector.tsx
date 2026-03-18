@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { CheckCircle, DollarSign, CreditCard } from 'lucide-react';
+import { CheckCircle, DollarSign, CreditCard, IndianRupee } from 'lucide-react';
 
 type PaymentMethod = 'cod' | 'stripe' | 'razorpay';
 
@@ -23,7 +23,7 @@ export default function PaymentMethodSelector({
       id: 'cod' as PaymentMethod,
       name: 'Cash on Delivery',
       description: 'Pay when your order arrives',
-      icon: DollarSign,
+      icon: IndianRupee,
       badge: 'No Extra Cost',
     },
     {
@@ -95,15 +95,6 @@ export default function PaymentMethodSelector({
           );
         })}
       </div>
-
-      <Button
-        onClick={() => handleSelect(selectedMethod)}
-        disabled={isLoading}
-        size="lg"
-        className="w-full bg-primary text-primary-foreground hover:opacity-90 font-semibold"
-      >
-        {isLoading ? 'Processing...' : 'Continue to Payment'}
-      </Button>
     </div>
   );
 }

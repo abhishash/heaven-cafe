@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { createRazorpayOrder, verifyRazorpayPayment } from '@/app/actions/razorpay';
+import { formatPrice } from '@/lib/utils';
 
 interface RazorpayCheckoutProps {
   orderId: string;
@@ -137,7 +138,7 @@ export default function RazorpayCheckout({
             Processing...
           </>
         ) : (
-          `Pay ₹${(amount * 100).toLocaleString()}`
+          `Pay ${formatPrice(amount, "INR")}`
         )}
       </Button>
     </div>

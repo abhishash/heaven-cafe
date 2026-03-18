@@ -5,13 +5,22 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import PaymentMethodSelector from "@/components/PaymentMethodSelector";
-// import { Checkout as StripeCheckout } from '@/components/Checkout';
 import CashOnDeliveryForm, {
   DeliveryDetails,
 } from "@/components/CashOnDeliveryForm";
 import RazorpayCheckout from "@/components/RazorpayCheckout";
-import Checkout from "@/components/Checkout";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/lib/redux/store";
+import { isArray } from "@/lib/type-guards";
+import EmptyCart from "@/components/cart/empty-cart";
+import { formatPrice } from "@/lib/utils";
+import Checkout from "@/components/stripe-checkout";
+import StripeCheckout from "@/components/stripe-checkout";
+import { fetchHandler } from "@/lib/fetch-handler";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { clearCart } from "@/lib/redux/slice/cartSlice";
 
 type PaymentMethod = "cod" | "stripe" | "razorpay";
 
@@ -19,29 +28,31 @@ export default function CheckoutPage() {
   const { } = useDispatch();
   const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
-    null,
+    "cod",
   );
-  const [isProcessing, setIsProcessing] = useState(false);
+  const { items: cart, totalPrice } = useSelector((state: RootState) => state.cart);
 
-  const subtotal = 3;
-  const deliveryFee = 5;
-  const finalTotal = subtotal + deliveryFee;
-  const orderId = `ORD-${Date.now()}`;
+  const orderId = `ORD-${Date.now()}XXXXXX`;
+  const { data: session } = useSession();
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () =>
+      fetchHandler({
+        endpoint: "orders",
+        method: "POST",
+        data: {},
+        token: session?.user?.accessToken,
+      })
+  });
 
   const handleCODSubmit = async (details: DeliveryDetails) => {
-    setIsProcessing(true);
     try {
       // Simulate order placement
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-   
-
-      // clearCart();
-      router.push(`/order-confirmation?orderId=${orderId}&method=cod`);
+      const response = await mutateAsync();
+      clearCart();
+      router.push(`/order-confirmation?orderId=${response?.order_no}&method=cod`);
     } catch (error) {
-      console.error("Error placing order:", error);
-    } finally {
-      setIsProcessing(false);
+      toast.error("Error placing order");
     }
   };
 
@@ -61,34 +72,11 @@ export default function CheckoutPage() {
     console.error("Razorpay error:", error);
   };
 
-  // if (cart.length === 0) {
-  //   return (
-  //     <main className="min-h-screen bg-background">
-  //       <div className="container mx-auto px-4 py-8">
-  //         <Link
-  //           href="/cart"
-  //           className="inline-flex items-center gap-2 text-primary hover:underline mb-8"
-  //         >
-  //           <ArrowLeft className="w-4 h-4" />
-  //           Back to Cart
-  //         </Link>
-
-  //         <div className="text-center py-12">
-  //           <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
-  //           <p className="text-muted-foreground mb-6">
-  //             Add items to your cart before checking out
-  //           </p>
-  //           <Link
-  //             href="/menu"
-  //             className="inline-block bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition"
-  //           >
-  //             Continue Shopping
-  //           </Link>
-  //         </div>
-  //       </div>
-  //     </main>
-  //   );
-  // }
+  if (!isArray(cart)) {
+    return (
+      <EmptyCart />
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background py-8 px-4">
@@ -108,31 +96,30 @@ export default function CheckoutPage() {
             <div className="bg-card rounded-lg p-6 border border-border">
               <PaymentMethodSelector
                 onSelectPayment={setPaymentMethod}
-                isLoading={isProcessing}
+                isLoading={isPending}
               />
-            </div>
 
+            </div>
             {/* Payment Specific Forms */}
             {paymentMethod && (
               <div className="bg-card rounded-lg p-6 border border-border">
                 {paymentMethod === "cod" && (
                   <CashOnDeliveryForm
                     orderId={orderId}
-                    amount={finalTotal}
+                    amount={totalPrice}
                     onSubmit={handleCODSubmit}
-                    isLoading={isProcessing}
+                    isLoading={isPending}
                   />
                 )}
 
-                {/* {paymentMethod === "stripe" && (
-                  // <StripeCheckout onSuccess={handleStripeSuccess} />
-                  <Checkout onSuccess={handleStripeSuccess} />
-                )} */}
+                {paymentMethod === "stripe" && (
+                  <StripeCheckout items={cart} />
+                )}
 
                 {paymentMethod === "razorpay" && (
                   <RazorpayCheckout
                     orderId={orderId}
-                    amount={finalTotal}
+                    amount={totalPrice + 20}
                     customerEmail="customer@example.com"
                     customerName="Customer"
                     onSuccess={handleRazorpaySuccess}
@@ -147,35 +134,39 @@ export default function CheckoutPage() {
           <div className="bg-card rounded-lg p-6 h-fit sticky top-24 border border-border">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
             <div className="space-y-4 mb-6 max-h-64 overflow-y-auto">
-              {/* {cart.map((item) => (
+              {cart.map((item) => (
                 <div
-                  key={item.productId}
+                  key={item.cart_id}
                   className="flex justify-between text-sm"
                 >
                   <div>
                     <p className="font-medium">{item.name}</p>
                     <p className="text-muted-foreground">
-                      Qty: {item.quantity}
+                      Qty: {item.qty}
                     </p>
                   </div>
                   <p className="font-medium">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatPrice(item?.price, "INR")}
                   </p>
                 </div>
-              ))} */}
+              ))}
             </div>
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between mb-2">
                 <p className="text-muted-foreground">Subtotal</p>
-                <p className="font-medium">${subtotal.toFixed(2)}</p>
+                <p className="font-medium">{formatPrice(totalPrice, "INR")}</p>
+              </div>
+              <div className="flex justify-between mb-2">
+                <p className="text-muted-foreground">Tax</p>
+                <p className="font-medium">{formatPrice(0, "INR")}</p>
               </div>
               <div className="flex justify-between mb-2">
                 <p className="text-muted-foreground">Delivery</p>
-                <p className="font-medium">${deliveryFee.toFixed(2)}</p>
+                <p className="font-medium">{formatPrice(20, "INR")}</p>
               </div>
               <div className="flex justify-between font-bold text-lg pt-2 border-t text-primary">
                 <p>Total</p>
-                <p>${finalTotal.toFixed(2)}</p>
+                <p>{formatPrice(totalPrice + 20, "INR")}</p>
               </div>
             </div>
           </div>

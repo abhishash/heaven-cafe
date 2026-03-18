@@ -28,7 +28,7 @@ export function Shimmer({
     <div
       className={`
         relative overflow-hidden
-        bg-gray-200 dark:bg-gray-700
+        bg-primary/20
         ${roundedClass}
         ${className}
       `}

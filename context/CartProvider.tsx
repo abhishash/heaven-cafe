@@ -21,7 +21,8 @@ export default function CartProvider({ children }: { children: ReactNode }) {
       } else {
         dispatch({
           items: [],
-          totalAmount: 21,
+          totalAmount: 0,
+          totalPrice: 0,
           loading: false,
           initialized: false,
           type: ""

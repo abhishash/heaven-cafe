@@ -2,12 +2,13 @@
 
 import { stripe } from '@/lib/stripe'
 import { products } from '@/lib/products'
+import { CartItem } from '@/lib/types'
 
-export async function startCheckoutSession(items: { id: string; quantity: number }[]) {
+export async function startCheckoutSession(items: CartItem[]) {
   // Validate and create line items from cart
   const lineItems = items
     .map((item) => {
-      const product = products.find((p) => p.id === item.id)
+      const product = products.find((p) => parseInt(p.id) === item.id)
       if (!product) {
         throw new Error(`Product with id "${item.id}" not found`)
       }
@@ -20,7 +21,7 @@ export async function startCheckoutSession(items: { id: string; quantity: number
           },
           unit_amount: product.priceInCents,
         },
-        quantity: item.quantity,
+        quantity: item.qty,
       }
     })
 

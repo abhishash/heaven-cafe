@@ -8,15 +8,16 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 
 import { startCheckoutSession } from "@/app/actions/stripe";
+import { CartItem } from "@/lib/types";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );
 
-export default function Checkout({
+export default function StripeCheckout({
   items,
 }: {
-  items: { id: string; quantity: number }[];
+  items: CartItem[];
 }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 

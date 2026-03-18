@@ -16,6 +16,7 @@ import {
 const initialState: CartState = {
   items: [],
   totalAmount: 0,
+  totalPrice: 0,
   loading: false,
   initialized: false,
 };
@@ -31,7 +32,7 @@ export const fetchCart = createAsyncThunk(
       method: CART_DETAILS?.method as methods,
       token: accessToken
     });
-  
+
     // 👉 IMPORTANT: return correct shape
     return res;
   }
@@ -68,6 +69,12 @@ const cartSlice = createSlice({
         (acc, item) => acc + Number(item.qty),
         0
       );
+
+      // ✅ Recalculate Subtotal total Price
+      state.totalPrice = state.items.reduce(
+        (acc, item) => acc + Number(item.price),
+        0
+      );
     },
 
     removeFromCart: (state, action: PayloadAction<number>) => {
@@ -75,8 +82,17 @@ const cartSlice = createSlice({
         (item) => item.cart_id !== action.payload
       );
 
+
+
+      // ✅ Recalculate total qty
       state.totalAmount = state.items.reduce(
         (acc, item) => acc + Number(item.qty),
+        0
+      );
+
+      // ✅ Recalculate Subtotal total Price
+      state.totalPrice = state.items.reduce(
+        (acc, item) => acc + Number(item.price),
         0
       );
     },
@@ -107,11 +123,20 @@ const cartSlice = createSlice({
         (acc, item) => acc + Number(item.qty),
         0
       );
+
+      // ✅ Recalculate Subtotal total Price
+      state.totalPrice = state.items.reduce(
+        (acc, item) => acc + Number(item.price),
+        0
+      );
     },
 
     clearCart: (state) => {
       state.items = [];
       state.totalAmount = 0;
+      state.totalPrice = 0;
+      state.loading = false;
+      state.initialized = false;
     },
   },
 
@@ -123,10 +148,12 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
         const res = action.payload;
+        console.log("Fetched Cart:", res); // 👉 Debug log
 
         // 🔥 adjust based on your API response
         state.items = res?.data || [];
         state.totalAmount = res?.total_qty
+        state.totalPrice = res?.totalPrice || 0;
         state.loading = false;
         state.initialized = true;
       })
