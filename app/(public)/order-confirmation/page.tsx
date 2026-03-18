@@ -157,7 +157,7 @@ function OrderConfirmationPage() {
             {method === 'cod' && (
               <Card className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 mb-8">
                 <div className="flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
                   <div className="text-start">
                     <p className="font-semibold text-blue-900 dark:text-blue-100 mb-1">
                       Cash on Delivery
@@ -175,7 +175,7 @@ function OrderConfirmationPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-base sm:text-lg"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-linear-to-r from-primary to-secondary text-white font-bold rounded-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-base sm:text-lg"
               >
                 <Home className="w-5 h-5" />
                 Continue Shopping

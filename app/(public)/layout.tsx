@@ -1,6 +1,4 @@
 import type { Metadata } from 'next'
-import { Analytics } from '@vercel/analytics/next'
-import { CartProvider } from '@/context/CartContext'
 import Header from '@/components/Header'
 import { Footer } from '@/components/footer'
 

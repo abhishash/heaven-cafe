@@ -3,7 +3,7 @@ import { ChefHat, Home, MapPin } from 'lucide-react'
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-background to-amber-50 flex items-center justify-center overflow-hidden relative">
+    <main className="min-h-screen bg-linear-to-b from-background to-amber-50 flex items-center justify-center overflow-hidden relative">
       {/* Decorative burger elements */}
       <div className="absolute top-10 left-10 text-6xl opacity-20 animate-bounce" style={{ animationDelay: '0s' }}>
         🍔
@@ -23,10 +23,10 @@ export default function NotFound() {
           {/* 404 Error Code */}
           <div className="mb-8">
             <div className="inline-block relative">
-              <h1 className="text-9xl sm:text-[120px] font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent leading-none">
+              <h1 className="text-9xl sm:text-[120px] font-black text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent leading-none">
                 404
               </h1>
-              <div className="absolute inset-0 blur-2xl bg-gradient-to-r from-primary/30 via-secondary/30 to-accent/30 -z-10"></div>
+              <div className="absolute inset-0 blur-2xl bg-linear-to-r from-primary/30 via-secondary/30 to-accent/30 -z-10"></div>
             </div>
           </div>
 
@@ -43,7 +43,7 @@ export default function NotFound() {
           {/* Decorative Icon */}
           <div className="mb-12 flex justify-center">
             <div className="relative">
-              <div className="flex items-center justify-center w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br from-secondary/20 to-accent/20 rounded-full">
+              <div className="flex items-center justify-center w-32 h-32 sm:w-40 sm:h-40 bg-linear-to-br from-secondary/20 to-accent/20 rounded-full">
                 <ChefHat className="w-16 h-16 sm:w-20 sm:h-20 text-primary animate-pulse" />
               </div>
               <div className="absolute -top-2 -right-2 text-4xl animate-spin" style={{ animationDuration: '3s' }}>
@@ -56,7 +56,7 @@ export default function NotFound() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-base sm:text-lg"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-linear-to-r from-primary to-secondary text-white font-bold rounded-full hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-base sm:text-lg"
             >
               <Home className="w-5 h-5" />
               Back to Home
