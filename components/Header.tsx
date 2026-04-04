@@ -39,7 +39,7 @@ export default function Header() {
             Menu
           </Link>
           {
-            isObject(session?.user) ? <Link href="/customer" className="text-primary-foreground hover:opacity-80 font-medium transition">
+            isObject(session?.user) ? <Link href="/customer/orders" className="text-primary-foreground hover:opacity-80 font-medium transition">
               <UserIcon
                 className="text-primary-foreground cursor-pointer hover:opacity-80 transition"
                 size={24}
