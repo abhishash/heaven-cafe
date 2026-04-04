@@ -13,10 +13,10 @@ import { useRouter } from "next/navigation";
 export default function UserCard() {
   const { data: session } = useSession();
   const router = useRouter();
-   const handleLogout = async () => {
-        await fetch("/api/logout", { method: "POST" });
-        await signOut({callbackUrl: "/login" });
-    }
+  const handleLogout = async () => {
+    await fetch("/api/logout", { method: "POST" });
+    await signOut({ callbackUrl: "/login" });
+  }
 
   return (
     <HoverCard openDelay={100} closeDelay={150}>
@@ -48,13 +48,13 @@ export default function UserCard() {
             Logout
           </Button>
         ) : <Button
-            variant="outline"
-            size="sm"
-            className="mt-2 w-full cursor-pointer"
-            onClick={()=>router.push("/login")}
-          >
-            Login
-          </Button>}
+          variant="outline"
+          size="sm"
+          className="mt-2 w-full cursor-pointer"
+          onClick={() => router.push("/login")}
+        >
+          Login
+        </Button>}
       </HoverCardContent>
     </HoverCard>
   );

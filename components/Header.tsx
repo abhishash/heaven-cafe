@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, User } from 'lucide-react';
+import { ShoppingCart, User, UserIcon } from 'lucide-react';
 import OrderTypeModal from './pop-up/Order-type-modal';
 import Image from 'next/image';
 import { Button } from './ui/button';
@@ -11,9 +11,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
 import UserCard from './user-card';
 import DineDeliveryToggle from './shared/dine-delivery-toggle';
+import { isObject } from 'framer-motion';
 
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
+  const { data: session } = useSession();
 
   return (
     <header className="bg-primary shadow-xl fixed w-full top-0 z-40">
@@ -36,7 +38,21 @@ export default function Header() {
           <Link href="/menu" className="text-primary-foreground hover:opacity-80 font-medium transition">
             Menu
           </Link>
-          <UserCard />
+          {
+            isObject(session?.user) ? <Link href="/customer" className="text-primary-foreground hover:opacity-80 font-medium transition">
+              <UserIcon
+                className="text-primary-foreground cursor-pointer hover:opacity-80 transition"
+                size={24}
+              />
+            </Link> : <Link href="/login" className="text-primary-foreground hover:opacity-80 font-medium transition">
+              <UserIcon
+                className="text-primary-foreground cursor-pointer hover:opacity-80 transition"
+                size={24}
+              />
+            </Link>
+          }
+
+          {/* <UserCard /> */}
           <Link href="/cart" className="relative">
             <ShoppingCart className="text-primary-foreground hover:opacity-80 transition" size={24} />
             {totalItems > 0 && (
@@ -46,7 +62,9 @@ export default function Header() {
             )}
           </Link>
         </div>
+
       </nav>
+
     </header>
   );
 }

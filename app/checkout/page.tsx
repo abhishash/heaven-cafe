@@ -34,6 +34,7 @@ export default function CheckoutPage() {
 
   const orderId = `ORD-${Date.now()}XXXXXX`;
   const { data: session } = useSession();
+  const dispatch = useDispatch();
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: () =>
@@ -49,7 +50,7 @@ export default function CheckoutPage() {
     try {
       // Simulate order placement
       const response = await mutateAsync();
-      clearCart();
+      dispatch(clearCart());
       router.push(`/order-confirmation?orderId=${response?.order_no}&method=cod`);
     } catch (error) {
       toast.error("Error placing order");

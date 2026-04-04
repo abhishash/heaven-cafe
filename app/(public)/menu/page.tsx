@@ -243,7 +243,7 @@ export default function MenuPage() {
           </p>
         </div>
 
-        <section className="overflow-hidden rounded-[2rem] bg-slate-950 px-6 py-10 text-white shadow-xl md:px-10">
+        <section className="overflow-hidden rounded-[2rem] bg-primary px-6 py-10 text-white shadow-xl md:px-10">
           <div className="grid gap-8 lg:grid-cols-[1.4fr_0.8fr] lg:items-end">
             <div>
               <Badge className="mb-4 rounded-full bg-white/10 px-4 py-1.5 text-orange-200 hover:bg-white/10">

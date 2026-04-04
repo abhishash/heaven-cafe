@@ -29,7 +29,7 @@ export default function CartPage() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow">
               {cart.map((item) => (
-                <CartItem item={item} />
+                <CartItem key={item.cart_id} item={item} />
               ))}
             </div>
 

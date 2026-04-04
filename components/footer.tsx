@@ -41,28 +41,28 @@ export function Footer() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-secondary hover:text-gray-900"
+                  className="text-secondary cursor-pointer hover:text-gray-900"
                 >
                   <Instagram className="size-6" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-secondary hover:text-gray-900"
+                  className="text-secondary cursor-pointer hover:text-gray-900"
                 >
                   <Twitter className="size-6" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-secondary hover:text-gray-900"
+                  className="text-secondary cursor-pointer hover:text-gray-900"
                 >
                   <Facebook className="size-6" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-secondary hover:text-gray-900"
+                  className="text-secondary cursor-pointer hover:text-gray-900"
                 >
                   <Linkedin className="size-6" />
                 </Button>
@@ -88,9 +88,11 @@ export function Footer() {
                           <li key={page.id}>
                             <Link
                               href={`/${page.url}`}
-                              className="text-sm text-secondary hover:text-green-600 transition"
+                              className="relative text-sm text-secondary inline-block group"
                             >
                               {page.name}
+
+                              <span className="absolute left-0 -bottom-0.5 h-0.5 w-0 bg-current transition-all duration-300 group-hover:w-full"></span>
                             </Link>
                           </li>
                         ))}

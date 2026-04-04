@@ -139,7 +139,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
       <div className="mb-8 bg-gray-50 p-4 rounded-lg">
         <div className="flex justify-between mb-2">
           <span className="text-gray-600">Subtotal ({quantity}x)</span>
-          <span className="font-semibold">{formatPrice(product.price, "INR")}</span>
+          <span className="font-semibold">{formatPrice(quantity*product.price, "INR")}</span>
         </div>
       </div>
 
