@@ -1,9 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function DineDeliveryToggle() {
     const [isDineIn, setIsDineIn] = useState(false)
+
+    // Check localStorage on page load
+    useEffect(() => {
+        const storedType = localStorage.getItem("orderType");
+
+        if (storedType === "dining") {
+            setIsDineIn(true);
+        } else {
+            setIsDineIn(false);
+        }
+    }, []);
 
     return (
         <div className="flex items-center justify-center gap-4">
@@ -17,7 +28,7 @@ export default function DineDeliveryToggle() {
 
             {/* Toggle Switch */}
             <button
-                onClick={() => setIsDineIn(!isDineIn)}
+                onClick={() => { setIsDineIn(!isDineIn); localStorage.setItem("orderType", isDineIn ? "delivery" : "dining"); }}
                 className={`relative cursor-pointer inline-flex h-7 w-16 items-center rounded-full transition-colors duration-300 bg-secondary`}
                 aria-label="Toggle between delivery and dine-in"
             >

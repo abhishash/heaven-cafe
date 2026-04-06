@@ -1,13 +1,14 @@
 'use client';
 
 import { Address } from '@/lib/mockData';
+import { UserAddress } from '@/lib/types';
 import { MapPin, Check, Edit2, Trash2 } from 'lucide-react';
 
 interface AddressCardProps {
-  address: Address;
+  address: UserAddress;
   isEditable?: boolean;
   onEdit?: (address: Address) => void;
-  onDelete?: (id: string) => void;
+  onDelete?: (id: number) => void;
 }
 
 export function AddressCard({ address, isEditable = true, onEdit, onDelete }: AddressCardProps) {
@@ -19,22 +20,22 @@ export function AddressCard({ address, isEditable = true, onEdit, onDelete }: Ad
             <MapPin className="w-5 h-5 text-primary" />
           </div>
           <div>
-            <p className="font-semibold text-foreground">{address.label}</p>
-            <p className="text-xs text-muted-foreground capitalize">{address.type}</p>
+            <p className="font-semibold text-foreground">{address.person}</p>
+            <p className="text-xs text-muted-foreground capitalize">{address.contact}</p>
           </div>
         </div>
-        {address.isDefault && (
+        {parseInt(address.is_default) ? (
           <div className="flex items-center gap-1 bg-green-50 text-green-700 px-2 py-1 rounded-full">
             <Check className="w-4 h-4" />
             <span className="text-xs font-medium">Default</span>
           </div>
-        )}
+        ) : null}
       </div>
 
       <div className="mb-4 ml-12">
-        <p className="text-sm text-foreground mb-1">{address.street}</p>
-        <p className="text-sm text-muted-foreground">{address.city}, {address.state} {address.zipCode}</p>
-        <p className="text-sm text-muted-foreground mt-2">{address.phoneNumber}</p>
+        <p className="text-sm text-foreground mb-1">{address.landmark}</p>
+        <p className="text-sm text-muted-foreground">{address.address}, {address.state} {address.pincode}</p>
+        <p className="text-sm text-muted-foreground mt-2">{address.country}</p>
       </div>
 
       {isEditable && (

@@ -37,21 +37,31 @@ export default function CheckoutPage() {
   const dispatch = useDispatch();
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: () =>
+    mutationFn: (orderData: {
+      order_type: string,
+      table_no?: number
+    }) =>
       fetchHandler({
         endpoint: "orders",
         method: "POST",
-        data: {},
+        data: { ...orderData },
         token: session?.user?.accessToken,
       })
   });
-
+  const storedType  = localStorage.getItem("orderType") ?? "token";
   const handleCODSubmit = async (details: DeliveryDetails) => {
     try {
       // Simulate order placement
-      const response = await mutateAsync();
-      dispatch(clearCart());
-      router.push(`/order-confirmation?orderId=${response?.order_no}&method=cod`);
+      const response = await mutateAsync({
+        "order_type": storedType === "dining" ? "token" : storedType, 
+        "table_no": storedType === "dining" ? 10 : undefined
+      });
+      if (response?.order_no) {
+        dispatch(clearCart());
+        router.push(`/order-confirmation?orderId=${response?.order_no}&method=cod`);
+      } else {
+        toast.error(response?.message || "Failed to place order");
+      }
     } catch (error) {
       toast.error("Error placing order");
     }

@@ -17,8 +17,8 @@ export default function OrderTypeModal() {
   const handleOpenChange = (isOpen: boolean) => {
     // If modal is closing AND no selection made
     if (!isOpen && !orderType) {
-      setOrderType("dine-in"); // default value
-      localStorage.setItem("orderType", "dine-in");
+      setOrderType("dining"); // default value
+      localStorage.setItem("orderType", "dining");
     }
 
     setOpen(isOpen);

@@ -5,13 +5,20 @@ import { mockAddresses } from '@/lib/mockData';
 import { CustomerLayout } from '@/components/customer/CustomerLayout';
 import { AddressCard } from '@/components/customer/AddressCard';
 import { Plus } from 'lucide-react';
+import { useDeleteAddressMutation, useGetAddressesQuery } from '@/store/services/api';
+import { AddressResponse } from '@/lib/types';
 
 export default function AddressesPage() {
-  const [addresses, setAddresses] = useState(mockAddresses);
+  const [addressess, setAddresses] = useState(mockAddresses);
   const [showAddForm, setShowAddForm] = useState(false);
+  const { data, isLoading } = useGetAddressesQuery<{ data: AddressResponse, isLoading: boolean }>(null);
+  const addresses = data?.data || []
 
-  const handleDelete = (id: string) => {
-    setAddresses(addresses.filter((addr) => addr.id !== id));
+  const [deleteAddress] = useDeleteAddressMutation();
+
+  const handleDelete = async (id: number) => {
+    const result = await deleteAddress(id);
+    console.log(result);
   };
 
   const handleEdit = () => {
@@ -134,31 +141,34 @@ export default function AddressesPage() {
             </form>
           </div>
         )}
-
-        {/* Addresses List */}
-        <div className="space-y-4">
-          {addresses.length > 0 ? (
-            addresses.map((address) => (
-              <AddressCard
-                key={address.id}
-                address={address}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg mb-4">No addresses saved yet</p>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Add Your First Address
-              </button>
+        {
+          isLoading ? <p>Loading...</p> :
+            //  {/* Addresses List */}
+            <div className="space-y-4">
+              {addresses.length > 0 ? (
+                addresses.map((address) => (
+                  <AddressCard
+                    key={address.id}
+                    address={address}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground text-lg mb-4">No addresses saved yet</p>
+                  <button
+                    onClick={() => setShowAddForm(true)}
+                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Your First Address
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+        }
+
       </div>
     </CustomerLayout>
   );

@@ -2,16 +2,38 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
 import { isArray } from '@/lib/type-guards';
 import EmptyCart from '@/components/cart/empty-cart';
 import CartItem from '@/components/cart/cart-item';
 import { formatPrice } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
+import { useMutation } from '@tanstack/react-query';
+import { fetchHandler } from '@/lib/fetch-handler';
+import { clearCart } from '@/lib/redux/slice/cartSlice';
 
 export default function CartPage() {
 
   const { items: cart, totalPrice } = useSelector((state: RootState) => state.cart);
+  const { data: session } = useSession();
+  const dispatch = useDispatch();
+  const { mutateAsync, isPending } = useMutation({
+      mutationFn: () =>
+        fetchHandler({
+          endpoint: "cart/clear",
+          method: "DELETE",
+          token: session?.user?.accessToken,
+        })
+    });
+
+  const handleClearCart = async () => {
+    const response = await mutateAsync();
+    if (response?.status) {
+      // Optionally, you can also dispatch an action to clear the cart in Redux if needed
+      dispatch(clearCart());
+    }
+  }
 
   if (!isArray(cart)) {
     return (
@@ -42,10 +64,10 @@ export default function CartPage() {
               <Button
                 variant="outline"
                 size="lg"
-                // onClick={clearCart}
+                disabled={isPending}
+                onClick={handleClearCart}
                 className="inline-flex cursor-pointer items-center justify-center gap-2 px-8 py-4 bg-white border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-white transition-all duration-300 "
-              >
-                Clear Cart
+              > {isPending ? "Clearing..." : "Clear Cart"}
               </Button>
             </div>
           </div>

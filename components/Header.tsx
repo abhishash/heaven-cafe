@@ -1,8 +1,12 @@
 'use client';
 
+
+import dynamic from "next/dynamic";
+
+const OrderTypeModal = dynamic(() => import('./pop-up/Order-type-modal'));
+const DineDeliveryToggle = dynamic(() => import('./shared/dine-delivery-toggle'));
 import Link from 'next/link';
 import { ShoppingCart, User, UserIcon } from 'lucide-react';
-import OrderTypeModal from './pop-up/Order-type-modal';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { SearchBar } from './Search-bar';
@@ -10,7 +14,6 @@ import { useSession } from 'next-auth/react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
 import UserCard from './user-card';
-import DineDeliveryToggle from './shared/dine-delivery-toggle';
 import { isObject } from 'framer-motion';
 
 export default function Header() {
