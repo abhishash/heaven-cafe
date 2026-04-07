@@ -21,7 +21,7 @@ export default function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="bg-primary shadow-xl fixed w-full top-0 z-40">
+    <header className="bg-primary rounded-3xl shadow-xl fixed w-full top-4 mx-auto sm:top-0  z-[9999]">
       {/* Desktop  Navigation */}
       <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 hidden sm:flex items-center justify-between">
         <div className='flex'>
@@ -76,44 +76,9 @@ export default function Header() {
               <Image src="/logo/final-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />
             </div>
           </Link>
-          <div className="flex items-center gap-6">
-            {/* Desktop Search */}
-            <div className="hidden md:block w-[400px]">
-              <SearchBar placeholder="Search products..." />
-            </div>
-
-            <Link href="/menu" className="text-primary-foreground hover:opacity-80 font-medium transition">
-              Menu
-            </Link>
-            {
-              isObject(session?.user) ? <Link href="/customer/orders" className="text-primary-foreground hover:opacity-80 font-medium transition">
-                <UserIcon
-                  className="text-primary-foreground cursor-pointer hover:opacity-80 transition"
-                  size={24}
-                />
-              </Link> : <Link href="/login" className="text-primary-foreground hover:opacity-80 font-medium transition">
-                <UserIcon
-                  className="text-primary-foreground cursor-pointer hover:opacity-80 transition"
-                  size={24}
-                />
-              </Link>
-            }
-
-            {/* <UserCard /> */}
-            <Link href="/cart" className="relative">
-              <ShoppingCart className="text-primary-foreground hover:opacity-80 transition" size={24} />
-              {totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-primary-foreground text-primary text-[11px] sm:text-xs font-bold rounded-full sm:w-6 w-5 h-5 sm:h-6 flex items-center justify-center">
-                  {totalItems}
-                </span>
-              )}
-            </Link>
-          </div>
+          <DineDeliveryToggle />
         </div>
         <OrderTypeModal />
-        <DineDeliveryToggle />
-
-
       </nav>
 
     </header>
