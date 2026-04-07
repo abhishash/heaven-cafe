@@ -21,7 +21,7 @@ export default function Header() {
   const { data: session } = useSession();
 
   return (
-    <header className="bg-primary rounded-3xl shadow-xl fixed w-full top-4 mx-auto sm:top-0  z-[9999]">
+    <header className="bg-primary rounded-3xl shadow-xl fixed w-full top-2 mx-auto sm:top-0  z-[9999]">
       {/* Desktop  Navigation */}
       <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 hidden sm:flex items-center justify-between">
         <div className='flex'>
