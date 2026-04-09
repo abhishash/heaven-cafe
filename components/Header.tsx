@@ -23,7 +23,7 @@ export default function Header() {
   const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <header className="bg-primary shadow-xl fixed top-0 w-full z-[9999]">
+    <header className="bg-linear-to-b from-primary from-40%  to-secondary fixed top-0 w-full z-50 ">
       {/* Desktop  Navigation */}
       <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 hidden sm:flex items-center justify-between">
         <div className='flex'>
@@ -72,17 +72,17 @@ export default function Header() {
       </nav>
       {/* Mobile Navigation */}
       {/* ✅ TOP NAV */}
-      <div className="sm:hidden sticky top-0 z-50 bg-primary shadow-sm">
+      <div className="sm:hidden sticky top-0  shadow-sm">
 
         {/* Top Row */}
-        <div className="flex items-center justify-between pl-2 pr-4 py-3">
+        <div className="flex items-center justify-between pl-2 pr-4 pb-1 pt-3">
 
           {/* Logo */}
           <Link href="/">
             <Image
               src="/logo/final-logo.png"
               alt="logo"
-              width={110}
+              width={140}
               height={70}
               priority
             />
@@ -90,7 +90,7 @@ export default function Header() {
 
           {/* Search Icon */}
           <button onClick={() => setShowSearch(!showSearch)}>
-            <Search className="text-white size-8" size={22} />
+            <Search className="text-white size-6" size={22} />
           </button>
         </div>
 
