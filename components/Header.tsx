@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 const OrderTypeModal = dynamic(() => import('./pop-up/Order-type-modal'));
 const DineDeliveryToggle = dynamic(() => import('./shared/dine-delivery-toggle'));
 import Link from 'next/link';
-import { BookAIcon, BookAlertIcon, BookOpenCheck, MenuIcon, Search, ShoppingCart, User, UserIcon } from 'lucide-react';
+import { MenuIcon, Search, ShoppingCart, User, UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { SearchBar } from './Search-bar';
@@ -117,18 +117,18 @@ export default function Header() {
 
 
       {/* ✅ BOTTOM NAV (FIXED) */}
-      <div className="sm:hidden fixed bottom-0 left-0 w-full bg-linear-to-t from-primary from-60%  to-secondary  border-t shadow-lg z-50">
-        <div className="flex justify-around items-center py-3">
+      <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+        <div className="flex justify-around items-center py-2">
 
           {/* Menu */}
-          <Link href="/menu" className="flex flex-col text-secondary items-center text-xs">
-            <BookOpenCheck className="text-secondary size-6" size={22} />
+          <Link href="/menu" className="flex flex-col items-center text-xs">
+            <MenuIcon size={22} />
             Menu
           </Link>
 
           {/* Cart */}
-          <Link href="/cart" className="flex text-secondary flex-col items-center relative text-xs">
-            <ShoppingCart className="text-secondary size-6" size={22} />
+          <Link href="/cart" className="flex flex-col items-center relative text-xs">
+            <ShoppingCart size={22} />
             {totalItems > 0 && (
               <span className="absolute -top-1 right-3 bg-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
                 {totalItems}
@@ -139,13 +139,13 @@ export default function Header() {
 
           {/* Profile */}
           {session?.user ? (
-            <Link href="/customer/orders" className="flex text-secondary flex-col items-center text-xs">
-              <User className="text-secondary size-6" size={22} />
+            <Link href="/customer/orders" className="flex flex-col items-center text-xs">
+              <User size={22} />
               Profile
             </Link>
           ) : (
-            <Link href="/login" className="flex text-secondary flex-col items-center text-xs">
-              <User className="text-secondary size-6" size={22} />
+            <Link href="/login" className="flex flex-col items-center text-xs">
+              <User size={22} />
               Login
             </Link>
           )}
