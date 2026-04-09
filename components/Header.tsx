@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 const OrderTypeModal = dynamic(() => import('./pop-up/Order-type-modal'));
 const DineDeliveryToggle = dynamic(() => import('./shared/dine-delivery-toggle'));
 import Link from 'next/link';
-import { ShoppingCart, User, UserIcon } from 'lucide-react';
+import { MenuIcon, Search, ShoppingCart, User, UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { SearchBar } from './Search-bar';
@@ -15,13 +15,15 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
 import UserCard from './user-card';
 import { isObject } from 'framer-motion';
+import { useState } from "react";
 
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
   const { data: session } = useSession();
+  const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <header className="bg-primary rounded-3xl shadow-xl fixed w-full top-2 mx-auto sm:top-0  z-[9999]">
+    <header className="bg-primary shadow-xl fixed top-0 w-full z-[9999]">
       {/* Desktop  Navigation */}
       <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 hidden sm:flex items-center justify-between">
         <div className='flex'>
@@ -69,18 +71,86 @@ export default function Header() {
 
       </nav>
       {/* Mobile Navigation */}
-      <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 flex flex-col sm:hidden ">
-        <div className='flex w-full justify-between'>
-          <Link href="/" className="flex items-center gap-2">
-            <div className="text-primary-foreground font-bold text-2xl">
-              <Image src="/logo/final-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />
-            </div>
-          </Link>
-          <DineDeliveryToggle />
-        </div>
-        <OrderTypeModal />
-      </nav>
+      {/* ✅ TOP NAV */}
+      <div className="sm:hidden sticky top-0 z-50 bg-primary shadow-sm">
 
+        {/* Top Row */}
+        <div className="flex items-center justify-between pl-2 pr-4 py-3">
+
+          {/* Logo */}
+          <Link href="/">
+            <Image
+              src="/logo/final-logo.png"
+              alt="logo"
+              width={110}
+              height={70}
+              priority
+            />
+          </Link>
+
+          {/* Search Icon */}
+          <button onClick={() => setShowSearch(!showSearch)}>
+            <Search className="text-white size-8" size={22} />
+          </button>
+        </div>
+
+        {/* Toggle (Dine / Delivery) */}
+        <div className="px-4 pb-3">
+          <div className="w-full">
+            {/* Your existing toggle */}
+            <DineDeliveryToggle />
+          </div>
+        </div>
+
+        {/* Expandable Search */}
+        {showSearch && (
+          <div className="px-4 pb-3">
+            <input
+              type="text"
+              placeholder="Search food, dishes..."
+              className="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+        )}
+      </div>
+
+
+
+      {/* ✅ BOTTOM NAV (FIXED) */}
+      <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+        <div className="flex justify-around items-center py-2">
+
+          {/* Menu */}
+          <Link href="/menu" className="flex flex-col items-center text-xs">
+            <MenuIcon size={22} />
+            Menu
+          </Link>
+
+          {/* Cart */}
+          <Link href="/cart" className="flex flex-col items-center relative text-xs">
+            <ShoppingCart size={22} />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 right-3 bg-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                {totalItems}
+              </span>
+            )}
+            Cart
+          </Link>
+
+          {/* Profile */}
+          {session?.user ? (
+            <Link href="/customer/orders" className="flex flex-col items-center text-xs">
+              <User size={22} />
+              Profile
+            </Link>
+          ) : (
+            <Link href="/login" className="flex flex-col items-center text-xs">
+              <User size={22} />
+              Login
+            </Link>
+          )}
+        </div>
+      </div>
     </header>
   );
 }
