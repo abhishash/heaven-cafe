@@ -20,7 +20,7 @@ export default function DineDeliveryToggle() {
         <div className="flex items-center justify-normal px-4 sm:justify-center gap-4">
             {/* Delivery Label */}
             <span
-                className={`text-sm sm:text-lg font-semibold transition-colors duration-300 ${!isDineIn ? 'text-primary' : 'text-secondary'
+                className={`text-xs sm:text-lg font-semibold transition-colors duration-300 ${!isDineIn ? 'text-primary' : 'text-secondary'
                     }`}
             >
                 DELIVERY
@@ -41,7 +41,7 @@ export default function DineDeliveryToggle() {
 
             {/* Dine-in/Takeaway Label */}
             <span
-                className={`text-sm sm:text-lg cursor-pointer font-semibold transition-colors duration-300 ${isDineIn ? 'text-primary' : 'text-secondary'
+                className={`text-xs sm:text-lg cursor-pointer font-semibold transition-colors duration-300 ${isDineIn ? 'text-primary' : 'text-secondary'
                     }`}
             >
                 DINE-IN/ <br className="hidden sm:block" /> TAKEAWAY
