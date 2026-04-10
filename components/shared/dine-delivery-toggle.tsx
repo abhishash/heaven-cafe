@@ -34,7 +34,7 @@ export default function DineDeliveryToggle() {
             >
                 {/* Animated Circle */}
                 <div
-                    className={`inline-flex sm:h-6 w-5 h-5 sm:w-6 transform items-center justify-center rounded-full bg-primary shadow-md transition-transform duration-300 ${isDineIn ? 'translate-x-10 sm:translate-9' : 'translate-x-1'
+                    className={`inline-flex sm:h-6 w-5 h-5 sm:w-6 transform items-center justify-center rounded-full bg-primary shadow-md transition-transform duration-300 ${isDineIn ? 'translate-x-10 sm:translate-x-9' : 'translate-x-1'
                         }`}
                 />
             </button>

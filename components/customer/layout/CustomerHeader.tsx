@@ -17,7 +17,7 @@ export default function CustomerHeader() {
   const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <header className="bg-linear-to-b from-primary from-40%  to-secondary fixed top-0 w-full z-50 ">
+    <header className="bg-primary fixed top-0 w-full z-50 ">
       {/* Desktop  Navigation */}
       <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 hidden sm:flex items-center justify-between">
         <div className='flex'>

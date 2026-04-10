@@ -39,7 +39,8 @@ export default function CheckoutPage() {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (orderData: {
       order_type: string,
-      table_no?: number
+      table_no?: number,
+      payment_method : PaymentMethod | null,
     }) =>
       fetchHandler({
         endpoint: "orders",
@@ -54,7 +55,8 @@ export default function CheckoutPage() {
       // Simulate order placement
       const response = await mutateAsync({
         "order_type": storedType === "dining" ? "token" : storedType, 
-        "table_no": storedType === "dining" ? 10 : undefined
+        "table_no": storedType === "dining" ? 10 : undefined,
+        payment_method: paymentMethod,
       });
       if (response?.order_no) {
         dispatch(clearCart());
@@ -109,7 +111,6 @@ export default function CheckoutPage() {
                 onSelectPayment={setPaymentMethod}
                 isLoading={isPending}
               />
-
             </div>
             {/* Payment Specific Forms */}
             {paymentMethod && (

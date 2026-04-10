@@ -1,85 +1,112 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import { Order } from '@/lib/mockData';
-import { ChevronRight, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { useState } from 'react'
+import { ChevronRight, Check, Star, DownloadIcon } from 'lucide-react'
+import Image from 'next/image'
+import { OrderProducts } from '@/lib/types'
+import { encodeId, formatIndianDateTime, formatPrice } from '@/lib/utils'
+import { isArray } from '@/lib/type-guards'
+import { imageBaseUrl } from '@/lib/constants'
+import Link from 'next/link'
+import { Order } from '@/types/order'
 
-interface OrderCardProps {
-  order: Order;
-}
+export function OrderCard({ order }: { order: Order }) {
+  const [imageError, setImageError] = useState<{ [key: number]: boolean }>({})
+  const [open, setOpen] = useState(false);
+  const [orderId, setOrderId] = useState<number | null>(null);
 
-export function OrderCard({ order }: OrderCardProps) {
-  const getStatusIcon = () => {
-    switch (order.status) {
-      case 'delivered':
-        return <CheckCircle className="w-5 h-5 text-green-600" />;
-      case 'processing':
-        return <Clock className="w-5 h-5 text-blue-600" />;
-      case 'cancelled':
-        return <XCircle className="w-5 h-5 text-red-600" />;
-    }
-  };
-
-  const getStatusText = () => {
-    switch (order.status) {
-      case 'delivered':
-        return 'Delivered';
-      case 'processing':
-        return 'Processing';
-      case 'cancelled':
-        return 'Cancelled';
-    }
-  };
-
-  const getStatusColor = () => {
-    switch (order.status) {
-      case 'delivered':
-        return 'bg-green-50 text-green-700';
-      case 'processing':
-        return 'bg-blue-50 text-blue-700';
-      case 'cancelled':
-        return 'bg-red-50 text-red-700';
-    }
-  };
+  const handleImageError = (itemId: number) => {
+    setImageError((prev) => ({ ...prev, [itemId]: true }))
+  }
 
   return (
-    <Link href={`/customer/orders/${order.id}`}>
-      <div className="bg-card rounded-lg border border-border p-4 hover:shadow-md transition-shadow cursor-pointer">
-        <div className="flex items-start justify-between mb-3">
-          <div className="flex-1">
-            <p className="text-sm font-medium text-muted-foreground">{order.orderNumber}</p>
-            <p className="text-sm text-muted-foreground">{new Date(order.date).toLocaleDateString()}</p>
-          </div>
-          <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${getStatusColor()}`}>
-            {getStatusIcon()}
-            <span className="text-xs font-medium">{getStatusText()}</span>
-          </div>
-        </div>
-
-        <div className="mb-4">
-          <p className="text-sm text-muted-foreground mb-2">Items:</p>
-          <div className="flex flex-wrap gap-1">
-            {order.items.slice(0, 2).map((item) => (
-              <span key={item.id} className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">
-                {item.name} x{item.quantity}
-              </span>
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-md transition-shadow">
+      {
+        isArray(order.products) ? <div className="px-6 py-4 border-b border-gray-100">
+          <div className="flex items-center gap-2 overflow-x-auto pb-2">
+            {order.products.slice(0, 12).map((item) => (
+              <div
+                key={item.id}
+                className="flex-shrink-0 w-20 h-20 rounded-lg bg-gray-100 overflow-hidden"
+              >
+                {!imageError[item.id] ? (
+                  <Image
+                    src={`${imageBaseUrl}${item?.image}`}
+                    alt={item?.name}
+                    height={120}
+                    width={120}
+                    className="w-full h-full object-cover"
+                    onError={() => handleImageError(item.id)}
+                    crossOrigin="anonymous"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <span className="text-xs text-gray-400">No image</span>
+                  </div>
+                )}
+              </div>
             ))}
-            {order.items.length > 2 && (
-              <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded">
-                +{order.items.length - 2} more
-              </span>
+            {order?.products?.length > 12 && (
+              <div className="flex-shrink-0 w-20 h-20 rounded-lg bg-gray-200 flex items-center justify-center">
+                <span className="text-xs font-medium text-gray-600">+{order.products.length - 12}</span>
+              </div>
             )}
           </div>
+        </div> : null
+      }
+
+
+      {/* Order Details */}
+      <div className="px-6 py-4 space-y-3">
+        {/* Status */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-green-100">
+              <Check size={14} className="text-primary" />
+            </span>
+            <span className="font-semibold text-foreground">{order.status}</span>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xs text-muted-foreground mb-1">Total</p>
-            <p className="text-lg font-bold text-foreground">${order.total.toFixed(2)}</p>
+        {/* Date */}
+        <p className="text-sm text-gray-500">{formatIndianDateTime(order?.created_at)}</p>
+
+        {/* Rating */}
+        <div className="flex gap-1">
+          <div className="flex flex-col gap-0.5">
+            <div className='flex gap-0.5 items-center'>
+
+
+              {Array.from({ length: 5 }).map((_, i) => (
+                // <span key={i} className="text-primary">★</span>
+                <Star
+                  key={i}
+                  size={16}
+                  className={`cursor-pointer ${i <= 4
+                    ? "fill-primary text-primary"
+                    : "text-gray-300"
+                    }`}
+                />
+              ))}
+            </div>
+            {
+              order?.order_rating &&
+              <p className='text-sm text-green-600'>{order?.order_rating}</p>
+            }
           </div>
-          <ChevronRight className="w-5 h-5 text-muted-foreground" />
         </div>
       </div>
-    </Link>
-  );
+
+      {/* Footer */}
+      <Link href={`/customer/orders/${encodeId(order?.id)}`} aria-label={`order-details-${order.id}`} >
+        <div className="px-6 py-2 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+          <div className='space-x-1.5'>
+            <span className="font-semibold text-lg text-primary">{formatPrice(parseInt(order?.final_amount), "INR")}</span>
+            <span className="text-sm text-slate-500 line-through">{formatPrice(parseInt(order?.total_amount), "INR")}</span>
+          </div>
+          <ChevronRight size={20} className="text-primary" />
+        </div>
+      </Link>
+    </div>
+  )
 }

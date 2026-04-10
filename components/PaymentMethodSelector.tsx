@@ -21,6 +21,7 @@ export default function PaymentMethodSelector({
   const methods = [
     {
       id: 'cod' as PaymentMethod,
+      value: 'cod',
       name: 'Cash on Delivery',
       description: 'Pay when your order arrives',
       icon: IndianRupee,
@@ -28,6 +29,7 @@ export default function PaymentMethodSelector({
     },
     {
       id: 'stripe' as PaymentMethod,
+      value: 'online',
       name: 'Credit/Debit Card',
       description: 'Pay securely with Stripe',
       icon: CreditCard,
@@ -35,6 +37,7 @@ export default function PaymentMethodSelector({
     },
     {
       id: 'razorpay' as PaymentMethod,
+      value: 'online',
       name: 'Razorpay',
       description: 'Pay with UPI, cards, and more',
       icon: CreditCard,

@@ -5,6 +5,9 @@ import { mockOrders } from '@/lib/mockData';
 import { CustomerLayout } from '@/components/customer/CustomerLayout';
 import { OrderCard } from '@/components/customer/OrderCard';
 import { Filter } from 'lucide-react';
+import { useGetOrdersQuery } from '@/store/services/order-api';
+import orders from 'razorpay/dist/types/orders';
+import { isArray } from '@/lib/type-guards';
 
 type FilterStatus = 'all' | 'delivered' | 'processing' | 'cancelled';
 
@@ -15,6 +18,8 @@ export default function OrdersPage() {
     filter === 'all'
       ? mockOrders
       : mockOrders.filter((order) => order.status === filter);
+
+  const { data, isLoading } = useGetOrdersQuery();
 
   const stats = {
     total: mockOrders.length,
@@ -58,11 +63,10 @@ export default function OrdersPage() {
               <button
                 key={status}
                 onClick={() => setFilter(status)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  filter === status
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === status
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                  }`}
               >
                 {status === 'all' ? 'All Orders' : status.charAt(0).toUpperCase() + status.slice(1)}
               </button>
@@ -71,17 +75,19 @@ export default function OrdersPage() {
         </div>
 
         {/* Orders List */}
-        <div className="space-y-4">
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order) => (
-              <OrderCard key={order.id} order={order} />
-            ))
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg">No orders found</p>
-            </div>
-          )}
-        </div>
+        {
+          isLoading ? <p>Loading...</p> : <div className="space-y-4">
+            {isArray(data) ? (
+              data?.map((order) => (
+                <OrderCard key={order.id} order={order} />
+              ))
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-lg">No orders found</p>
+              </div>
+            )}
+          </div>
+        }
       </div>
     </CustomerLayout>
   );
