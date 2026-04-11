@@ -33,7 +33,7 @@ export default function DineDeliveryToggle() {
 
             {/* Dine-in/Takeaway Label */}
             <span
-                className={`text-xs sm:text-sm text-white cursor-pointer font-semibold transition-colors duration-300`}
+                className={`text-xs sm:text-sm text-nowrap text-white cursor-pointer font-semibold transition-colors duration-300`}
             >
                 {isDineIn ? 'DELIVERY' : 'DINE-IN / TAKEAWAY'}
             </span>

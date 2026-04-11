@@ -104,7 +104,24 @@ export default async function Home() {
         <FavouriteCategory />
       </Suspense>
 
-      {/* Features Section */}
+      {/* CTA Section */}
+      <section className="bg-gradient-to-r my-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 from-secondary to-secondary rounded-2xl">
+        <div className="max-w-3xl mx-auto px-6 text-center">
+          <h3 className="text-3xl font-bold text-primary mb-4">
+            Ready to Experience Heaven?
+          </h3>
+          <p className="text-primary/90 mb-8 text-lg">
+            Sign up today and enjoy exclusive deals on your first order.
+          </p>
+          <Link href="/register">
+            <Button size="lg" className='cursor-pointer h-14 text-lg'  >
+              Create Account
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+        {/* Features Section */}
       <section className="">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 ">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -136,24 +153,6 @@ export default async function Home() {
               </p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-gradient-to-r my-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 from-secondary to-secondary rounded-2xl">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h3 className="text-3xl font-bold text-primary mb-4">
-            Ready to Experience Heaven?
-          </h3>
-          <p className="text-primary/90 mb-8 text-lg">
-            Sign up today and enjoy exclusive deals on your first order.
-          </p>
-          <Link href="/register">
-            <Button size="lg" className='cursor-pointer h-14 text-lg'  >
-              Create Account
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
         </div>
       </section>
     </>

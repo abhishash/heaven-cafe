@@ -75,7 +75,7 @@ export default function Header() {
       <div className="sm:hidden sticky top-0  shadow-sm">
 
         {/* Top Row */}
-        <div className="flex items-center justify-between pl-2 pr-4 pb-1 pt-3">
+        <div className="flex items-center justify-between pl-0 pr-0 pb-1 pt-3">
 
           {/* Logo */}
           <Link href="/">
@@ -87,31 +87,22 @@ export default function Header() {
               priority
             />
           </Link>
-
-          {/* Search Icon */}
-          <button onClick={() => setShowSearch(!showSearch)}>
-            <Search className="text-white size-6" size={22} />
-          </button>
-        </div>
-
-        {/* Toggle (Dine / Delivery) */}
-        <div className="px-4 pb-3">
-          <div className="w-full">
-            {/* Your existing toggle */}
-            <DineDeliveryToggle />
+          {/* Toggle (Dine / Delivery) */}
+          <div className="">
+            <div className="w-full">
+              {/* Your existing toggle */}
+              <DineDeliveryToggle />
+            </div>
           </div>
         </div>
 
-        {/* Expandable Search */}
-        {showSearch && (
-          <div className="px-4 pb-3">
-            <input
-              type="text"
-              placeholder="Search food, dishes..."
-              className="w-full border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-        )}
+        <div className="px-2 pb-3">
+          <input
+            type="text"
+            placeholder="Search food, dishes..."
+            className="w-full border rounded-xl text-white placeholder:text-white/70 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
       </div>
 
 
