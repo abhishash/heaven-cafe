@@ -1,15 +1,41 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 import { ShoppingBag, User, MapPin, MessageCircle, LogOut, Settings } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export function BottomNavigation() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const isActive = (path: string) => {
     return pathname.startsWith(path);
   };
+
+  const handleLogout = async () => {
+    setLoading(true);
+    await fetch("/api/logout", { method: "POST" })?.then(async (res) => {
+      const data = await res.json() as { success: boolean };
+      if (data.success) {
+        const signOutRes = await signOut({ callbackUrl: "/login", redirect: false });
+        console.log("Sign out response:", signOutRes);
+        if (signOutRes?.url) {
+          router.push("/login");
+        } else {
+          toast.warning("Logout successful, but failed to redirect. Please login again.");
+        }
+      }
+    }).catch((error) => {
+      toast.warning("Error logging out:", error);
+    }).finally(() => {
+      setLoading(false);
+    })
+  }
 
   const navItems = [
     { icon: ShoppingBag, label: 'Orders', href: '/customer/orders' },
@@ -30,11 +56,10 @@ export function BottomNavigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${
-                  active
-                    ? 'text-primary border-t-2 border-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
+                className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${active
+                  ? 'text-primary border-t-2 border-primary'
+                  : 'text-muted-foreground hover:text-foreground'
+                  }`}
               >
                 <Icon className="w-6 h-6 mb-1" />
                 <span className="text-xs font-medium">{item.label}</span>
@@ -69,11 +94,10 @@ export function BottomNavigation() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                    active
-                      ? 'bg-primary/10 text-primary font-semibold shadow-sm'
-                      : 'text-foreground hover:bg-muted hover:text-primary'
-                  }`}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${active
+                    ? 'bg-primary/10 text-primary font-semibold shadow-sm'
+                    : 'text-foreground hover:bg-muted hover:text-primary'
+                    }`}
                 >
                   <Icon className="w-5 h-5 flex-shrink-0" />
                   <span className="text-sm">{item.label}</span>
@@ -89,9 +113,9 @@ export function BottomNavigation() {
             <Settings className="w-5 h-5 flex-shrink-0" />
             <span className="text-sm font-medium">Settings</span>
           </button>
-          <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-destructive hover:bg-destructive/10 transition-colors">
+          <button onClick={handleLogout} disabled={loading} className="cursor-pointer w-full flex items-center gap-3 px-4 py-2 rounded-lg text-destructive hover:bg-destructive/10 transition-colors">
             <LogOut className="w-5 h-5 flex-shrink-0" />
-            <span className="text-sm font-medium">Logout</span>
+            <span className="text-sm font-medium"> {loading ? 'Logging out...' : 'Logout'}</span>
           </button>
         </div>
       </aside>
