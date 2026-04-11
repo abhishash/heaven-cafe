@@ -19,7 +19,7 @@ export default function CustomerHeader() {
   return (
     <header className="bg-primary fixed top-0 w-full z-50 ">
       {/* Desktop  Navigation */}
-      <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 hidden sm:flex items-center justify-between">
+      <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-1 hidden sm:flex items-center justify-between">
         <div className='flex'>
           <Link href="/" className="flex items-center gap-2">
             <div className="text-primary-foreground font-bold text-2xl">

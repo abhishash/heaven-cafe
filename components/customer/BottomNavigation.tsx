@@ -7,10 +7,13 @@ import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { clearCart } from '@/lib/redux/slice/cartSlice';
 
 export function BottomNavigation() {
   const pathname = usePathname();
   const router = useRouter();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const isActive = (path: string) => {
@@ -22,6 +25,7 @@ export function BottomNavigation() {
     await fetch("/api/logout", { method: "POST" })?.then(async (res) => {
       const data = await res.json() as { success: boolean };
       if (data.success) {
+        dispatch(clearCart());
         const signOutRes = await signOut({ callbackUrl: "/login", redirect: false });
         console.log("Sign out response:", signOutRes);
         if (signOutRes?.url) {
