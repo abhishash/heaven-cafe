@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 const OrderTypeModal = dynamic(() => import('./pop-up/Order-type-modal'));
 const DineDeliveryToggle = dynamic(() => import('./shared/dine-delivery-toggle'));
 import Link from 'next/link';
-import { MenuIcon, Search, ShoppingCart, User, UserIcon } from 'lucide-react';
+import { MenuIcon, NotebookPen, NotebookTabs, Search, ShoppingCart, User, UserIcon } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import { SearchBar } from './Search-bar';
@@ -21,7 +21,6 @@ import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
   const { data: session } = useSession();
-  const [showSearch, setShowSearch] = useState(false);
 
   return (
     <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
@@ -36,14 +35,14 @@ export default function Header() {
           <DineDeliveryToggle />
         </div>
         <OrderTypeModal />
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           {/* Desktop Search */}
           <div className="hidden md:block w-[400px]">
             <SearchBar placeholder="Search products..." />
           </div>
 
           <Link href="/menu" className="text-primary-foreground hover:opacity-80 font-medium transition">
-            Menu
+            <NotebookPen   />
           </Link>
 
           <UserSection />
@@ -163,7 +162,7 @@ export function UserSection() {
       {/* Cart / Count Badge */}
       <div className="relative">
         <h2 className="border py-1.5 font-semibold bg-white text-primary px-2 border-white rounded-md text-sm">
-          Wallent Amt: {isLoggedIn ? isLoading ? "0" : data?.points : "0"}
+          Wallet Amt: {isLoggedIn ? isLoading ? "0" : data?.points ? parseInt(data?.points.toString()) : "0" : "0"}
         </h2>
       </div>
     </div>

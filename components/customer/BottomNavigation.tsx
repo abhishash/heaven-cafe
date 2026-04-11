@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { redirect, usePathname } from 'next/navigation';
-import { ShoppingBag, User, MapPin, MessageCircle, LogOut, Settings } from 'lucide-react';
+import { ShoppingBag, User, MapPin, MessageCircle, LogOut, Settings, HandCoins } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -45,13 +45,14 @@ export function BottomNavigation() {
     { icon: ShoppingBag, label: 'Orders', href: '/customer/orders' },
     { icon: User, label: 'Profile', href: '/customer/profile' },
     { icon: MapPin, label: 'Addresses', href: '/customer/addresses' },
+    { icon: HandCoins, label: 'Loyalty', href: '/customer/loyalty-history' },
     { icon: MessageCircle, label: 'Support', href: '/customer/support' },
   ];
 
   return (
     <>
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0  bg-white dark:bg-sidebar border-t border-border shadow-lg md:hidden z-40">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-sidebar border-t border-border shadow-lg md:hidden z-40">
         <div className="flex justify-around items-center h-20">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -74,7 +75,7 @@ export function BottomNavigation() {
       </nav>
 
       {/* Desktop Left Sidebar Navigation */}
-      <aside className="hidden md:flex  h-screen w-64 bg-white dark:bg-sidebar border-r border-border flex-col z-40">
+      <aside className="hidden md:flex w-84  h-screen bg-white dark:bg-sidebar border-r border-border flex-col z-40">
         {/* Logo/Header Section */}
         <div className="px-6 py-8 border-b border-border">
           <div className="flex items-center gap-3 mb-8">

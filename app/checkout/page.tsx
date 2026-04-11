@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import PaymentMethodSelector from "@/components/PaymentMethodSelector";
 import CashOnDeliveryForm, {
   DeliveryDetails,
-} from "@/components/CashOnDeliveryForm";
+} from "@/components/checkout/CashOnDeliveryForm";
 import RazorpayCheckout from "@/components/RazorpayCheckout";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
@@ -17,30 +17,57 @@ import { formatPrice } from "@/lib/utils";
 import Checkout from "@/components/stripe-checkout";
 import StripeCheckout from "@/components/stripe-checkout";
 import { fetchHandler } from "@/lib/fetch-handler";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { clearCart } from "@/lib/redux/slice/cartSlice";
+import { PaymentMethodsResponse } from "@/types/order";
+import WalletOnDeliveryForm from "@/components/checkout/WalletOnDeliveryForm";
 
 type PaymentMethod = "cod" | "stripe" | "razorpay";
 
 export default function CheckoutPage() {
-  const { } = useDispatch();
-  const router = useRouter();
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
+
+
+  const [paymentMethod, setPaymentMethod] = useState<string>(
     "cod",
   );
-  const { items: cart, totalPrice } = useSelector((state: RootState) => state.cart);
+  const [storedType, setStoredType] = useState<string>("token");
+
+
 
   const orderId = `ORD-${Date.now()}XXXXXX`;
   const { data: session } = useSession();
   const dispatch = useDispatch();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const value = localStorage.getItem("orderType") ?? "token";
+      setStoredType(value);
+    }
+  }, []);
+
+  const { items: cart, totalPrice } = useSelector((state: RootState) => state.cart);
+
+
+  const { data, isPending: isPaymentMethodsPending } = useQuery<PaymentMethodsResponse>({
+    queryKey: [`payment-methods`],
+    queryFn: () =>
+      fetchHandler({
+        endpoint: "payment-methods",
+        method: "GET",
+        token: session?.user?.accessToken,
+      }),
+  });
+
+  const paymentMethods = data?.data || [];
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (orderData: {
       order_type: string,
       table_no?: number,
-      payment_method : PaymentMethod | null,
+      payment_method: string,
     }) =>
       fetchHandler({
         endpoint: "orders",
@@ -49,12 +76,14 @@ export default function CheckoutPage() {
         token: session?.user?.accessToken,
       })
   });
-  const storedType  = localStorage.getItem("orderType") ?? "token";
+
+
+
   const handleCODSubmit = async (details: DeliveryDetails) => {
     try {
       // Simulate order placement
       const response = await mutateAsync({
-        "order_type": storedType === "dining" ? "token" : storedType, 
+        "order_type": storedType === "dining" ? "token" : storedType,
         "table_no": storedType === "dining" ? 10 : undefined,
         payment_method: paymentMethod,
       });
@@ -109,7 +138,8 @@ export default function CheckoutPage() {
             <div className="bg-card rounded-lg p-6 border border-border">
               <PaymentMethodSelector
                 onSelectPayment={setPaymentMethod}
-                isLoading={isPending}
+                isLoading={isPaymentMethodsPending}
+                paymentMethods={paymentMethods}
               />
             </div>
             {/* Payment Specific Forms */}
@@ -117,6 +147,17 @@ export default function CheckoutPage() {
               <div className="bg-card rounded-lg p-6 border border-border">
                 {paymentMethod === "cod" && (
                   <CashOnDeliveryForm
+                    orderId={orderId}
+                    amount={totalPrice}
+                    onSubmit={handleCODSubmit}
+                    isLoading={isPending}
+                  />
+                )}
+
+                {/* Wallet Amount */}
+
+                {paymentMethod === "wallet" && (
+                  <WalletOnDeliveryForm
                     orderId={orderId}
                     amount={totalPrice}
                     onSubmit={handleCODSubmit}

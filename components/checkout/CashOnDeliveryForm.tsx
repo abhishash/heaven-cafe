@@ -88,7 +88,7 @@ export default function CashOnDeliveryForm({
 
       {/* Delivery Details */}
       <div className="space-y-4">
-        <div className="space-y-2">
+        <div className="flex flex-col gap-y-4">
           <label className="text-sm font-medium text-foreground">
             Delivery Notes (Optional)
           </label>

@@ -1,3 +1,5 @@
+import { LucideIcon } from "lucide-react";
+
 export interface ProductPivot {
   order_id: number;
   product_id: number;
@@ -26,4 +28,28 @@ export interface OrdersResponse {
   status: boolean;
   message: string;
   data: Order[];
+}
+
+export type PaymentMethodName =
+  | "cod"
+  | "wallet"
+  | "razorpay"
+  | "stripe"
+  | "payu"
+  | "card";
+
+export interface PaymentMethod {
+  id: string;
+  name: string; // or PaymentMethodName (see note below)
+  status: number; // 1 = active, 0 = inactive
+  description: string;
+  icon: LucideIcon;
+  badge: string;
+  label: string;
+}
+
+export interface PaymentMethodsResponse {
+  status: boolean;
+  message: string;
+  data: PaymentMethod[];
 }

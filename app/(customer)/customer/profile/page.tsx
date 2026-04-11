@@ -1,8 +1,14 @@
 'use client';
 
 import { mockUserProfile, mockOrders } from '@/lib/mockData';
-import { CustomerLayout } from '@/components/customer/CustomerLayout';
+import { clearCart } from '@/lib/redux/slice/cartSlice';
+import { useGetUserDetailQuery } from '@/store/services/customer-api';
 import { User, Mail, Phone, Calendar, ShoppingBag, Crown, Edit2, LogOut } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toast } from 'sonner';
 
 export default function ProfilePage() {
   const membershipColor = {
@@ -16,6 +22,33 @@ export default function ProfilePage() {
     silver: 'Enjoy 5% off and free delivery on orders over $20',
     gold: 'Get 10% off all orders, free delivery, and exclusive specials',
   };
+
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+
+  const { data: userProfile, isLoading } = useGetUserDetailQuery();
+
+  const handleLogout = async () => {
+    setLoading(true);
+    await fetch("/api/logout", { method: "POST" })?.then(async (res) => {
+      const data = await res.json() as { success: boolean };
+      if (data.success) {
+        dispatch(clearCart());
+        const signOutRes = await signOut({ callbackUrl: "/login", redirect: false });
+        console.log("Sign out response:", signOutRes);
+        if (signOutRes?.url) {
+          router.push("/login");
+        } else {
+          toast.warning("Logout successful, but failed to redirect. Please login again.");
+        }
+      }
+    }).catch((error) => {
+      toast.warning("Error logging out:", error);
+    }).finally(() => {
+      setLoading(false);
+    })
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
@@ -33,8 +66,8 @@ export default function ProfilePage() {
               <User className="w-8 h-8" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-foreground">{mockUserProfile.name}</h2>
-              <p className="text-muted-foreground">Member since {new Date(mockUserProfile.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}</p>
+              <h2 className="text-2xl font-bold text-foreground">{isLoading ? 'Loading...' : userProfile?.name}</h2>
+              <p className="text-muted-foreground">Member since {isLoading ? 'Loading...' : userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'N/A'}</p>
             </div>
           </div>
           <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${membershipColor[mockUserProfile.membershipTier]}`}>
@@ -54,7 +87,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <p className="text-sm text-muted-foreground mb-1">Email</p>
-              <p className="font-medium text-foreground">{mockUserProfile.email}</p>
+              <p className="font-medium text-foreground">{isLoading ? 'Loading...' : userProfile?.email}</p>
             </div>
             <button className="p-2 hover:bg-muted rounded-lg transition-colors">
               <Edit2 className="w-5 h-5 text-muted-foreground" />
@@ -66,7 +99,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <p className="text-sm text-muted-foreground mb-1">Phone Number</p>
-              <p className="font-medium text-foreground">{mockUserProfile.phoneNumber}</p>
+              <p className="font-medium text-foreground">{isLoading ? 'Loading...' : userProfile?.phone}</p>
             </div>
             <button className="p-2 hover:bg-muted rounded-lg transition-colors">
               <Edit2 className="w-5 h-5 text-muted-foreground" />
@@ -84,8 +117,8 @@ export default function ProfilePage() {
             <div
               key={tier}
               className={`p-4 rounded-lg border-2 transition-all ${mockUserProfile.membershipTier === tier
-                  ? `border-primary ${membershipColor[tier]}`
-                  : 'border-border hover:border-primary/50'
+                ? `border-primary ${membershipColor[tier]}`
+                : 'border-border hover:border-primary/50'
                 }`}
             >
               <p className="font-semibold capitalize mb-2">{tier} Member</p>
@@ -135,9 +168,9 @@ export default function ProfilePage() {
         <button className="w-full border border-border text-foreground py-3 rounded-lg font-semibold hover:bg-muted transition-colors">
           Change Password
         </button>
-        <button className="w-full flex items-center justify-center gap-2 border border-destructive text-destructive py-3 rounded-lg font-semibold hover:bg-destructive/5 transition-colors">
+        <button onClick={handleLogout} disabled={loading} className="w-full cursor-pointer flex items-center justify-center gap-2 border border-destructive text-destructive py-3 rounded-lg font-semibold hover:bg-destructive/5 transition-colors">
           <LogOut className="w-5 h-5" />
-          Logout
+          {loading ? 'Logging out...' : 'Logout'}
         </button>
       </div>
     </div>
