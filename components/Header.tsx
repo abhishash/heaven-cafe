@@ -16,6 +16,7 @@ import { RootState } from '@/lib/redux/store';
 import UserCard from './user-card';
 import { isObject } from 'framer-motion';
 import { useState } from "react";
+import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
 
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
@@ -44,19 +45,11 @@ export default function Header() {
           <Link href="/menu" className="text-primary-foreground hover:opacity-80 font-medium transition">
             Menu
           </Link>
-          {
-            isObject(session?.user) ? <Link href="/customer/orders" className="text-primary-foreground hover:opacity-80 font-medium transition">
-              <UserIcon
-                className="text-primary-foreground cursor-pointer hover:opacity-80 transition"
-                size={24}
-              />
-            </Link> : <Link href="/login" className="text-primary-foreground hover:opacity-80 font-medium transition">
-              <UserIcon
-                className="text-primary-foreground cursor-pointer hover:opacity-80 transition"
-                size={24}
-              />
-            </Link>
-          }
+
+          <UserSection />
+
+
+
 
           {/* <UserCard /> */}
           <Link href="/cart" className="relative">
@@ -68,7 +61,6 @@ export default function Header() {
             )}
           </Link>
         </div>
-
       </nav>
       {/* Mobile Navigation */}
       {/* ✅ TOP NAV */}
@@ -143,5 +135,37 @@ export default function Header() {
         </div>
       </div>
     </header>
+  );
+}
+
+
+
+export function UserSection() {
+  const { data: session, status } = useSession();
+
+  const isLoggedIn = status === "authenticated" && session?.user;
+  const { data, isLoading } = useGetWalletPointQuery(
+    undefined,
+    { skip: !isLoggedIn }
+  );
+
+  return (
+    <div className="flex items-center gap-3">
+
+      {/* User Icon */}
+      <Link
+        href={isLoggedIn ? "/customer/orders" : "/login"}
+        className="text-primary-foreground hover:opacity-80 transition"
+      >
+        <UserIcon size={24} />
+      </Link>
+
+      {/* Cart / Count Badge */}
+      <div className="relative">
+        <h2 className="border py-1.5 font-semibold bg-white text-primary px-2 border-white rounded-md text-sm">
+          Wallent Amt: {isLoggedIn ? isLoading ? "0" : data?.points : "0"}
+        </h2>
+      </div>
+    </div>
   );
 }
