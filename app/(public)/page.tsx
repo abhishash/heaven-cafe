@@ -68,7 +68,7 @@ export default async function Home() {
       {/* Favorite And Extra Product Banners */}
       <Suspense fallback={"loading...."}>
         {data?.map((item, index) => (
-          <section key={index} className="py-16 px-4">
+          <section key={index} className="py-5 px-6">
             <div className="container mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-primary text-balance">
                 {item?.name}
@@ -85,7 +85,7 @@ export default async function Home() {
 
 
       {/* Call to Action */}
-      <section className="bg-secondary container mx-auto px-4 rounded-2xl sm:px-6 lg:px-8 py-20  py-16 px-4">
+      <section className="bg-secondary container mx-auto rounded-2xl sm:px-6 lg:px-8 py-10 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4 text-primary">Ready to Order?</h2>
           <p className="text-lg mb-8 text-muted-foreground">

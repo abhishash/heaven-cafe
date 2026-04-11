@@ -65,7 +65,7 @@ export const CategoriesCarousel = ({ title, subCategories }: ProductCarouselProp
         });
     };
     return (
-        <section className="bg-gradient-to-b from-slate-50 to-white px-0 sm:px-0 py-12">
+        <section className="bg-gradient-to-b from-slate-50 to-white px-0 sm:px-4 py-10">
 
             <div className="mx-auto container">
 
