@@ -23,13 +23,13 @@ export default function Header() {
   const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <header className="bg-primary fixed top-0 w-full z-50 ">
+    <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
       {/* Desktop  Navigation */}
-      <nav className="container mx-auto pl-0 pr-2 sm:px-4 py-2.5 sm:py-4 hidden sm:flex items-center justify-between">
+      <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
         <div className='flex'>
           <Link href="/" className="flex items-center gap-2">
             <div className="text-primary-foreground font-bold text-2xl">
-              <Image src="/logo/final-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />
+              <Image src="/logo/final-logo.png" className='' priority={true} alt='main-logo' width={140} height={120} />
             </div>
           </Link>
           <DineDeliveryToggle />
