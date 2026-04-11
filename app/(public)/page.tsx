@@ -68,7 +68,7 @@ export default async function Home() {
       {/* Favorite And Extra Product Banners */}
       <Suspense fallback={"loading...."}>
         {data?.map((item, index) => (
-          <section key={index} className="py-5 px-6">
+          <section key={index} className="pb-20 pt-10 px-6">
             <div className="container mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-primary text-balance">
                 {item?.name}
