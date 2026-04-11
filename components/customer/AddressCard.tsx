@@ -7,7 +7,7 @@ import { MapPin, Check, Edit2, Trash2 } from 'lucide-react';
 interface AddressCardProps {
   address: UserAddress;
   isEditable?: boolean;
-  onEdit?: (address: Address) => void;
+  onEdit?: (address: UserAddress) => void;
   onDelete?: (id: number) => void;
 }
 
