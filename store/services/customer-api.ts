@@ -1,6 +1,6 @@
 import { ADDRESSES } from "@/lib/constants";
 import { AuthResponse, User } from "@/types/customer";
-import { WalletPoint } from "@/types/wallet";
+import { CardApiResponse, CardType, WalletPoint } from "@/types/wallet";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 const APIENDPOINT = process.env.API_ENDPOINT;
@@ -25,7 +25,11 @@ export const userApi = createApi({
             transformResponse: (response: AuthResponse) => response.user,
             providesTags: ["user"]
         }),
+        getUserCards: builder.query<CardApiResponse, void>({
+            query: () => "/card",
+            transformResponse: (response: CardApiResponse) => response,
+        }),
     })
 })
 
-export const { useGetUserDetailQuery } = userApi;
+export const { useGetUserDetailQuery, useGetUserCardsQuery } = userApi;

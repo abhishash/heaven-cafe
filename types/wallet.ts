@@ -21,3 +21,63 @@ export interface WalletPointsResponse {
   available_points: number;
   points: WalletPointItem[];
 }
+
+export type LeadStatus = "pending" | "approved" | "rejected";
+
+export interface CardType {
+  id: number;
+  name: string;
+  discount_percent: number | null;
+  status: 0 | 1;
+  description: string; // HTML / plain text
+  image: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Lead {
+  id: number;
+  user_id: number;
+  card_type_id: number;
+  crn: string;
+  status: LeadStatus;
+  name: string;
+  phone: string;
+  email: string;
+  created_at: string; // ISO date
+  updated_at: string; // ISO date
+  card_type: CardType;
+}
+
+export interface CardApiResponse {
+  success: boolean;
+  applied_cards: AppliedCard[];
+  available_card_types: CardType[];
+  leads: Lead[];
+}
+
+export interface AppliedCard {
+  id: number;
+  user_id: number;
+  card_type_id: number;
+  card_number: string;
+  card_name: string;
+  balance: string; // API gives string (can convert to number if needed)
+  status: 0 | 1;
+  is_primary: 0 | 1;
+  expiry_date: string; // YYYY-MM-DD
+  created_at: string; // ISO
+  updated_at: string; // ISO
+  card_type: CardType;
+}
+
+export interface CardType {
+  id: number;
+  name: string;
+  discount_percent: number | null;
+  status: 0 | 1;
+  description: string; // HTML string
+  image: string;
+  created_at: string; // ISO date
+  updated_at: string; // ISO date
+}

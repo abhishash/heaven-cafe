@@ -2,13 +2,15 @@
 
 import { mockUserProfile, mockOrders } from '@/lib/mockData';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
-import { useGetUserDetailQuery } from '@/store/services/customer-api';
+import { useGetUserCardsQuery, useGetUserDetailQuery } from '@/store/services/customer-api';
 import { User, Mail, Phone, Calendar, ShoppingBag, Crown, Edit2, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
+import Image from "next/image";
+
 
 export default function ProfilePage() {
   const membershipColor = {
@@ -28,6 +30,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
 
   const { data: userProfile, isLoading } = useGetUserDetailQuery();
+  const { data: userCards, isLoading: isUserCardsLoading } = useGetUserCardsQuery();
 
   const handleLogout = async () => {
     setLoading(true);
@@ -113,20 +116,161 @@ export default function ProfilePage() {
         <h3 className="text-lg font-bold text-foreground mb-4">Membership Benefits</h3>
         <p className="text-muted-foreground mb-4">{membershipBenefit[mockUserProfile.membershipTier]}</p>
         <div className="grid md:grid-cols-3 gap-4">
-          {(['bronze', 'silver', 'gold'] as const).map((tier) => (
-            <div
-              key={tier}
-              className={`p-4 rounded-lg border-2 transition-all ${mockUserProfile.membershipTier === tier
-                ? `border-primary ${membershipColor[tier]}`
-                : 'border-border hover:border-primary/50'
-                }`}
-            >
-              <p className="font-semibold capitalize mb-2">{tier} Member</p>
-              {tier === 'bronze' && <p className="text-xs text-muted-foreground">Basic discounts</p>}
-              {tier === 'silver' && <p className="text-xs text-muted-foreground">5% off + free delivery</p>}
-              {tier === 'gold' && <p className="text-xs text-muted-foreground">10% off + exclusive deals</p>}
-            </div>
-          ))}
+          {userCards?.available_card_types?.map((tier) => {
+            const isActive = false;
+
+            return (
+              <div
+                key={tier.id}
+                className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
+        ${isActive
+                    ? "border-primary bg-primary/5"
+                    : "border-border hover:border-primary/50"
+                  }`}
+              >
+                {/* Card Image */}
+                <div className="w-full h-32 relative mb-3">
+                  <Image
+                    src={`${process.env.ASSET_ENDPOINS}/${tier.image}`}
+                    alt={tier.name}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+
+                {/* Title */}
+                <p className="font-semibold text-base capitalize">
+                  {tier.name}
+                </p>
+
+                {/* Discount */}
+                <p className="text-sm text-muted-foreground mt-1">
+                  {tier.discount_percent
+                    ? `${tier.discount_percent}% Discount`
+                    : "Special Discount Available"}
+                </p>
+
+                {/* Description (HTML safe render) */}
+                <div
+                  className="text-xs text-muted-foreground mt-2 line-clamp-3"
+                  dangerouslySetInnerHTML={{ __html: tier.description }}
+                />
+
+                {/* Active Badge */}
+                {isActive && (
+                  <div className="mt-3 text-xs font-medium text-primary">
+                    Active Plan
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          {userCards?.applied_cards?.map((tier) => {
+            const appliedcards = tier?.card_type;
+            const isActive = tier?.status === 1;
+            const isPrimary = tier?.is_primary === 1;
+
+            return (
+              <div
+                key={appliedcards?.id}
+                className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
+        ${isPrimary
+                    ? "border-green-500 bg-green-50" : isActive ? " border-primary bg-primary/5"
+                      : "border-border hover:border-primary/50"
+                  }`}
+              >
+                {/* Card Image */}
+                <div className="w-full h-32 relative mb-3">
+                  <Image
+                    src={`${process.env.ASSET_ENDPOINS}/${appliedcards?.image}`}
+                    alt={appliedcards?.name}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+
+                {/* Title */}
+                <p className="font-semibold text-sm capitalize">
+                  Card: {tier?.card_name}
+                </p>
+
+                {/* Title */}
+                <p className="font-semibold text-sm capitalize">
+                  Balance: {tier?.balance} <br /> Exy Date: {new Date(tier?.expiry_date).toLocaleDateString()}
+                </p>
+
+                {/* Title */}
+                <p className="font-semibold text-sm capitalize">
+                  Card: {tier?.card_number}
+                </p>
+
+
+                {/* Active Badge */}
+                {isPrimary ? (
+                  <div className="mt-3 text-xs font-medium text-green-500">
+                    Primary
+                  </div>
+                ) : isActive ? (
+                  <div className="mt-3 text-xs font-medium text-primary">
+                    Active
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+
+           {userCards?.leads?.map((tier) => {
+            const appliedcards = tier?.card_type;
+            const isActive = tier?.status;
+
+            return (
+              <div
+                key={appliedcards?.id}
+                className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
+        ${isActive === "approved"
+                    ? "border-green-500 bg-green-50" : isActive === "pending" ? " border-yellow-500 bg-yellow-50" : "border-border hover:border-primary/50"
+                  }`}
+              >
+                {/* Card Image */}
+                <div className="w-full h-32 relative mb-3">
+                  <Image
+                    src={`${process.env.ASSET_ENDPOINS}/${appliedcards?.image}`}
+                    alt={appliedcards?.name}
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+
+                {/* Title */}
+                <p className="font-semibold text-sm capitalize">
+                  CRN No.: {tier?.crn}
+                </p>
+
+                {/* Title */}
+                <p className="font-semibold text-sm capitalize">
+                  Name: {tier?.name} <br /> Phone: {tier?.phone}
+                </p>
+
+
+                {/* Active Badge */}
+                {isActive === "pending" ? (
+                  <div className="mt-3 text-xs font-medium text-yellow-500">
+                    Pending
+                  </div>
+                ) : isActive === "approved" ? (
+                  <div className="mt-3 text-xs font-medium text-green-500">
+                    Set as Primary
+                  </div>
+                ) : isActive === "rejected" ? (
+                  <div className="mt-3 text-xs font-medium text-red-500">
+                    Rejected
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+
         </div>
       </div>
 

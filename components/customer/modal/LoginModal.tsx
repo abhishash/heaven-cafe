@@ -9,7 +9,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import Link from "next/link";
 import Image from "next/image";
 
-export default function LoginModal({ open, setOpen, onLogin, isLoading }) {
+export default function LoginModal({ open, setOpen, onLogin, isLoading } : { open: boolean; setOpen: (open: boolean) => void; onLogin: (data: FieldValues) => void; isLoading: boolean }) {
     const [showPassword, setShowPassword] = useState(false)
     const { register, handleSubmit } = useForm();
 
