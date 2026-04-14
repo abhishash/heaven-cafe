@@ -98,7 +98,7 @@ export default function LoyalityPage() {
                 className="flex items-center justify-between p-6 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
               >
                 <div className="flex-1">
-                  <h3 className="font-bold text-gray-900 text-lg">{transaction?.order_no}</h3>
+                  <h3 className="font-bold text-gray-900 text-lg">{transaction?.order_no ?? transaction?.description}</h3>
                   <p className="text-gray-500 text-sm">  {transaction?.created_at ? new Date(transaction?.created_at).toLocaleDateString('en-US', { day: 'numeric', year: 'numeric', month: 'long' }) : "N/A"}</p>
                 </div>
 
@@ -110,7 +110,7 @@ export default function LoyalityPage() {
                     }`}
                 >
                   <span className="text-center">
-                    {transaction.points}
+                    {transaction?.points}
                   </span>
                 </div>
               </div>

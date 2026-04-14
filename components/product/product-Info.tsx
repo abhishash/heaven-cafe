@@ -9,11 +9,13 @@ import { Minus, Plus } from "lucide-react";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { addToCart, removeFromCart } from "@/lib/redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import { isObject } from "@/lib/type-guards";
+import LoginModal from "../customer/modal/LoginModal";
+import { FieldValues } from "react-hook-form";
 
 
 interface ProductInfoProps {
@@ -24,7 +26,8 @@ interface ProductInfoProps {
 const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const [customization, setCustomization] = useState('');
-  const [added, setAdded] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
   const dispatch = useDispatch();
@@ -44,8 +47,8 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
   });
 
   const handleAddToCart = async () => {
-    if( !isObject(session?.user) ){
-      toast.warning("Please login to add items to cart");
+    if (!isObject(session?.user)) {
+      setOpenLogin(true);
       return;
     }
     await mutateAsync({
@@ -62,6 +65,32 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
     }).catch((err) => {
       toast.error(err?.message);
     })
+  };
+
+  const handleLogin = async (data: FieldValues) => {
+
+    setLoading(true)
+
+    try {
+      const response = await signIn("credentials", {
+        username: data.email,
+        password: data.password,
+        redirect: false,
+        callbackUrl: "/",
+      });
+
+      if (response?.ok) {
+        toast.success("Login successful");
+        await handleAddToCart();
+      } else {
+        toast.warning(response?.error);
+      }
+
+    } catch (err) {
+      toast.warning("Something went wrong");
+    } finally {
+      setOpenLogin(false);
+    }
   };
 
 
@@ -92,66 +121,74 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
     }
   }
   return (
+    <>
 
-    <div className="flex flex-col">
-      <div className="mb-6">
-        <span className="text-sm font-semibold text-orange-500 bg-orange-50 px-3 py-1 rounded">
-          {product.category}
-        </span>
-        <h1 className="text-4xl font-bold mt-4 text-gray-800">{product.name}</h1>
-        <p className="text-2xl font-bold text-orange-600 mt-2">
-          {formatPrice(product.price, "INR")}
-        </p>
-      </div>
-      <HtmlRender html={product?.description} />
-
-      {/* Quantity Selector */}
-      <div className="mb-8">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
-          Quantity
-        </label>
-        <div className="flex items-center border border-gray-300 rounded-lg w-fit">
-          <button
-            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="p-2 hover:bg-gray-100 cursor-pointer"
-          >
-            <Minus size={20} />
-          </button>
-          <span className="px-6 py-2 font-semibold text-lg">{quantity}</span>
-          <button
-            onClick={() => setQuantity(quantity + 1)}
-            className="p-2 hover:bg-gray-100"
-          >
-            <Plus size={20} />
-          </button>
+      <div className="flex flex-col">
+        <div className="mb-6">
+          <span className="text-sm font-semibold text-orange-500 bg-orange-50 px-3 py-1 rounded">
+            {product.category}
+          </span>
+          <h1 className="text-4xl font-bold mt-4 text-gray-800">{product.name}</h1>
+          <p className="text-2xl font-bold text-orange-600 mt-2">
+            {formatPrice(product.price, "INR")}
+          </p>
         </div>
-      </div>
+        <HtmlRender html={product?.description} />
 
-      {/* Price Summary */}
-      <div className="mb-8 bg-gray-50 p-4 rounded-lg">
-        <div className="flex justify-between mb-2">
-          <span className="text-gray-600">Subtotal ({quantity}x)</span>
-          <span className="font-semibold">{formatPrice(quantity*product.price, "INR")}</span>
+        {/* Quantity Selector */}
+        <div className="mb-8">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Quantity
+          </label>
+          <div className="flex items-center border border-gray-300 rounded-lg w-fit">
+            <button
+              onClick={() => setQuantity(Math.max(1, quantity - 1))}
+              className="p-2 hover:bg-gray-100 cursor-pointer"
+            >
+              <Minus size={20} />
+            </button>
+            <span className="px-6 py-2 font-semibold text-lg">{quantity}</span>
+            <button
+              onClick={() => setQuantity(quantity + 1)}
+              className="p-2 hover:bg-gray-100"
+            >
+              <Plus size={20} />
+            </button>
+          </div>
         </div>
+
+        {/* Price Summary */}
+        <div className="mb-8 bg-gray-50 p-4 rounded-lg">
+          <div className="flex justify-between mb-2">
+            <span className="text-gray-600">Subtotal ({quantity}x)</span>
+            <span className="font-semibold">{formatPrice(quantity * product.price, "INR")}</span>
+          </div>
+        </div>
+
+        {/* Add to Cart Button */}
+        <Button
+          onClick={handleAddToCart}
+          size="lg"
+          className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-6"
+        >
+          {isPending ? '✓ Added to Cart!' : 'Add to Cart'}
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => router.push('/menu')}
+          className="w-full mt-3 text-lg cursor-pointer"
+        >
+          Continue Shopping
+        </Button>
       </div>
-
-      {/* Add to Cart Button */}
-      <Button
-        onClick={handleAddToCart}
-        size="lg"
-        className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-6"
-      >
-        {isPending ? '✓ Added to Cart!' : 'Add to Cart'}
-      </Button>
-
-      <Button
-        variant="outline"
-        onClick={() => router.push('/menu')}
-        className="w-full mt-3 text-lg cursor-pointer"
-      >
-        Continue Shopping
-      </Button>
-    </div>
+      <LoginModal
+        open={openLogin}
+        setOpen={setOpenLogin}
+        onLogin={handleLogin}
+        isLoading={loading}
+      />
+    </>
   )
 
 }
