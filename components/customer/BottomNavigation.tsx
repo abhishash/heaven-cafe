@@ -2,19 +2,22 @@
 
 import Link from 'next/link';
 import { redirect, usePathname } from 'next/navigation';
-import { ShoppingBag, User, MapPin, MessageCircle, LogOut, Settings, HandCoins } from 'lucide-react';
-import { signOut } from 'next-auth/react';
+import { ShoppingBag, User, MapPin, MessageCircle, LogOut, Settings, HandCoins, ChevronRight } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
+import Image from 'next/image';
 
 export function BottomNavigation() {
   const pathname = usePathname();
   const router = useRouter();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+  console.log("Session data in BottomNavigation:", session);
 
   const isActive = (path: string) => {
     return pathname.startsWith(path);
@@ -77,14 +80,46 @@ export function BottomNavigation() {
       {/* Desktop Left Sidebar Navigation */}
       <aside className="hidden md:flex w-84  h-screen bg-white dark:bg-sidebar border-r border-border flex-col z-40">
         {/* Logo/Header Section */}
-        <div className="px-6 py-8 border-b border-border">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-white font-bold text-lg">C</span>
-            </div>
+        <div className="px-6 py-0 border-b border-border">
+          <div className="flex items-center gap-3">
             <div>
-              <h1 className="text-xl font-bold text-primary">CafeHub</h1>
-              <p className="text-xs text-muted-foreground">Customer Portal</p>
+              {/* Logo */}
+              <div className=" rounded-xl px-6 py-4 flex items-center gap-6">
+
+                {/* Left Section */}
+                <div className="flex flex-col items-center relative">
+                  {/* Crown */}
+                  <div className="text-yellow-500 text-3xl absolute -top-5">
+                    👑
+                  </div>
+
+                  {/* Logo */}
+                  <div className="bg-primary font-bold flex justify-center items-center h-14 w-14 text-white text-lg px-3 py-2 rounded-full mt-4">
+                    AK
+                  </div>
+
+                  {/* Ribbon */}
+                  <div className="bg-primary font-semibold text-white text-xs px-4 py-1 -mt-2 rounded-xs">
+                    Excellence
+                  </div>
+                </div>
+
+                {/* Middle Section */}
+                <div className="flex-1">
+                  <h2 className="text-lg capitalize font-bold tracking-wide">
+                    {session?.user?.name}
+                  </h2>
+                  <p className="text-base font-semibold mt-1">
+                    7906948573
+                  </p>
+                </div>
+
+                {/* Right Arrow */}
+                <button className='cursor-pointer'>
+                  <ChevronRight className="text-gray-500" />
+                </button>
+              </div>
+
             </div>
           </div>
         </div>

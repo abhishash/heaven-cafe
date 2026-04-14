@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { addToCart, removeFromCart } from "@/lib/redux/slice/cartSlice";
 import { useDispatch } from "react-redux";
 import { toast } from "sonner";
+import { isObject } from "@/lib/type-guards";
 
 
 interface ProductInfoProps {
@@ -43,6 +44,10 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
   });
 
   const handleAddToCart = async () => {
+    if( !isObject(session?.user) ){
+      toast.warning("Please login to add items to cart");
+      return;
+    }
     await mutateAsync({
       product_id: parseInt(product?.id),
       qty: quantity || 1,
