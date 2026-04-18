@@ -15,12 +15,33 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
 import UserCard from './user-card';
 import { isObject } from 'framer-motion';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
 
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
   const { data: session } = useSession();
+  const [showSearch, setShowSearch] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY) {
+        // scrolling down
+        setShowSearch(false);
+      } else {
+        // scrolling up
+        setShowSearch(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
     <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
@@ -42,7 +63,7 @@ export default function Header() {
           </div>
 
           <Link href="/menu" className="text-primary-foreground hover:opacity-80 font-medium transition">
-            <NotebookPen   />
+            <NotebookPen />
           </Link>
 
           <UserSection />
@@ -76,6 +97,7 @@ export default function Header() {
               width={140}
               height={70}
               priority
+              className="min-w-[140px]"
             />
           </Link>
           {/* Toggle (Dine / Delivery) */}
@@ -87,52 +109,57 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="px-2 pb-3">
+        <div
+          className={`px-2 transition-all duration-300 overflow-hidden ${showSearch
+              ? "max-h-20 opacity-100 pb-3"
+              : "max-h-0 opacity-0 pb-0"
+            }`}
+        >
           <input
             type="text"
             placeholder="Search food, dishes..."
             className="w-full border rounded-xl text-white placeholder:text-white/70 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
-      </div>
 
 
 
-      {/* ✅ BOTTOM NAV (FIXED) */}
-      <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
-        <div className="flex justify-around items-center py-2">
+        {/* ✅ BOTTOM NAV (FIXED) */}
+        <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+          <div className="flex justify-around items-center py-2">
 
-          {/* Menu */}
-          <Link href="/menu" className="flex flex-col items-center text-xs">
-            <MenuIcon size={22} />
-            Menu
-          </Link>
+            {/* Menu */}
+            <Link href="/menu" className="flex flex-col items-center text-xs">
+              <MenuIcon size={22} />
+              Menu
+            </Link>
 
-          {/* Cart */}
-          <Link href="/cart" className="flex flex-col items-center relative text-xs">
-            <ShoppingCart size={22} />
-            {totalItems > 0 && (
-              <span className="absolute -top-1 right-3 bg-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                {totalItems}
-              </span>
+            {/* Cart */}
+            <Link href="/cart" className="flex flex-col items-center relative text-xs">
+              <ShoppingCart size={22} />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 right-3 bg-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                  {totalItems}
+                </span>
+              )}
+              Cart
+            </Link>
+
+            {/* Profile */}
+            {session?.user ? (
+              <Link href="/customer/orders" className="flex flex-col items-center text-xs">
+                <User size={22} />
+                Profile
+              </Link>
+            ) : (
+              <Link href="/login" className="flex flex-col items-center text-xs">
+                <User size={22} />
+                Login
+              </Link>
             )}
-            Cart
-          </Link>
-
-          {/* Profile */}
-          {session?.user ? (
-            <Link href="/customer/orders" className="flex flex-col items-center text-xs">
-              <User size={22} />
-              Profile
-            </Link>
-          ) : (
-            <Link href="/login" className="flex flex-col items-center text-xs">
-              <User size={22} />
-              Login
-            </Link>
-          )}
+          </div>
         </div>
-      </div>
+        </div>
     </header>
   );
 }

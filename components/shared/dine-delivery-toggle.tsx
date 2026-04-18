@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function DineDeliveryToggle() {
     const [isDineIn, setIsDineIn] = useState(false)
@@ -17,7 +18,7 @@ export default function DineDeliveryToggle() {
     }, []);
 
     return (
-        <div className="flex items-center justify-normal px-4 sm:justify-center gap-4">
+        <div className="flex sm:flex-row flex-row-reverse items-center justify-start px-4 sm:justify-center gap-4">
             {/* Toggle Switch */}
             <button
                 onClick={() => { setIsDineIn(!isDineIn); localStorage.setItem("orderType", isDineIn ? "delivery" : "dining"); }}
@@ -26,17 +27,24 @@ export default function DineDeliveryToggle() {
             >
                 {/* Animated Circle */}
                 <div
-                    className={`inline-flex w-4 h-4 transform items-center justify-center rounded-full bg-primary shadow-md transition-transform duration-300 ${isDineIn ? 'translate-x-10 sm:translate-x-7' : 'translate-x-1'
+                    className={`inline-flex w-4 h-4 transform items-center justify-center rounded-full bg-primary shadow-md transition-transform duration-300 ${isDineIn ? 'translate-x-7' : 'translate-x-1'
                         }`}
                 />
             </button>
 
             {/* Dine-in/Takeaway Label */}
-            <span
-                className={`text-xs sm:text-sm text-nowrap text-white cursor-pointer font-semibold transition-colors duration-300`}
-            >
-                {isDineIn ? 'DELIVERY' : 'DINE-IN / TAKEAWAY'}
-            </span>
+            <AnimatePresence mode="wait">
+                <motion.span
+                    key={isDineIn ? "delivery" : "dinein"} // 🔑 important for re-render animation
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-xs sm:text-sm text-nowrap text-white cursor-pointer font-semibold"
+                >
+                    {isDineIn ? "DELIVERY" : "DINE-IN / TAKEAWAY"}
+                </motion.span>
+            </AnimatePresence>
         </div>
     )
 }

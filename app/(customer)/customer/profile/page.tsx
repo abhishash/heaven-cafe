@@ -175,8 +175,8 @@ export default function ProfilePage() {
               <div
                 key={appliedcards?.id}
                 className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
-        ${isPrimary
-                    ? "border-green-500 bg-green-50" : isActive ? " border-primary bg-primary/5"
+        ${isPrimary || isActive
+                    ? "border-green-500 bg-green-50" 
                       : "border-border hover:border-primary/50"
                   }`}
               >
@@ -212,8 +212,8 @@ export default function ProfilePage() {
                     Primary
                   </div>
                 ) : isActive ? (
-                  <div className="mt-3 text-xs font-medium text-primary">
-                    Active
+                  <div className="mt-3 text-xs font-medium text-orange-500">
+                    Set as Primary
                   </div>
                 ) : null}
               </div>
@@ -256,7 +256,7 @@ export default function ProfilePage() {
                 {/* Active Badge */}
                 {isActive === "pending" ? (
                   <div className="mt-3 text-xs font-medium text-yellow-500">
-                    Pending
+                    {tier?.status}
                   </div>
                 ) : isActive === "approved" ? (
                   <div className="mt-3 text-xs font-medium text-green-500">
