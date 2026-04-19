@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
             <CustomerHeader />
-            <div className="min-h-screen flex mt-20 px-10 container mx-auto bg-background">
+            <div className="min-h-screen flex my-20 px-0 sm:px-10 container mx-auto bg-background">
                 <BottomNavigation />
                 <main className="w-full">
                     {children}

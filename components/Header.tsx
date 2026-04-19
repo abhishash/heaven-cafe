@@ -62,7 +62,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="bg-primary rounded-b-lg shadow-2xl pr-2 fixed top-0 w-full z-50 ">
+    <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
       {/* Desktop  Navigation */}
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
         <div className='flex'>

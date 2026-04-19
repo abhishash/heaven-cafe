@@ -7,7 +7,6 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div className="min-h-screen grid md:grid-cols-2 bg-secondary">
 
             <div className="hidden md:flex relative flex-col justify-center items-center text-white p-10 overflow-hidden">
-
                 {/* Background Image */}
                 <Image
                     src="/images/fast-food-bg.png"

@@ -78,7 +78,7 @@ export function BottomNavigation() {
       </nav>
 
       {/* Desktop Left Sidebar Navigation */}
-      <aside className="hidden md:flex w-84  h-screen bg-white dark:bg-sidebar border-r border-border flex-col z-40">
+      <aside className="hidden md:flex w-84  bg-white dark:bg-sidebar border-r border-border flex-col z-40">
         {/* Logo/Header Section */}
         <div className="px-6 py-0 border-b border-border">
           <div className="flex items-center gap-3">

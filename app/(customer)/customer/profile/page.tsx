@@ -2,7 +2,7 @@
 
 import { mockUserProfile, mockOrders } from '@/lib/mockData';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
-import { useGetUserCardsQuery, useGetUserDetailQuery } from '@/store/services/customer-api';
+import { useGetUserCardsQuery, useGetUserDetailQuery, useSetPrimaryCardMutation, useApplyCardMutation } from '@/store/services/customer-api';
 import { User, Mail, Phone, Calendar, ShoppingBag, Crown, Edit2, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
 import Image from "next/image";
+import CardSkeleton from '@/components/customer/placeholder/CardSkeleton';
 
 
 export default function ProfilePage() {
@@ -30,7 +31,19 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
 
   const { data: userProfile, isLoading } = useGetUserDetailQuery();
-  const { data: userCards, isLoading: isUserCardsLoading } = useGetUserCardsQuery();
+  const { data: userCards, isLoading: isUserCardsLoading, refetch } = useGetUserCardsQuery();
+  const [setPrimaryCard, { isLoading: isSetPrimaryCardLoading }] = useSetPrimaryCardMutation();
+  const [applyCard, { isLoading: isApplyCardLoading }] = useApplyCardMutation();
+
+  const handleApplyCard = async (id: number) => {
+    try {
+      await applyCard({ card_type_id: id }).unwrap();
+      toast.success("Card applied successfully");
+      refetch();
+    } catch (err) {
+      toast.error("Failed to apply card");
+    }
+  };
 
   const handleLogout = async () => {
     setLoading(true);
@@ -90,7 +103,7 @@ export default function ProfilePage() {
             </div>
             <div className="flex-1">
               <p className="text-sm text-muted-foreground mb-1">Email</p>
-              <p className="font-medium text-foreground">{isLoading ? 'Loading...' : userProfile?.email}</p>
+              <p className="font-medium break-all text-foreground">{isLoading ? 'Loading...' : userProfile?.email}</p>
             </div>
             <button className="p-2 hover:bg-muted rounded-lg transition-colors">
               <Edit2 className="w-5 h-5 text-muted-foreground" />
@@ -115,17 +128,18 @@ export default function ProfilePage() {
       <div className="bg-card rounded-lg border border-border p-6 mb-6">
         <h3 className="text-lg font-bold text-foreground mb-4">Membership Benefits</h3>
         <p className="text-muted-foreground mb-4">{membershipBenefit[mockUserProfile.membershipTier]}</p>
-        <div className="grid md:grid-cols-3 gap-4">
+        {isUserCardsLoading ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(3)].map((_, i) => (
+            <CardSkeleton key={i} />
+          ))}
+        </div> : <div className="grid md:grid-cols-3 gap-4">
           {userCards?.available_card_types?.map((tier) => {
-            const isActive = false;
 
             return (
               <div
                 key={tier.id}
                 className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
-        ${isActive
-                    ? "border-primary bg-primary/5"
-                    : "border-border hover:border-primary/50"
+        ${"border-border hover:border-primary/50"
                   }`}
               >
                 {/* Card Image */}
@@ -139,12 +153,12 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Title */}
-                <p className="font-semibold text-base capitalize">
+                <p className="font-semibold text-xs capitalize">
                   {tier.name}
                 </p>
 
                 {/* Discount */}
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {tier.discount_percent
                     ? `${tier.discount_percent}% Discount`
                     : "Special Discount Available"}
@@ -157,11 +171,13 @@ export default function ProfilePage() {
                 />
 
                 {/* Active Badge */}
-                {isActive && (
-                  <div className="mt-3 text-xs font-medium text-primary">
-                    Active Plan
-                  </div>
-                )}
+                <button
+                  onClick={() => handleApplyCard(tier.id)}
+                  disabled={isApplyCardLoading}
+                  className="mt-3 text-xs font-medium text-primary"
+                >
+                  {isApplyCardLoading ? 'Applying...' : 'Apply Card'}
+                </button>
               </div>
             );
           })}
@@ -176,8 +192,8 @@ export default function ProfilePage() {
                 key={appliedcards?.id}
                 className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
         ${isPrimary || isActive
-                    ? "border-green-500 bg-green-50" 
-                      : "border-border hover:border-primary/50"
+                    ? "border-green-500 bg-green-50"
+                    : "border-border hover:border-primary/50"
                   }`}
               >
                 {/* Card Image */}
@@ -191,17 +207,17 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Title */}
-                <p className="font-semibold text-sm capitalize">
+                <p className="font-semibold text-xs capitalize">
                   Card: {tier?.card_name}
                 </p>
 
                 {/* Title */}
-                <p className="font-semibold text-sm capitalize">
+                <p className="font-semibold text-xs capitalize">
                   Balance: {tier?.balance} <br /> Exy Date: {new Date(tier?.expiry_date).toLocaleDateString()}
                 </p>
 
                 {/* Title */}
-                <p className="font-semibold text-sm capitalize">
+                <p className="font-semibold text-xs capitalize">
                   Card: {tier?.card_number}
                 </p>
 
@@ -212,15 +228,26 @@ export default function ProfilePage() {
                     Primary
                   </div>
                 ) : isActive ? (
-                  <div className="mt-3 text-xs font-medium text-orange-500">
-                    Set as Primary
-                  </div>
+                  <button
+                    disabled={isSetPrimaryCardLoading}
+                    onClick={() => {
+                      setPrimaryCard(tier?.id?.toString()).then(() => {
+                        refetch();
+                        toast.success("Primary card updated successfully!");
+                      }).catch(() => {
+                        toast.error("Failed to set primary card. Please try again.");
+                      })
+                    }}
+                    className="mt-3 cursor-pointer text-xs font-medium text-orange-500"
+                  >
+                    {isSetPrimaryCardLoading ? 'Setting...' : 'Set as Primary'}
+                  </button>
                 ) : null}
               </div>
             );
           })}
 
-           {userCards?.leads?.map((tier) => {
+          {userCards?.leads?.map((tier) => {
             const appliedcards = tier?.card_type;
             const isActive = tier?.status;
 
@@ -243,12 +270,12 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Title */}
-                <p className="font-semibold text-sm capitalize">
+                <p className="font-semibold text-xs capitalize">
                   CRN No.: {tier?.crn}
                 </p>
 
                 {/* Title */}
-                <p className="font-semibold text-sm capitalize">
+                <p className="font-semibold text-xs capitalize">
                   Name: {tier?.name} <br /> Phone: {tier?.phone}
                 </p>
 
@@ -271,7 +298,8 @@ export default function ProfilePage() {
             );
           })}
 
-        </div>
+        </div>}
+
       </div>
 
       {/* Statistics */}

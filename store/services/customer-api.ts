@@ -29,7 +29,21 @@ export const userApi = createApi({
             query: () => "/card",
             transformResponse: (response: CardApiResponse) => response,
         }),
+        setPrimaryCard: builder.mutation<any, string>({
+            query: (id) => ({
+                url: `/card/set-primary/${id}`,
+                method: "POST", // or PUT (confirm from backend)
+            }),
+            invalidatesTags: ["user"], // refetch user/cards after update
+        }),
+        applyCard: builder.mutation<any, { card_type_id: number }>({
+            query: (body) => ({
+                url: `/card/apply`,
+                method: "POST",
+                body,
+            }),
+        }),
     })
 })
 
-export const { useGetUserDetailQuery, useGetUserCardsQuery } = userApi;
+export const { useGetUserDetailQuery, useGetUserCardsQuery, useSetPrimaryCardMutation, useApplyCardMutation } = userApi;
