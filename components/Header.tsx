@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/lib/redux/store';
 import UserCard from './user-card';
 import { isObject } from 'framer-motion';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
 
 export default function Header() {
@@ -24,27 +24,45 @@ export default function Header() {
   const [showSearch, setShowSearch] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  const lastScrollYRef = useRef(0);
+
+  const lastTriggerYRef = useRef(0);
+
   useEffect(() => {
+    const threshold = 112;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY) {
-        // scrolling down
-        setShowSearch(false);
-      } else {
-        // scrolling up
+      // Always show at top
+      if (currentScrollY <= 50) {
         setShowSearch(true);
+        lastTriggerYRef.current = currentScrollY;
+        lastScrollYRef.current = currentScrollY;
+        return;
       }
 
-      setLastScrollY(currentScrollY);
+      const diffFromTrigger = currentScrollY - lastTriggerYRef.current;
+
+      if (diffFromTrigger > threshold) {
+        // scrolling down enough
+        setShowSearch(false);
+        lastTriggerYRef.current = currentScrollY;
+      } else if (diffFromTrigger < -threshold) {
+        // scrolling up enough
+        setShowSearch(true);
+        lastTriggerYRef.current = currentScrollY;
+      }
+
+      lastScrollYRef.current = currentScrollY;
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   return (
-    <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
+    <header className="bg-primary rounded-b-lg shadow-2xl pr-2 fixed top-0 w-full z-50 ">
       {/* Desktop  Navigation */}
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
         <div className='flex'>
@@ -110,16 +128,12 @@ export default function Header() {
         </div>
 
         <div
-          className={`px-2 transition-all duration-300 overflow-hidden ${showSearch
+          className={`px-2 z-40 transition-[max-height,opacity] duration-300 ${showSearch
               ? "max-h-20 opacity-100 pb-3"
-              : "max-h-0 opacity-0 pb-0"
+              : "max-h-0 opacity-0 pb-0 pointer-events-none"
             }`}
         >
-          <input
-            type="text"
-            placeholder="Search food, dishes..."
-            className="w-full border rounded-xl text-white placeholder:text-white/70 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+          <SearchBar placeholder="Search products..." />
         </div>
 
 
@@ -159,10 +173,11 @@ export default function Header() {
             )}
           </div>
         </div>
-        </div>
+      </div>
     </header>
   );
 }
+
 
 
 
