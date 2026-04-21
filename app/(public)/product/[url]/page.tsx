@@ -25,7 +25,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const relatedProducts = productResponse?.similar_products;
   const aplusBanner = productResponse?.aplus;
 
-
   if (!isObject(product)) {
     return notFound();
   }

@@ -111,7 +111,6 @@ export default function LoginModal({ open, setOpen, onLogin, isLoading } : { ope
                             className="w-full h-12 cursor-pointer bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base transition-all duration-200"
                         >
                             {isLoading ? 'Signing in...' : 'Sign In'}
-                            Sign In
                         </Button>
                     </form>
                 </div>

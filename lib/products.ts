@@ -8,6 +8,8 @@ export interface Product {
   category: string;
   featured?: boolean;
   badge?: string;
+  stock?: string;
+  in_stock?: string;
 }
 
 export const products: Product[] = [

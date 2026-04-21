@@ -24,6 +24,7 @@ export interface DeliveryDetails {
   city: string;
   postalCode: string;
   notes?: string;
+  card_number?: string; // For card payments
 }
 
 export default function CashOnDeliveryForm({

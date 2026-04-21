@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus, Settings } from "lucide-react";
 import PaymentMethodSelector from "@/components/PaymentMethodSelector";
 import CashOnDeliveryForm, {
   DeliveryDetails,
@@ -23,6 +23,9 @@ import { useSession } from "next-auth/react";
 import { clearCart } from "@/lib/redux/slice/cartSlice";
 import { PaymentMethodsResponse } from "@/types/order";
 import WalletOnDeliveryForm from "@/components/checkout/WalletOnDeliveryForm";
+import { Button } from "@/components/ui/button";
+import CardItem from "@/components/shared/cart-item";
+import CardsList from "@/components/checkout/CardsList";
 
 type PaymentMethod = "cod" | "stripe" | "razorpay";
 
@@ -32,9 +35,8 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<string>(
     "cod",
   );
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [storedType, setStoredType] = useState<string>("token");
-
-
 
   const orderId = `ORD-${Date.now()}XXXXXX`;
   const { data: session } = useSession();
@@ -62,12 +64,15 @@ export default function CheckoutPage() {
   });
 
   const paymentMethods = data?.data || [];
+  const cardPayments = paymentMethods.filter((method) => method?.name === "card");
+  const cards = cardPayments?.[0]?.cards || [];
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (orderData: {
       order_type: string,
       table_no?: number,
       payment_method: string,
+      card_number?: string,
     }) =>
       fetchHandler({
         endpoint: "orders",
@@ -81,20 +86,31 @@ export default function CheckoutPage() {
 
   const handleCODSubmit = async (details: DeliveryDetails) => {
     try {
-      // Simulate order placement
+      setIsPlacingOrder(true);
+
       const response = await mutateAsync({
-        "order_type": storedType === "dining" ? "token" : storedType,
-        "table_no": storedType === "dining" ? 10 : undefined,
+        order_type: storedType === "dining" ? "token" : storedType,
+        table_no: storedType === "dining" ? 10 : undefined,
         payment_method: paymentMethod,
+        card_number: details.card_number,
       });
+
       if (response?.order_no) {
         dispatch(clearCart());
-        router.push(`/order-confirmation?orderId=${response?.order_no}&method=cod`);
+
+        // small delay ensures state updates before redirect
+        setTimeout(() => {
+          router.push(
+            `/order-confirmation?orderId=${response?.order_no}&method=cod`
+          );
+        }, 100);
       } else {
         toast.error(response?.message || "Failed to place order");
+        setIsPlacingOrder(false);
       }
     } catch (error) {
       toast.error("Error placing order");
+      setIsPlacingOrder(false);
     }
   };
 
@@ -113,6 +129,20 @@ export default function CheckoutPage() {
   const handleRazorpayError = (error: string) => {
     console.error("Razorpay error:", error);
   };
+
+
+  if (isPlacingOrder) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-muted-foreground">
+            Placing your order...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isArray(cart)) {
     return (
@@ -179,6 +209,22 @@ export default function CheckoutPage() {
                     onError={handleRazorpayError}
                   />
                 )}
+
+                {
+                  paymentMethod === "card" && (
+                    <CardsList
+                      cards={cards}
+                      onAddCard={() => {
+                        console.log("Add card clicked");
+                        // open modal / navigate
+                      }}
+                      orderId={orderId}
+                      amount={totalPrice}
+                      onSubmit={handleCODSubmit}
+                      isLoading={isPending}
+                    />
+                  )
+                }
               </div>
             )}
           </div>

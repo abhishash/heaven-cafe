@@ -69,7 +69,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
 
   const handleLogin = async (data: FieldValues) => {
 
-    setLoading(true)
+    setLoading(true);
 
     try {
       const response = await signIn("credentials", {
@@ -90,6 +90,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
       toast.warning("Something went wrong");
     } finally {
       setOpenLogin(false);
+      setLoading(false);
     }
   };
 
@@ -120,6 +121,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
       alert("Error adding to cart");
     }
   }
+  console.log('Product Info Rendered with product:', product);
   return (
     <>
 
@@ -166,13 +168,24 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
         </div>
 
         {/* Add to Cart Button */}
-        <Button
-          onClick={handleAddToCart}
-          size="lg"
-          className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-6"
-        >
-          {isPending ? '✓ Added to Cart!' : 'Add to Cart'}
-        </Button>
+        {
+          parseInt(product?.in_stock as string) <= 0 ? (
+            <Button
+              size="lg"
+              disabled={true}
+              className="w-full cursor-not-allowed bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-6"
+            >
+              Out Of STock
+            </Button>
+          ) : <Button
+            onClick={handleAddToCart}
+            size="lg"
+            className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-6"
+          >
+            {isPending ? '✓ Added to Cart!' : 'Add to Cart'}
+          </Button>
+        }
+
 
         <Button
           variant="outline"

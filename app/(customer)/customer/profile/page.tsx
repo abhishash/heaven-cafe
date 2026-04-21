@@ -52,9 +52,8 @@ export default function ProfilePage() {
       if (data.success) {
         dispatch(clearCart());
         const signOutRes = await signOut({ callbackUrl: "/login", redirect: false });
-        console.log("Sign out response:", signOutRes);
         if (signOutRes?.url) {
-          router.push("/login");
+          router.push("/");
         } else {
           toast.warning("Logout successful, but failed to redirect. Please login again.");
         }
