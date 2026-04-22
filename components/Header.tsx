@@ -18,7 +18,7 @@ import { isObject } from 'framer-motion';
 import { useState, useEffect, useRef } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
 import AddressForm from "./pop-up/address-form";
-import MapPicker from "./MapPicker";
+import MapPicker from "./LiveMap";
 import LocationModal from "./location/LocationModal";
 
 export default function Header() {
@@ -69,13 +69,13 @@ export default function Header() {
   return (
     <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
       {/* Desktop  Navigation */}
-      {/* <div>
+      <div>
         <button onClick={() => setOpen(true)}>
           Open Location Picker
         </button>
 
         <LocationModal open={open} setOpen={setOpen} />
-      </div> */}
+      </div>
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
         <div className='flex'>
           <Link href="/" className="flex items-center gap-2">
