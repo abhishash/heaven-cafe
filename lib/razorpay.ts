@@ -1,20 +1,23 @@
 import Razorpay from 'razorpay';
 
-if (!process.env.RAZORPAY_KEY_ID) {
-  throw new Error('RAZORPAY_KEY_ID is not defined');
-}
+export function getRazorpayInstance() {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
 
-if (!process.env.RAZORPAY_KEY_SECRET) {
-  throw new Error('RAZORPAY_KEY_SECRET is not defined');
-}
+  if (!keyId || !keySecret) {
+    throw new Error(
+      'Razorpay is not configured. Add RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET.',
+    );
+  }
 
-export const razorpayInstance = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+  return new Razorpay({
+    key_id: keyId,
+    key_secret: keySecret,
+  });
+}
 
 export interface RazorpayOrderData {
-  amount: number; // in paise (1 rupee = 100 paise)
+  amount: number;
   currency: string;
   receipt: string;
   notes?: Record<string, string>;

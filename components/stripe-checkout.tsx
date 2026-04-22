@@ -10,9 +10,10 @@ import { loadStripe } from "@stripe/stripe-js";
 import { startCheckoutSession } from "@/app/actions/stripe";
 import { CartItem } from "@/lib/types";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-);
+const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const stripePromise = stripePublishableKey
+  ? loadStripe(stripePublishableKey)
+  : null;
 
 export default function StripeCheckout({
   items,
@@ -34,12 +35,18 @@ export default function StripeCheckout({
     createCheckoutSession();
   }, [createCheckoutSession]);
 
-  if (!clientSecret) {
+  if (!clientSecret || !stripePromise) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-background border-t-primary"></div>
-          <p className="mt-4 text-muted-foreground">Loading checkout...</p>
+          {!stripePromise ? (
+            <p className="text-destructive font-medium">Stripe configuration is missing. Please add your publishable key.</p>
+          ) : (
+            <>
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-background border-t-primary"></div>
+              <p className="mt-4 text-muted-foreground">Loading checkout...</p>
+            </>
+          )}
         </div>
       </div>
     );

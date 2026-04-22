@@ -11,6 +11,7 @@ interface RazorpayCheckoutProps {
   amount: number;
   customerEmail: string;
   customerName: string;
+  disabled?: boolean;
   onSuccess: (paymentId: string) => void;
   onError: (error: string) => void;
 }
@@ -20,6 +21,7 @@ export default function RazorpayCheckout({
   amount,
   customerEmail,
   customerName,
+  disabled = false,
   onSuccess,
   onError,
 }: RazorpayCheckoutProps) {
@@ -47,7 +49,16 @@ export default function RazorpayCheckout({
 
   const handlePayment = async () => {
     if (!scriptLoaded.current) {
-      setError('Razorpay is not loaded. Please refresh and try again.');
+      const message = 'Razorpay is not loaded. Please refresh and try again.';
+      setError(message);
+      onError(message);
+      return;
+    }
+
+    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+      const message = 'Razorpay public key is not configured.';
+      setError(message);
+      onError(message);
       return;
     }
 
@@ -64,7 +75,9 @@ export default function RazorpayCheckout({
       });
 
       if (!orderResponse.success) {
-        setError(orderResponse.error || 'Failed to create order');
+        const message = orderResponse.error || 'Failed to create order';
+        setError(message);
+        onError(message);
         setIsLoading(false);
         return;
       }
@@ -97,7 +110,9 @@ export default function RazorpayCheckout({
           if (verifyResponse.success) {
             onSuccess(response.razorpay_payment_id);
           } else {
-            onError(verifyResponse.error || 'Payment verification failed');
+            const message = verifyResponse.error || 'Payment verification failed';
+            setError(message);
+            onError(message);
           }
           setIsLoading(false);
         },
@@ -114,6 +129,7 @@ export default function RazorpayCheckout({
       const errorMessage =
         err instanceof Error ? err.message : 'An error occurred';
       setError(errorMessage);
+      onError(errorMessage);
       setIsLoading(false);
     }
   };
@@ -128,7 +144,7 @@ export default function RazorpayCheckout({
 
       <Button
         onClick={handlePayment}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         size="lg"
         className="w-full bg-primary text-primary-foreground hover:opacity-90 font-semibold"
       >
@@ -138,7 +154,7 @@ export default function RazorpayCheckout({
             Processing...
           </>
         ) : (
-          `Pay ${formatPrice(amount, "INR")}`
+          `Place Order & Pay ${formatPrice(amount, "INR")}`
         )}
       </Button>
     </div>

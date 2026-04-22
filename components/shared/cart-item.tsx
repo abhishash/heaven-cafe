@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Check } from 'lucide-react'
 
 interface CardItemProps {
-    id: number
+    id: string | number
     card_number: string
     card_name: string
     balance: string

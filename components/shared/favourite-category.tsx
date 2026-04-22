@@ -42,7 +42,7 @@ export default function FavouriteCategory() {
         isPending ? <CategorySkeleton length={2} title="Favourite Daily Products" /> :
             isObject(categories) ? < CategoriesCarousel
                 title={categories?.name}
-                subCategories={categories?.subCategories}
+                subCategories={categories?.subCategories ?? []}
             /> : null
     );
 }

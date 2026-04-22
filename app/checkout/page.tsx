@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Plus, Settings } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import PaymentMethodSelector from "@/components/PaymentMethodSelector";
 import CashOnDeliveryForm, {
   DeliveryDetails,
@@ -14,7 +14,6 @@ import { RootState } from "@/lib/redux/store";
 import { isArray } from "@/lib/type-guards";
 import EmptyCart from "@/components/cart/empty-cart";
 import { formatPrice } from "@/lib/utils";
-import Checkout from "@/components/stripe-checkout";
 import StripeCheckout from "@/components/stripe-checkout";
 import { fetchHandler } from "@/lib/fetch-handler";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -23,20 +22,21 @@ import { useSession } from "next-auth/react";
 import { clearCart } from "@/lib/redux/slice/cartSlice";
 import { PaymentMethodsResponse } from "@/types/order";
 import WalletOnDeliveryForm from "@/components/checkout/WalletOnDeliveryForm";
-import { Button } from "@/components/ui/button";
-import CardItem from "@/components/shared/cart-item";
 import CardsList from "@/components/checkout/CardsList";
 
-type PaymentMethod = "cod" | "stripe" | "razorpay";
-
 export default function CheckoutPage() {
-
-
-  const [paymentMethod, setPaymentMethod] = useState<string>(
-    "cod",
-  );
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [storedType, setStoredType] = useState<string>("token");
+
+  const normalizedMethod = paymentMethod?.trim().toLowerCase() || "";
+  const isCOD = normalizedMethod === "cod" || normalizedMethod.includes("cash");
+  const isWallet = normalizedMethod === "wallet";
+  const isStripe = normalizedMethod === "stripe";
+  const isCard = normalizedMethod === "card";
+  
+  // Agar selected method COD, Wallet, Stripe, ya Card nahi hai, toh usko Razorpay maan lo (Fallback for any unknown online method)
+  const isRazorpay = normalizedMethod !== "" && !isCOD && !isWallet && !isStripe && !isCard;
 
   const orderId = `ORD-${Date.now()}XXXXXX`;
   const { data: session } = useSession();
@@ -51,7 +51,6 @@ export default function CheckoutPage() {
   }, []);
 
   const { items: cart, totalPrice } = useSelector((state: RootState) => state.cart);
-
 
   const { data, isPending: isPaymentMethodsPending } = useQuery<PaymentMethodsResponse>({
     queryKey: [`payment-methods`],
@@ -73,6 +72,7 @@ export default function CheckoutPage() {
       table_no?: number,
       payment_method: string,
       card_number?: string,
+      payment_id?: string,
     }) =>
       fetchHandler({
         endpoint: "orders",
@@ -82,34 +82,39 @@ export default function CheckoutPage() {
       })
   });
 
+  const placeOrder = async (paymentMethodName: string, details: { cardNumber?: string; paymentId?: string } = {}) => {
+    const response = await mutateAsync({
+      order_type: storedType === "dining" ? "token" : storedType,
+      table_no: storedType === "dining" ? 10 : undefined,
+      payment_method: paymentMethodName,
+      card_number: details.cardNumber,
+      payment_id: details.paymentId,
+    });
+
+    if (!response?.order_no) {
+      throw new Error(response?.message || "Failed to place order");
+    }
+
+    dispatch(clearCart());
+    return response.order_no as string;
+  };
 
 
   const handleCODSubmit = async (details: DeliveryDetails) => {
     try {
       setIsPlacingOrder(true);
+      const orderNo = await placeOrder(paymentMethod, { cardNumber: details.card_number });
+      const confirmationMethod = paymentMethod === "card" ? "card" : paymentMethod;
 
-      const response = await mutateAsync({
-        order_type: storedType === "dining" ? "token" : storedType,
-        table_no: storedType === "dining" ? 10 : undefined,
-        payment_method: paymentMethod,
-        card_number: details.card_number,
-      });
-
-      if (response?.order_no) {
-        dispatch(clearCart());
-
-        // small delay ensures state updates before redirect
-        setTimeout(() => {
-          router.push(
-            `/order-confirmation?orderId=${response?.order_no}&method=cod`
-          );
-        }, 100);
-      } else {
-        toast.error(response?.message || "Failed to place order");
-        setIsPlacingOrder(false);
-      }
+      setTimeout(() => {
+        router.push(
+          `/order-confirmation?orderId=${orderNo}&method=${confirmationMethod}`
+        );
+      }, 100);
     } catch (error) {
-      toast.error("Error placing order");
+      const message =
+        error instanceof Error ? error.message : "Error placing order";
+      toast.error(message);
       setIsPlacingOrder(false);
     }
   };
@@ -119,15 +124,24 @@ export default function CheckoutPage() {
     router.push(`/order-confirmation?orderId=${orderId}&method=stripe`);
   };
 
-  const handleRazorpaySuccess = (paymentId: string) => {
-    // clearCart();
-    router.push(
-      `/order-confirmation?orderId=${orderId}&paymentId=${paymentId}&method=razorpay`,
-    );
+  const handleRazorpaySuccess = async (paymentId: string) => {
+    try {
+      setIsPlacingOrder(true);
+      const orderNo = await placeOrder(paymentMethod, { paymentId });
+      router.push(
+        `/order-confirmation?orderId=${orderNo}&paymentId=${paymentId}&method=${paymentMethod}`,
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to place Razorpay order";
+      toast.error(message);
+      setIsPlacingOrder(false);
+    }
   };
 
   const handleRazorpayError = (error: string) => {
     console.error("Razorpay error:", error);
+    toast.error(error);
   };
 
 
@@ -175,7 +189,7 @@ export default function CheckoutPage() {
             {/* Payment Specific Forms */}
             {paymentMethod && (
               <div className="bg-card rounded-lg p-6 border border-border">
-                {paymentMethod === "cod" && (
+                {isCOD && (
                   <CashOnDeliveryForm
                     orderId={orderId}
                     amount={totalPrice}
@@ -186,7 +200,7 @@ export default function CheckoutPage() {
 
                 {/* Wallet Amount */}
 
-                {paymentMethod === "wallet" && (
+                {isWallet && (
                   <WalletOnDeliveryForm
                     orderId={orderId}
                     amount={totalPrice}
@@ -195,23 +209,24 @@ export default function CheckoutPage() {
                   />
                 )}
 
-                {paymentMethod === "stripe" && (
+                {isStripe && (
                   <StripeCheckout items={cart} />
                 )}
 
-                {paymentMethod === "razorpay" && (
+                {isRazorpay && (
                   <RazorpayCheckout
                     orderId={orderId}
                     amount={totalPrice + 20}
-                    customerEmail="customer@example.com"
-                    customerName="Customer"
+                    customerEmail={session?.user?.email ?? "customer@example.com"}
+                    customerName={session?.user?.name ?? "Customer"}
+                    disabled={isPlacingOrder}
                     onSuccess={handleRazorpaySuccess}
                     onError={handleRazorpayError}
                   />
                 )}
 
                 {
-                  paymentMethod === "card" && (
+                  isCard && (
                     <CardsList
                       cards={cards}
                       onAddCard={() => {

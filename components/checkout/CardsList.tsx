@@ -5,12 +5,9 @@ import { Button } from "@/components/ui/button";
 import CardItem from "../shared/cart-item";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { PaymentCard } from "@/types/order";
 
-type CardType = {
-    id: string | number;
-    is_primary?: number;
-    [key: string]: any;
-};
+type CardType = PaymentCard;
 
 type CardsListProps = {
     cards: CardType[];

@@ -1,6 +1,5 @@
 'use server';
 
-import { razorpayInstance } from '@/lib/razorpay';
 import crypto from 'crypto';
 
 interface CreateOrderParams {
@@ -17,20 +16,38 @@ export async function createRazorpayOrder({
   customerName,
 }: CreateOrderParams) {
   try {
-    // Convert dollars to paise (1 dollar = 100 paise, but for this example we'll use INR)
-    // Amount should be in paise, so multiply by 100
     const amountInPaise = Math.round(amount * 100);
 
-    const order = await razorpayInstance.orders.create({
-      amount: amountInPaise,
-      currency: 'INR',
-      receipt: orderId,
-      notes: {
-        email: customerEmail,
-        name: customerName,
-        orderId: orderId,
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!keyId || !keySecret) {
+      return { success: false, error: 'Razorpay keys are missing on server' };
+    }
+
+    const auth = Buffer.from(`${keyId}:${keySecret}`).toString('base64');
+
+    // 🚀 Bypassing Razorpay npm package completely to avoid Server Crash
+    const response = await fetch('https://api.razorpay.com/v1/orders', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${auth}`,
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        amount: amountInPaise,
+        currency: 'INR',
+        receipt: orderId,
+      }),
+      cache: 'no-store'
     });
+
+    const order = await response.json();
+
+    if (!response.ok) {
+      console.error('Razorpay API Error:', order);
+      return { success: false, error: order.error?.description || 'Failed to create payment order' };
+    }
 
     return {
       success: true,
@@ -59,7 +76,15 @@ export async function verifyRazorpayPayment({
   razorpaySignature,
 }: VerifyPaymentParams) {
   try {
-    const secret = process.env.RAZORPAY_KEY_SECRET!;
+    const secret = process.env.RAZORPAY_KEY_SECRET;
+
+    if (!secret) {
+      return {
+        success: false,
+        error: 'Razorpay secret is not configured',
+      };
+    }
+
     const body = razorpayOrderId + '|' + razorpayPaymentId;
     const expectedSignature = crypto
       .createHmac('sha256', secret)

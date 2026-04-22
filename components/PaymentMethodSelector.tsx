@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { CheckCircle, DollarSign, CreditCard, IndianRupee } from 'lucide-react';
@@ -23,7 +23,17 @@ export default function PaymentMethodSelector({
   isLoading = false,
   paymentMethods,
 }: PaymentMethodSelectorProps) {
-  const [selectedMethod, setSelectedMethod] = useState<string>('cod');
+  const [selectedMethod, setSelectedMethod] = useState<string>('');
+
+  useEffect(() => {
+    if (paymentMethods && isArray(paymentMethods) && paymentMethods.length > 0 && !selectedMethod) {
+      const firstActive = paymentMethods.find((m) => m.status === 1);
+      if (firstActive) {
+        setSelectedMethod(firstActive.name);
+        onSelectPayment(firstActive.name);
+      }
+    }
+  }, [paymentMethods, selectedMethod, onSelectPayment]);
 
 
 
