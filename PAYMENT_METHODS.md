@@ -2,7 +2,7 @@
 
 ## Overview
 
-FastBite now supports three payment methods to provide flexibility to customers:
+Heaven Cafe now supports three payment methods to provide flexibility to customers:
 
 1. **Cash on Delivery (COD)** - Free, no setup required
 2. **Stripe** - International payments, credit/debit cards

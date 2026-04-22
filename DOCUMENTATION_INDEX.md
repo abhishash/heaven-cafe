@@ -1,4 +1,4 @@
-# FastBite Multi-Payment System - Documentation Index
+# Heaven Cafe Multi-Payment System - Documentation Index
 
 ## 📚 Quick Navigation
 

@@ -88,7 +88,7 @@ export default function RazorpayCheckout({
         order_id: orderResponse.orderId,
         amount: orderResponse.amount,
         currency: orderResponse.currency,
-        name: 'FastBite',
+        name: 'Heaven Cafe',
         description: `Order #${orderId}`,
         customer_notification: 1,
         prefill: {

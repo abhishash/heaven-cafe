@@ -39,7 +39,7 @@ function OrderConfirmationPage() {
           icon: CheckCircle,
           color: 'text-green-600',
         };
-      case 'razorpay':
+      case 'Razorpay':
         return {
           name: 'Razorpay',
           description: 'Payment completed',
@@ -195,7 +195,7 @@ function OrderConfirmationPage() {
                 Need help with your order?
               </p>
               <p className="text-sm">
-                <a href="mailto:support@fastbite.com" className="text-primary hover:underline">
+                <a href="mailto:support@Heaven Cafe.com" className="text-primary hover:underline">
                   Contact Support
                 </a>
               </p>

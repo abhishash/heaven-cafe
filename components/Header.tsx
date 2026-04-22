@@ -1,22 +1,34 @@
-'use client';
-
+"use client";
 
 import dynamic from "next/dynamic";
 
-const OrderTypeModal = dynamic(() => import('./pop-up/Order-type-modal'));
-const DineDeliveryToggle = dynamic(() => import('./shared/dine-delivery-toggle'));
-import Link from 'next/link';
-import { MenuIcon, NotebookPen, NotebookTabs, Search, ShoppingCart, User, UserIcon } from 'lucide-react';
-import Image from 'next/image';
-import { Button } from './ui/button';
-import { SearchBar } from './Search-bar';
-import { useSession } from 'next-auth/react';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/lib/redux/store';
-import UserCard from './user-card';
-import { isObject } from 'framer-motion';
+const OrderTypeModal = dynamic(() => import("./pop-up/Order-type-modal"));
+const DineDeliveryToggle = dynamic(
+  () => import("./shared/dine-delivery-toggle"),
+);
+import Link from "next/link";
+import {
+  Bell,
+  MenuIcon,
+  NotebookPen,
+  NotebookTabs,
+  Search,
+  ShoppingCart,
+  User,
+  UserIcon,
+} from "lucide-react";
+import Image from "next/image";
+import { Button } from "./ui/button";
+import { SearchBar } from "./Search-bar";
+import { useSession } from "next-auth/react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/redux/store";
+import UserCard from "./user-card";
+import { isObject } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
+import { useQuery } from "@tanstack/react-query";
+import { fetchHandler } from "@/lib/fetch-handler";
 
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
@@ -63,12 +75,32 @@ export default function Header() {
 
   return (
     <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
+      {/* Bell Ring Animation CSS */}
+      <style>{`
+        @keyframes ring {
+          0% { transform: rotate(0); }
+          10%, 30%, 50%, 70%, 90% { transform: rotate(-15deg); }
+          20%, 40%, 60%, 80% { transform: rotate(15deg); }
+          100% { transform: rotate(0); }
+        }
+        .animate-ring {
+          animation: ring 2s infinite ease-in-out;
+          transform-origin: top center;
+        }
+      `}</style>
       {/* Desktop  Navigation */}
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
-        <div className='flex'>
+        <div className="flex">
           <Link href="/" className="flex items-center gap-2">
             <div className="text-primary-foreground font-bold text-2xl">
-              <Image src="/logo/final-logo.png" className='' priority={true} alt='main-logo' width={140} height={120} />
+              <Image
+                src="/logo/final-logo.png"
+                className=""
+                priority={true}
+                alt="main-logo"
+                width={140}
+                height={120}
+              />
             </div>
           </Link>
           <DineDeliveryToggle />
@@ -80,18 +112,23 @@ export default function Header() {
             <SearchBar placeholder="Search products..." />
           </div>
 
-          <Link href="/menu" className="text-primary-foreground hover:opacity-80 font-medium transition">
+          <Link
+            href="/menu"
+            className="text-primary-foreground hover:opacity-80 font-medium transition"
+          >
             <NotebookPen />
           </Link>
 
           <UserSection />
-
-
-
+          
+          <NotificationBell />
 
           {/* <UserCard /> */}
           <Link href="/cart" className="relative">
-            <ShoppingCart className="text-primary-foreground hover:opacity-80 transition" size={24} />
+            <ShoppingCart
+              className="text-primary-foreground hover:opacity-80 transition"
+              size={24}
+            />
             {totalItems > 0 && (
               <span className="absolute -top-2 -right-2 bg-primary-foreground text-primary text-[11px] sm:text-xs font-bold rounded-full sm:w-6 w-5 h-5 sm:h-6 flex items-center justify-center">
                 {totalItems}
@@ -103,10 +140,8 @@ export default function Header() {
       {/* Mobile Navigation */}
       {/* ✅ TOP NAV */}
       <div className="sm:hidden sticky top-0  shadow-sm">
-
         {/* Top Row */}
         <div className="flex items-center justify-between pl-0 pr-0 pb-1 pt-3">
-
           {/* Logo */}
           <Link href="/">
             <Image
@@ -128,19 +163,19 @@ export default function Header() {
         </div>
 
         <div
-          className={`px-2 z-40 transition-[max-height,opacity] duration-300 ${showSearch
+          className={`px-2 z-40 transition-[max-height,opacity] duration-300 ${
+            showSearch
               ? "max-h-20 opacity-100 pb-3"
               : "max-h-0 opacity-0 pb-0 pointer-events-none"
-            }`}
+          }`}
         >
           <SearchBar placeholder="Search products..." />
         </div>
 
-
-
         {/* ✅ BOTTOM NAV (FIXED) */}
         <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
           <div className="flex justify-around items-center py-2">
+            <NotificationBell isMobile={true} />
 
             {/* Menu */}
             <Link href="/menu" className="flex flex-col items-center text-xs">
@@ -149,7 +184,10 @@ export default function Header() {
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="flex flex-col items-center relative text-xs">
+            <Link
+              href="/cart"
+              className="flex flex-col items-center relative text-xs"
+            >
               <ShoppingCart size={22} />
               {totalItems > 0 && (
                 <span className="absolute -top-1 right-3 bg-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
@@ -161,12 +199,18 @@ export default function Header() {
 
             {/* Profile */}
             {session?.user ? (
-              <Link href="/customer/orders" className="flex flex-col items-center text-xs">
+              <Link
+                href="/customer/orders"
+                className="flex flex-col items-center text-xs"
+              >
                 <User size={22} />
                 Profile
               </Link>
             ) : (
-              <Link href="/login" className="flex flex-col items-center text-xs">
+              <Link
+                href="/login"
+                className="flex flex-col items-center text-xs"
+              >
                 <User size={22} />
                 Login
               </Link>
@@ -178,21 +222,16 @@ export default function Header() {
   );
 }
 
-
-
-
 export function UserSection() {
   const { data: session, status } = useSession();
 
   const isLoggedIn = status === "authenticated" && session?.user;
-  const { data, isLoading } = useGetWalletPointQuery(
-    undefined,
-    { skip: !isLoggedIn }
-  );
+  const { data, isLoading } = useGetWalletPointQuery(undefined, {
+    skip: !isLoggedIn,
+  });
 
   return (
     <div className="flex items-center gap-3">
-
       {/* User Icon */}
       <Link
         href={isLoggedIn ? "/customer/orders" : "/login"}
@@ -204,9 +243,56 @@ export function UserSection() {
       {/* Cart / Count Badge */}
       <div className="relative">
         <h2 className="border py-1.5 font-semibold bg-white text-primary px-2 border-white rounded-md text-sm">
-          Wallet Amt: {isLoggedIn ? isLoading ? "0" : data?.points ? parseInt(data?.points.toString()) : "0" : "0"}
+          Wallet Amt:{" "}
+          {isLoggedIn
+            ? isLoading
+              ? "0"
+              : data?.points
+                ? parseInt(data?.points.toString())
+                : "0"
+            : "0"}
         </h2>
       </div>
     </div>
+  );
+}
+
+export function NotificationBell({ isMobile }: { isMobile?: boolean }) {
+  const { data: session } = useSession();
+  const { data } = useQuery({
+    queryKey: ['notifications'],
+    queryFn: () => fetchHandler({
+      endpoint: 'notifications',
+      method: 'GET',
+      token: session?.user?.accessToken,
+    }),
+    enabled: !!session?.user?.accessToken,
+  });
+
+  const notificationCount = data?.notifications?.length || 0;
+
+  if (isMobile) {
+    return (
+      <Link href="/notification" className="flex flex-col items-center relative text-xs">
+        <Bell size={22} className="animate-ring" />
+        {notificationCount > 0 && (
+          <span className="absolute -top-1 right-3 bg-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full shadow-md">
+            {notificationCount}
+          </span>
+        )}
+        Notification
+      </Link>
+    );
+  }
+
+  return (
+    <Link href="/notification" className="relative">
+      <Bell className="text-primary-foreground hover:opacity-80 transition animate-ring" size={24} />
+      {notificationCount > 0 && (
+        <span className="absolute -top-2 -right-2 bg-primary-foreground text-primary text-[11px] sm:text-xs font-bold rounded-full sm:w-5 w-5 h-5 sm:h-5 flex items-center justify-center shadow-md">
+          {notificationCount}
+        </span>
+      )}
+    </Link>
   );
 }
