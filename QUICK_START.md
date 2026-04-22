@@ -1,9 +1,9 @@
-# FastBite Payment System - Quick Start Guide
+# Heaven Cafe Payment System - Quick Start Guide
 
 ## 🚀 Get Started in 5 Minutes
 
 ### Step 1: Verify Installation
-Your FastBite e-commerce platform already has all three payment methods integrated:
+Your Heaven Cafe e-commerce platform already has all three payment methods integrated:
 
 - ✅ **Cash on Delivery** - Ready to use (no setup)
 - ✅ **Stripe** - Ready to use (already configured)

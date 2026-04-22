@@ -1,7 +1,7 @@
 # Razorpay Integration Setup Guide
 
 ## Overview
-This FastBite e-commerce application now supports Razorpay payments alongside Cash on Delivery and Stripe. Follow these steps to set up Razorpay.
+This Heaven Cafe e-commerce application now supports Razorpay payments alongside Cash on Delivery and Stripe. Follow these steps to set up Razorpay.
 
 ## Prerequisites
 - A Razorpay business account (sign up at https://razorpay.com)

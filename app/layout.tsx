@@ -37,7 +37,7 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions);
   return (
     <html lang="en">
-      <body className={`${geist.className} antialiased"`}>
+      <body className={`${geist.className} antialiased`}>
         <SessionProviders session={session}>
           <ReduxProvider>
             <QueryProvider >

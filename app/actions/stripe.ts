@@ -5,6 +5,10 @@ import { products } from '@/lib/products'
 import { CartItem } from '@/lib/types'
 
 export async function startCheckoutSession(items: CartItem[]) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured. Please add STRIPE_SECRET_KEY.');
+  }
+
   // Validate and create line items from cart
   const lineItems = items
     .map((item) => {
@@ -37,6 +41,10 @@ export async function startCheckoutSession(items: CartItem[]) {
 }
 
 export async function getCheckoutSessionStatus(clientSecret: string) {
+  if (!stripe) {
+    throw new Error('Stripe is not configured.');
+  }
+
   const session = await stripe.checkout.sessions.retrieve(clientSecret, {
     expand: ['payment_intent'],
   })

@@ -4,7 +4,7 @@ import { Footer } from '@/components/footer'
 import 'leaflet/dist/leaflet.css';
 
 export const metadata: Metadata = {
-  title: 'FastBite - Fast Food E-Commerce',
+  title: 'Heaven Cafe - Fast Food E-Commerce',
   description: 'Order delicious fast food online. Burgers, chicken, sides, and more delivered fast.',
 }
 
