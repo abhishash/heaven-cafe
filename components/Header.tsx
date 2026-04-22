@@ -17,12 +17,17 @@ import UserCard from './user-card';
 import { isObject } from 'framer-motion';
 import { useState, useEffect, useRef } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
+import AddressForm from "./pop-up/address-form";
+import MapPicker from "./MapPicker";
+import LocationModal from "./location/LocationModal";
 
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
   const { data: session } = useSession();
   const [showSearch, setShowSearch] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [open, setOpen] = useState(false);
+
 
   const lastScrollYRef = useRef(0);
 
@@ -64,6 +69,13 @@ export default function Header() {
   return (
     <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
       {/* Desktop  Navigation */}
+      {/* <div>
+        <button onClick={() => setOpen(true)}>
+          Open Location Picker
+        </button>
+
+        <LocationModal open={open} setOpen={setOpen} />
+      </div> */}
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
         <div className='flex'>
           <Link href="/" className="flex items-center gap-2">
@@ -129,8 +141,8 @@ export default function Header() {
 
         <div
           className={`px-2 z-40 transition-[max-height,opacity] duration-300 ${showSearch
-              ? "max-h-20 opacity-100 pb-3"
-              : "max-h-0 opacity-0 pb-0 pointer-events-none"
+            ? "max-h-20 opacity-100 pb-3"
+            : "max-h-0 opacity-0 pb-0 pointer-events-none"
             }`}
         >
           <SearchBar placeholder="Search products..." />
