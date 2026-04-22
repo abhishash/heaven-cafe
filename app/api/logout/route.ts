@@ -7,7 +7,6 @@ export async function POST() {
   const session = await getServerSession(authOptions);
 
   if (isObject(session?.user)) {
-    // Call PHP API logout endpoint
     await fetch(`${process.env.API_ENDPOINT}logout`, {
       method: "POST",
       headers: {

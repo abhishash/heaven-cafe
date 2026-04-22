@@ -1,6 +1,6 @@
-# 💳 FastBite Multi-Payment System
+# 💳 Heaven Cafe Multi-Payment System
 
-Welcome to FastBite's complete multi-payment solution! This platform supports three payment methods for maximum customer flexibility and conversion.
+Welcome to Heaven Cafe's complete multi-payment solution! This platform supports three payment methods for maximum customer flexibility and conversion.
 
 ## 📋 Table of Contents
 
@@ -14,7 +14,7 @@ Welcome to FastBite's complete multi-payment solution! This platform supports th
 
 ## 🎯 Quick Overview
 
-**FastBite** now offers customers three ways to pay for their orders:
+**Heaven Cafe** now offers customers three ways to pay for their orders:
 
 | Method | Status | Setup Time | Best For |
 |--------|--------|-----------|----------|
@@ -482,7 +482,7 @@ All payment methods are optimized for mobile:
 
 ## 🎉 You're All Set!
 
-Your FastBite platform now supports:
+Your Heaven Cafe platform now supports:
 - ✅ Cash on Delivery (instant, no setup)
 - ✅ Stripe (global, secure)
 - ✅ Razorpay (India-focused, multiple methods)
@@ -508,4 +508,4 @@ Need help? Check:
 
 **Happy selling! 🚀**
 
-Your FastBite e-commerce platform is ready to accept payments from customers worldwide.
+Your Heaven Cafe e-commerce platform is ready to accept payments from customers worldwide.

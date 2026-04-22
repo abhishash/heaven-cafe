@@ -2,7 +2,7 @@
 
 ## ✅ What's Been Implemented
 
-Your FastBite e-commerce platform now supports **three payment methods**:
+Your Heaven Cafe e-commerce platform now supports **three payment methods**:
 
 ### 1. ✅ Cash on Delivery (COD)
 - **Status**: Fully functional, no setup required
@@ -40,7 +40,7 @@ Your FastBite e-commerce platform now supports **three payment methods**:
 ## 📁 File Structure
 
 ```
-fastbite-ecommerce/
+Heaven Cafe-ecommerce/
 ├── components/
 │   ├── PaymentMethodSelector.tsx       # Selector UI for all 3 methods
 │   ├── CashOnDeliveryForm.tsx          # COD form with validation

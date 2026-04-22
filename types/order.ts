@@ -46,10 +46,21 @@ export interface PaymentMethod {
   icon: LucideIcon;
   badge: string;
   label: string;
+  cards?: PaymentCard[];
 }
 
 export interface PaymentMethodsResponse {
   status: boolean;
   message: string;
   data: PaymentMethod[];
+}
+
+export interface PaymentCard {
+  id: string | number;
+  card_number: string;
+  card_name: string;
+  balance: string;
+  status: number;
+  is_primary: number;
+  expiry_date: string;
 }
