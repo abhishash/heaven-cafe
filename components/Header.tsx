@@ -27,6 +27,9 @@ import UserCard from "./user-card";
 import { isObject } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
+import AddressForm from "./pop-up/address-form";
+import MapPicker from "./LiveMap";
+import LocationModal from "./location/LocationModal";
 import { useQuery } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
 
@@ -35,6 +38,8 @@ export default function Header() {
   const { data: session } = useSession();
   const [showSearch, setShowSearch] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [open, setOpen] = useState(false);
+
 
   const lastScrollYRef = useRef(0);
 
@@ -89,6 +94,13 @@ export default function Header() {
         }
       `}</style>
       {/* Desktop  Navigation */}
+      <div>
+        <button onClick={() => setOpen(true)}>
+          Open Location Picker
+        </button>
+
+        <LocationModal open={open} setOpen={setOpen} />
+      </div>
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
         <div className="flex">
           <Link href="/" className="flex items-center gap-2">

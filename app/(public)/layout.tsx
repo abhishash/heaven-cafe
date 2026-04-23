@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Header from '@/components/Header'
 import { Footer } from '@/components/footer'
+import 'leaflet/dist/leaflet.css';
 
 export const metadata: Metadata = {
   title: 'Heaven Cafe - Fast Food E-Commerce',
