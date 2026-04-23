@@ -76,7 +76,7 @@ export default function LiveMap({
   ]);
 
   const [address, setAddressState] = useState({
-    persion: "",
+    person: "",
     contact: "",
     street: "",
     landmark: "",
@@ -177,9 +177,9 @@ export default function LiveMap({
       <div className="flex-1 no-scrollbar overflow-y-auto px-4 mt-4 space-y-3">
 
         <Input
-          placeholder="persion Name"
-          value={address.persion}
-          onChange={(e: any) => updateField("persion", e.target.value)}
+          placeholder="Person Name"
+          value={address.person}
+          onChange={(e: any) => updateField("person", e.target.value)}
         />
 
         <Input
