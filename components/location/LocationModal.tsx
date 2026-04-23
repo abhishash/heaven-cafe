@@ -29,7 +29,7 @@ export default function LocationModal({
 
         {/* MAP + FORM */}
         <div className="p-0">
-          <LiveMap setAddress={setAddress} />
+          <LiveMap setAddress={setAddress} setOpen={setOpen} />
         </div>
       </DialogContent>
     </Dialog>

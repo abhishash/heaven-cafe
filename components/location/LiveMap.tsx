@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import L from "leaflet";
 import { useAddNewAddressMutation } from "@/store/services/address-api";
 import AddressSearch from "./AddressSearch";
+import { toast } from "sonner";
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
@@ -70,19 +71,24 @@ function MapClickHandler({
 }
 
 /* ---------------- Input UI ---------------- */
-const Input = (props: any) => (
+const Input = ({ errors, ...props }: any) => (
   <input
     {...props}
-    className="w-full px-4 py-2 border rounded-xl bg-white shadow-sm 
-    focus:outline-none focus:ring-2 focus:ring-primary/40 
-    transition text-sm"
+    className={`w-full px-4 py-3 border rounded-xl bg-white shadow-sm 
+    focus:outline-none focus:ring-2 transition text-sm
+    ${errors
+        ? "border-red-500 focus:ring-red-500"
+        : "border-gray-300 focus:ring-primary/40"
+      }`}
   />
 );
 
 export default function LiveMap({
   setAddress,
+  setOpen
 }: {
   setAddress?: (addr: any) => void;
+  setOpen: (val: boolean) => void;
 }) {
   const [position, setPosition] = useState<[number, number]>([
     28.6139, 77.209,
@@ -98,8 +104,34 @@ export default function LiveMap({
     lat: 0,
     lng: 0,
   });
+  const [errors, setErrors] = useState<any>({});
 
   const [addAddress, { isLoading }] = useAddNewAddressMutation();
+  const validate = () => {
+    let newErrors: any = {};
+
+    if (!address.person.trim()) {
+      newErrors.person = "Person name is required";
+    }
+
+    if (!address.contact.trim()) {
+      newErrors.contact = "Contact number is required";
+    } else if (!/^\d{10}$/.test(address.contact)) {
+      newErrors.contact = "Enter valid 10-digit number";
+    }
+
+    if (!address.street.trim()) {
+      newErrors.street = "Street address is required";
+    }
+
+    if (!address.address) {
+      newErrors.address = "Location is required";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
 
   /* ---------------- GPS detect ---------------- */
   useEffect(() => {
@@ -136,6 +168,23 @@ export default function LiveMap({
     setAddressState(updated);
     setAddress?.(updated);
   };
+
+  const handleSubmit = async () => {
+    if (!validate()) return;
+    try {
+      await addAddress({
+        ...address,
+        lat: position[0],
+        lng: position[1],
+        is_default: true,
+      });
+      toast.success("Address saved successfully!");
+      setOpen(false);
+    } catch {
+      alert("Failed to save address. Please try again.");
+    }
+  }
+
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -190,26 +239,28 @@ export default function LiveMap({
             placeholder="Person Name"
             value={address.person}
             onChange={(e: any) => updateField("person", e.target.value)}
+            errors={errors.person}
           />
 
           <Input
             placeholder="contact Number"
             value={address.contact}
             onChange={(e: any) => updateField("contact", e.target.value)}
+            errors={errors.contact}
           />
         </div>
-
-
         <Input
           placeholder="Street Address"
           value={address.street}
           onChange={(e: any) => updateField("street", e.target.value)}
+          errors={errors.street}
         />
 
         <Input
           placeholder="Landmark (optional)"
           value={address.landmark}
           onChange={(e: any) => updateField("landmark", e.target.value)}
+          errors={errors.landmark}
         />
 
         {/* SELECT */}
@@ -241,19 +292,13 @@ export default function LiveMap({
 
         {/* BUTTON */}
         <button
-          onClick={async () => {
-            await addAddress({
-              ...address,
-              lat: position[0],
-              lng: position[1],
-              is_default: true,
-            });
-          }}
+          onClick={handleSubmit}
+          disabled={isLoading}
           className="w-full py-2 cursor-pointer bg-primary text-white rounded-xl shadow-md active:scale-95 transition"
-        >
-          Save Address
+        > {
+            isLoading ? "Saving..." : "Save Address"
+          }
         </button>
-
       </div>
     </div>
   );

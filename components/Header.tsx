@@ -23,13 +23,8 @@ import { SearchBar } from "./Search-bar";
 import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/lib/redux/store";
-import UserCard from "./user-card";
-import { isObject } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
-import AddressForm from "./pop-up/address-form";
-import MapPicker from "./location/LiveMap";
-import LocationModal from "./location/LocationModal";
 import { useQuery } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
 
@@ -95,13 +90,6 @@ export default function Header() {
       `}</style>
       {/* Desktop  Navigation */}
       
-      {/* <div>
-        <button onClick={() => setOpen(true)}>
-          Open Location Picker
-        </button>
-
-        <LocationModal open={open} setOpen={setOpen} />
-      </div> */}
 
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
         <div className="flex">

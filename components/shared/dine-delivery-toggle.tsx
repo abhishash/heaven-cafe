@@ -38,7 +38,7 @@ export default function DineDeliveryToggle() {
                         }`}
                 />
             </button>
-            <LocationModal open={open} setOpen={setOpen} />
+            <LocationModal open={open}  setOpen={setOpen} />
             {/* Dine-in/Takeaway Label */}
             <AnimatePresence mode="wait">
                 <motion.span
