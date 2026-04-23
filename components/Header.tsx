@@ -28,7 +28,7 @@ import { isObject } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
 import AddressForm from "./pop-up/address-form";
-import MapPicker from "./LiveMap";
+import MapPicker from "./location/LiveMap";
 import LocationModal from "./location/LocationModal";
 import { useQuery } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";

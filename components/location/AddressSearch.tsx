@@ -1,92 +1,82 @@
-'use client';
+import { useState } from "react";
 
-import { useState, useEffect, useCallback } from 'react';
-import { useMap } from 'react-leaflet';
+export default function AddressSearch({
+  setPosition,
+  setAddress,
+}: {
+  setPosition: (pos: [number, number]) => void;
+  setAddress: (addr: any) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-export interface SearchResult {
-  name: string;
-  address: string;
-  lat: number;
-  lng: number;
-}
+  const searchLocation = async (value: string) => {
+    setQuery(value);
 
-export default function AddressSearch() {
-  const map = useMap(); // ✅ requires inside MapContainer
-
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [show, setShow] = useState(false);
-
-  const searchLocation = useCallback(async (q: string) => {
-    if (q.length < 3) {
+    if (value.length < 3) {
       setResults([]);
-      setShow(false);
       return;
     }
 
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=5`
-      );
+    setLoading(true);
 
-      const data = await res.json();
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${value}`
+    );
+    const data = await res.json();
 
-      const formatted = data.map((item: any) => ({
-        name: item.display_name.split(',')[0],
-        address: item.display_name,
-        lat: parseFloat(item.lat),
-        lng: parseFloat(item.lon),
-      }));
+    setResults(data);
+    setLoading(false);
+  };
 
-      setResults(formatted);
-      setShow(true);
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
+  const handleSelect = (place: any) => {
+    const lat = parseFloat(place.lat);
+    const lng = parseFloat(place.lon);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      searchLocation(query);
-    }, 400);
+    setPosition([lat, lng]);
 
-    return () => clearTimeout(timer);
-  }, [query, searchLocation]);
+    setAddress((prev: any) => ({
+      ...prev,
+      address: place.display_name,
+      lat,
+      lng,
+    }));
 
-  const handleSelect = (place: SearchResult) => {
-    setQuery(place.name);
-    setShow(false);
-
-    map.flyTo([place.lat, place.lng], 16);
+    setResults([]);
+    setQuery(place.display_name);
   };
 
   return (
-    <div className="absolute top-4 left-4 z-[1000] w-[300px] bg-white rounded-xl shadow-lg p-2">
-      
-      <input
-        type="text"
-        placeholder="Search location..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full p-2 border rounded-lg outline-none"
-      />
+    <div className="absolute top-1 left-3 right-2 z-[1000]">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <input
+          value={query}
+          onChange={(e) => searchLocation(e.target.value)}
+          placeholder="Search address..."
+          className="w-full px-4 py-2 text-sm outline-none"
+        />
 
-      {show && results.length > 0 && (
-        <div className="mt-2 max-h-60 overflow-auto">
-          {results.map((r, i) => (
-            <div
-              key={i}
-              onClick={() => handleSelect(r)}
-              className="p-2 hover:bg-gray-100 cursor-pointer rounded"
-            >
-              <p className="text-sm font-medium">{r.name}</p>
-              <p className="text-xs text-gray-500 truncate">
-                {r.address}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
+        {loading && (
+          <div className="px-4 py-2 text-xs text-gray-400">
+            Searching...
+          </div>
+        )}
+
+        {results.length > 0 && (
+          <div className="max-h-60 overflow-y-auto border-t">
+            {results.map((item, i) => (
+              <div
+                key={i}
+                onClick={() => handleSelect(item)}
+                className="px-4 py-2 text-xs cursor-pointer hover:bg-gray-100"
+              >
+                {item.display_name}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

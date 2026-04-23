@@ -10,7 +10,20 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
+import L from "leaflet";
 import { useAddNewAddressMutation } from "@/store/services/address-api";
+import AddressSearch from "./AddressSearch";
+
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl:
+    "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
+  iconUrl:
+    "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+  shadowUrl:
+    "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+});
 
 /* ---------------- Recenter ---------------- */
 function RecenterMap({ position }: { position: [number, number] }) {
@@ -60,8 +73,8 @@ function MapClickHandler({
 const Input = (props: any) => (
   <input
     {...props}
-    className="w-full px-4 py-3 border rounded-xl bg-white shadow-sm 
-    focus:outline-none focus:ring-2 focus:ring-black/10 
+    className="w-full px-4 py-2 border rounded-xl bg-white shadow-sm 
+    focus:outline-none focus:ring-2 focus:ring-primary/40 
     transition text-sm"
   />
 );
@@ -128,13 +141,18 @@ export default function LiveMap({
     <div className="h-screen flex flex-col bg-gray-50">
 
       {/* 🗺️ MAP SECTION */}
-      <div className="h-[260px] w-full p-2">
-        <div className="h-full w-full rounded-2xl overflow-hidden shadow-lg border relative">
-
+      <div className="h-[200px] sticky top-0 z-10 w-full p-2 bg-gray-50">
+        <div className="h-full relative w-full rounded-2xl overflow-hidden shadow-lg border relative">
+          {/* 🔍 SEARCH BAR */}
+          <AddressSearch
+            setPosition={setPosition}
+            setAddress={setAddressState}
+          />
           <MapContainer
             center={position}
             zoom={15}
-            className="w-full h-full"
+            attributionControl={false}
+            className="w-full h-full cursor-grab active:cursor-grabbing"
             zoomControl={false}
           >
             <TileLayer
@@ -152,41 +170,35 @@ export default function LiveMap({
               <Popup>Selected Location 📍</Popup>
             </Marker>
           </MapContainer>
-
-          {/* 📍 Floating hint */}
-          <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs shadow">
-            Tap on map to select location
-          </div>
-
         </div>
       </div>
 
       {/* 📍 ADDRESS CARD */}
       <div className="px-4">
-        <div className="bg-white border shadow-sm rounded-2xl p-4">
-
+        <div className="bg-white border shadow-sm rounded-2xl py-2 px-4">
           <p className="text-xs text-gray-500 mb-1">Selected Area</p>
-          <p className="text-sm font-medium text-gray-800 leading-snug">
+          <p className="text-xs font-medium text-gray-800 leading-snug">
             {address.address || "Detecting location..."}
           </p>
-
         </div>
       </div>
 
       {/* 🧾 FORM */}
-      <div className="flex-1 no-scrollbar overflow-y-auto px-4 mt-4 space-y-3">
+      <div className="flex-1 no-scrollbar overflow-y-auto px-4 mt-4 space-y-2">
+        <div className="flex gap-x-2 mt-0.5">
+          <Input
+            placeholder="Person Name"
+            value={address.person}
+            onChange={(e: any) => updateField("person", e.target.value)}
+          />
 
-        <Input
-          placeholder="Person Name"
-          value={address.person}
-          onChange={(e: any) => updateField("person", e.target.value)}
-        />
+          <Input
+            placeholder="contact Number"
+            value={address.contact}
+            onChange={(e: any) => updateField("contact", e.target.value)}
+          />
+        </div>
 
-        <Input
-          placeholder="contact Number"
-          value={address.contact}
-          onChange={(e: any) => updateField("contact", e.target.value)}
-        />
 
         <Input
           placeholder="Street Address"
@@ -201,15 +213,31 @@ export default function LiveMap({
         />
 
         {/* SELECT */}
-        <select
-          value={address.address_type}
-          onChange={(e) => updateField("address_type", e.target.value)}
-          className="w-full px-4 py-3 border rounded-xl bg-white shadow-sm text-sm"
-        >
-          <option value="Home">🏠 Home</option>
-          <option value="Work">💼 Work</option>
-          <option value="Other">📍 Other</option>
-        </select>
+        <div className="flex gap-2">
+          {[
+            { label: "Home", icon: "🏠" },
+            { label: "Work", icon: "💼" },
+            { label: "Other", icon: "📍" },
+          ].map((item) => {
+            const active = address.address_type === item.label;
+
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => updateField("address_type", item.label)}
+                className={`flex-1 flex items-center justify-center gap-1 px-4 py-2 rounded-xl border text-sm transition
+          ${active
+                    ? "bg-primary text-white border-primary shadow-md"
+                    : "bg-white text-gray-700 border-gray-300"
+                  }`}
+              >
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
 
         {/* BUTTON */}
         <button
@@ -221,7 +249,7 @@ export default function LiveMap({
               is_default: true,
             });
           }}
-          className="w-full py-3 cursor-pointer bg-primary text-white rounded-xl shadow-md active:scale-95 transition"
+          className="w-full py-2 cursor-pointer bg-primary text-white rounded-xl shadow-md active:scale-95 transition"
         >
           Save Address
         </button>

@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from "framer-motion";
+import LocationModal from '../location/LocationModal';
 
 export default function DineDeliveryToggle() {
     const [isDineIn, setIsDineIn] = useState(false)
+    const [open, setOpen] = useState(false);
 
     // Check localStorage on page load
     useEffect(() => {
@@ -13,6 +15,7 @@ export default function DineDeliveryToggle() {
         if (storedType === "dining") {
             setIsDineIn(true);
         } else {
+            setOpen(true);
             setIsDineIn(false);
         }
     }, []);
@@ -21,7 +24,11 @@ export default function DineDeliveryToggle() {
         <div className="flex sm:flex-row flex-row-reverse items-center justify-start px-4 sm:justify-center gap-4">
             {/* Toggle Switch */}
             <button
-                onClick={() => { setIsDineIn(!isDineIn); localStorage.setItem("orderType", isDineIn ? "delivery" : "dining"); }}
+                onClick={() => { 
+                    setIsDineIn(!isDineIn); 
+                    localStorage.setItem("orderType", isDineIn ? "dining" : "delivery"); 
+                    setOpen(isDineIn ? false : true);
+                }}
                 className={`relative cursor-pointer inline-flex h-5 min-w-12 items-center rounded-full transition-colors duration-300 bg-secondary`}
                 aria-label="Toggle between delivery and dine-in"
             >
@@ -31,7 +38,7 @@ export default function DineDeliveryToggle() {
                         }`}
                 />
             </button>
-
+            <LocationModal open={open} setOpen={setOpen} />
             {/* Dine-in/Takeaway Label */}
             <AnimatePresence mode="wait">
                 <motion.span

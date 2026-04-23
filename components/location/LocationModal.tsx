@@ -10,7 +10,7 @@ import {
 
 import dynamic from "next/dynamic";
 
-const LiveMap = dynamic(() => import("../LiveMap"), {
+const LiveMap = dynamic(() => import("./LiveMap"), {
   ssr: false,
 });
 
@@ -25,7 +25,7 @@ export default function LocationModal({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md py-1  px-0 max-h-[96vh] no-scrollbar overflow-y-auto overflow-x-hidden rounded-2xl">
+      <DialogContent className="sm:max-w-md py-1 px-0 max-h-[80dvh] sm:max-h-[96vh] no-scrollbar overflow-y-auto overflow-x-hidden rounded-2xl">
 
         {/* MAP + FORM */}
         <div className="p-0">
