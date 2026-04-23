@@ -46,6 +46,13 @@ function OrderConfirmationPage() {
           icon: CheckCircle,
           color: 'text-green-600',
         };
+      case 'wallet':
+        return {
+          name: 'Wallet',
+          description: 'Payment completed',
+          icon: CheckCircle,
+          color: 'text-green-600',
+        };
       default:
         return {
           name: 'Unknown',
