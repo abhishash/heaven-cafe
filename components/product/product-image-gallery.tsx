@@ -17,7 +17,6 @@ export default function ProductImageGallery({ images, thumbnailImg }: { images: 
                 src={`${imageBaseUrl}/${thumbnailImg}`}
                              alt="Product image"
                 fill
-                className="object-cover"
                  sizes="(max-width: 768px) 100vw, 50vw"
                   onLoadingComplete={() => setIsLoading(false)}
                 priority
