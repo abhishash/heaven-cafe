@@ -84,11 +84,11 @@ const Input = ({ errors, ...props }: any) => (
 );
 
 export default function LiveMap({
-  setAddress,
-  setOpen
+  setOpen,
+  refetch
 }: {
-  setAddress?: (addr: any) => void;
   setOpen: (val: boolean) => void;
+  refetch?: () => void
 }) {
   const [position, setPosition] = useState<[number, number]>([
     28.6139, 77.209,
@@ -107,6 +107,7 @@ export default function LiveMap({
   const [errors, setErrors] = useState<any>({});
 
   const [addAddress, { isLoading }] = useAddNewAddressMutation();
+
   const validate = () => {
     let newErrors: any = {};
 
@@ -153,42 +154,38 @@ export default function LiveMap({
         lat,
         lng,
       }));
-
-      setAddress?.({
-        ...address,
-        address: data.display_name,
-        lat,
-        lng,
-      });
     });
   }, []);
 
   const updateField = (key: string, value: string) => {
     const updated = { ...address, [key]: value };
     setAddressState(updated);
-    setAddress?.(updated);
   };
 
   const handleSubmit = async () => {
     if (!validate()) return;
-    try {
-      await addAddress({
-        ...address,
-        lat: position[0],
-        lng: position[1],
-        is_default: true,
-      });
+
+    await addAddress({
+      ...address,
+      lat: position[0],
+      lng: position[1],
+      is_default: true,
+    }).then((res) => {
       toast.success("Address saved successfully!");
+      refetch && refetch()
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => {
+
       setOpen(false);
-    } catch {
-      alert("Failed to save address. Please try again.");
-    }
+    });
+    // toast.success("Address saved successfully!");
+
   }
 
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
-
       {/* 🗺️ MAP SECTION */}
       <div className="h-[200px] sticky top-0 z-10 w-full p-2 bg-gray-50">
         <div className="h-full relative w-full rounded-2xl overflow-hidden shadow-lg border relative">
@@ -277,7 +274,7 @@ export default function LiveMap({
                 key={item.label}
                 type="button"
                 onClick={() => updateField("address_type", item.label)}
-                className={`flex-1 flex items-center justify-center gap-1 px-4 py-2 rounded-xl border text-sm transition
+                className={`flex-1 cursor-pointer flex items-center justify-center gap-1 px-4 py-2 rounded-xl border text-sm transition
           ${active
                     ? "bg-primary text-white border-primary shadow-md"
                     : "bg-white text-gray-700 border-gray-300"

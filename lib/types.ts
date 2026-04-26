@@ -197,7 +197,7 @@ export interface CartState {
 export interface UserAddress {
   id: number;
   userId: number;
-  is_default: string;
+  is_default: number;
   person: string;
   landmark: string;
   country: string;
@@ -210,6 +210,7 @@ export interface UserAddress {
   pincode: number;
   personName: string;
   contact: string;
+  street: string;
   createdAt: string;
   updatedAt: string;
 }

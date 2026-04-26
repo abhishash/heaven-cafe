@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -17,21 +17,23 @@ const LiveMap = dynamic(() => import("./LiveMap"), {
 export default function LocationModal({
   open,
   setOpen,
+  refetch
 }: {
   open: boolean;
   setOpen: (val: boolean) => void;
+  refetch?: () => void
 }) {
-  const [address, setAddress] = useState<any>(null);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md py-1 px-0 max-h-[80dvh] sm:max-h-[96vh] no-scrollbar overflow-y-auto overflow-x-hidden rounded-2xl">
-
-        {/* MAP + FORM */}
-        <div className="p-0">
-          <LiveMap setAddress={setAddress} setOpen={setOpen} />
-        </div>
-      </DialogContent>
-    </Dialog>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-md py-1 px-0 max-h-[80dvh] sm:max-h-[96vh] no-scrollbar overflow-y-auto overflow-x-hidden rounded-2xl">
+          {/* MAP + FORM */}
+          <div className="p-0">
+            <LiveMap setOpen={setOpen} refetch={refetch} />
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

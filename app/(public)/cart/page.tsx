@@ -12,20 +12,39 @@ import { useSession } from 'next-auth/react';
 import { useMutation } from '@tanstack/react-query';
 import { fetchHandler } from '@/lib/fetch-handler';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
+import { useGetAddressesQuery } from '@/store/services/api';
+import { AddressResponse } from '@/lib/types';
+import TableNumber from '@/components/pop-up/table-number';
+import { useState } from 'react';
+import { SquarePen } from 'lucide-react';
+import AddressPopUp from '@/components/checkout/modal/address-pop';
 
 export default function CartPage() {
-
+  const [open, setOpen] = useState(false);
+  const [showAddress, setShowAddress] = useState(false);
   const { items: cart, totalPrice } = useSelector((state: RootState) => state.cart);
+  const isDineIn = useSelector((state: RootState) => state.orderType?.isDineIn);
+  const tableNumber = useSelector((state: RootState) => state.orderType?.tableNumber);
   const { data: session } = useSession();
   const dispatch = useDispatch();
+
+  //-------Clear the cart mutation---------//
   const { mutateAsync, isPending } = useMutation({
-      mutationFn: () =>
-        fetchHandler({
-          endpoint: "cart/clear",
-          method: "DELETE",
-          token: session?.user?.accessToken,
-        })
-    });
+    mutationFn: () =>
+      fetchHandler({
+        endpoint: "cart/clear",
+        method: "DELETE",
+        token: session?.user?.accessToken,
+      })
+  });
+
+  //------Get the all customer address-----//
+  const { data, isLoading, refetch } = useGetAddressesQuery<{
+    data: AddressResponse;
+    isLoading: boolean;
+  }>(null);
+
+  const defaultAddress = data?.data?.find((item) => item?.is_default === 1);
 
   const handleClearCart = async () => {
     const response = await mutateAsync();
@@ -102,16 +121,47 @@ export default function CartPage() {
                   {formatPrice(totalPrice, "INR")}
                 </span>
               </div>
+              {/* Footer section */}
+              <div className='flex gap-y-2 flex-col'>
+                <div
+                  className="w-full relative cursor-pointer text-primary border border-primary rounded-2xl bg-primary/5 font-medium px-4 py-3 flex flex-col items-start gap-1 text-left"
+                >
+                  {isLoading ? (
+                    <p className="text-sm animate-pulse">
+                      Fetching your default address...
+                    </p>
+                  ) : (
+                    isDineIn ? <> <p onClick={() => setOpen(true)} className="text-xs flex justify-between text-primary truncate w-full">
+                      Table No : {tableNumber}  <button onClick={() => setOpen(true)} className='absolute bottom-2 bg-primary py-1 px-1 rounded-md cursor-pointer right-2'><SquarePen className='size-4 text-white' /> </button>
+                    </p></> : <>
+                      <p className="text-sm font-semibold truncate w-full">
+                        📍 {defaultAddress?.address || "No address found"}
+                      </p> <button onClick={() => setShowAddress(true)} className='absolute bottom-2 bg-primary py-1 px-1 rounded-md cursor-pointer right-2'><SquarePen className='size-4 text-white' /> </button>
+                      {/* Landmark + Street */}
+                      <p className="text-xs text-muted-foreground truncate w-full">
+                        {defaultAddress?.landmark}, {defaultAddress?.street}
+                      </p>
+                      {/* Contact */}
+                      <div className="text-xs text-muted-foreground">
+                        <span className="font-medium">Contact:</span>{" "}
+                        {defaultAddress?.person} - {defaultAddress?.contact}
+                      </div>
+                    </>
+                  )}
+                </div>
 
-              <Link href="/checkout">
-                <Button size="lg" className="w-full cursor-pointer bg-primary rounded-full hover:bg-primary/80 text-white font-bold">
-                  Proceed to Checkout
-                </Button>
-              </Link>
+                <Link href="/checkout">
+                  <Button size="lg" className="w-full cursor-pointer bg-primary rounded-full hover:bg-primary/80 text-white font-bold">
+                    Proceed to Checkout
+                  </Button>
+                </Link>
+              </div>
+              {isDineIn && <TableNumber setOpen={setOpen} open={open} />}
+              <AddressPopUp setOpen={setShowAddress} open={showAddress} addresses={data?.data} refetch={refetch} />
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </main >
   );
 }

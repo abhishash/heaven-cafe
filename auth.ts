@@ -23,7 +23,6 @@ export const authOptions: NextAuthOptions = {
                     password: credentials?.password,
                 };
 
-
                 try {
                     const res = await fetchHandler<any>({
                         endpoint: "login",
@@ -42,6 +41,7 @@ export const authOptions: NextAuthOptions = {
                             email: customerInfo?.email,
                             phone: customerInfo?.phone,
                             id: customerInfo?.id,
+                            isAddress: res?.is_address,
                         };
                     } else {
                         throw new Error(res?.message as string);
@@ -64,6 +64,7 @@ export const authOptions: NextAuthOptions = {
             if (isObject(user) && user.token) {
                 token.accessToken = user.token as string;
                 token.role = "customer";
+                token.isAddress = user.isAddress;
             }
             return token;
         },
@@ -75,6 +76,7 @@ export const authOptions: NextAuthOptions = {
                     ...session.user,
                     accessToken: token.accessToken as string,
                     role: token.role,
+                    isAddress: token.isAddress,
                 },
                 error: token.error,
             };

@@ -7,6 +7,7 @@ declare module "next-auth" {
       accessToken: string;
       refreshToken?: string;
       role?: string;
+      isAddress: boolean;
     } & DefaultSession["user"];
   }
 
@@ -15,6 +16,7 @@ declare module "next-auth" {
     accessToken: string;
     refreshToken?: string;
     role?: string;
+    isAddress: boolean;
   }
 }
 

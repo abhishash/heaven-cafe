@@ -3,31 +3,61 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from "framer-motion";
 import LocationModal from '../location/LocationModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleOrderType } from '@/lib/redux/slice/orderTypeSlice';
+import { RootState } from '@/lib/redux/store';
+import { toast } from 'sonner';
+import { useSession } from 'next-auth/react';
 
 export default function DineDeliveryToggle() {
-    const [isDineIn, setIsDineIn] = useState(false)
     const [open, setOpen] = useState(false);
 
-    // Check localStorage on page load
-    useEffect(() => {
-        const storedType = localStorage.getItem("orderType");
+    const dispatch = useDispatch();
+    const isDineIn = useSelector((state: RootState) => state.orderType.isDineIn);
+    const { data: session } = useSession();
 
-        if (storedType === "dining") {
-            setIsDineIn(true);
-        } else {
-            setOpen(true);
-            setIsDineIn(false);
+    const getLocationAndOpen = () => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                if (!session?.user?.isAddress) {
+                    setOpen(true);
+                }
+            },
+            (error) => {
+                toast.warning("Please allow location access to continue.");
+                setOpen(false);
+            }
+        );
+    };
+
+    useEffect(() => {
+        if (!navigator.permissions) {
+            getLocationAndOpen();
+            return;
         }
+
+        navigator.permissions
+            .query({ name: "geolocation" as PermissionName })
+            .then((result) => {
+                if (result.state === "granted") {
+                    getLocationAndOpen(); // already allowed
+                } else if (result.state === "prompt") {
+                    getLocationAndOpen(); // trigger permission popup
+                } else {
+                    setOpen(false);
+                }
+            });
     }, []);
 
     return (
         <div className="flex sm:flex-row flex-row-reverse items-center justify-start px-4 sm:justify-center gap-4">
             {/* Toggle Switch */}
             <button
-                onClick={() => { 
-                    setIsDineIn(!isDineIn); 
-                    localStorage.setItem("orderType", isDineIn ? "dining" : "delivery"); 
-                    setOpen(isDineIn ? false : true);
+                onClick={() => {
+                    dispatch(toggleOrderType());
+                    if (!isDineIn && !session?.user?.isAddress) {
+                        getLocationAndOpen();
+                    }
                 }}
                 className={`relative cursor-pointer inline-flex h-5 min-w-12 items-center rounded-full transition-colors duration-300 bg-secondary`}
                 aria-label="Toggle between delivery and dine-in"
@@ -38,7 +68,7 @@ export default function DineDeliveryToggle() {
                         }`}
                 />
             </button>
-            <LocationModal open={open}  setOpen={setOpen} />
+            <LocationModal open={open} setOpen={setOpen} />
             {/* Dine-in/Takeaway Label */}
             <AnimatePresence mode="wait">
                 <motion.span
@@ -49,7 +79,7 @@ export default function DineDeliveryToggle() {
                     transition={{ duration: 0.3 }}
                     className="text-xs sm:text-sm text-nowrap text-white cursor-pointer font-semibold"
                 >
-                    {isDineIn ? "DELIVERY" : "DINE-IN / TAKEAWAY"}
+                    {isDineIn ? "DINE-IN / TAKEAWAY" : "DELIVERY"}
                 </motion.span>
             </AnimatePresence>
         </div>

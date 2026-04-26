@@ -148,7 +148,6 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
         const res = action.payload;
-        console.log("Fetched Cart:", res); // 👉 Debug log
 
         // 🔥 adjust based on your API response
         state.items = res?.data || [];

@@ -3,22 +3,11 @@
 import dynamic from "next/dynamic";
 
 const OrderTypeModal = dynamic(() => import("./pop-up/Order-type-modal"));
-const DineDeliveryToggle = dynamic(
-  () => import("./shared/dine-delivery-toggle"),
-);
+const DineDeliveryToggle = dynamic(() => import("./shared/dine-delivery-toggle"));
+
 import Link from "next/link";
-import {
-  Bell,
-  MenuIcon,
-  NotebookPen,
-  NotebookTabs,
-  Search,
-  ShoppingCart,
-  User,
-  UserIcon,
-} from "lucide-react";
+import { Bell, MenuIcon, NotebookPen, ShoppingCart, User, UserIcon,} from "lucide-react";
 import Image from "next/image";
-import { Button } from "./ui/button";
 import { SearchBar } from "./Search-bar";
 import { useSession } from "next-auth/react";
 import { useSelector } from "react-redux";
@@ -32,9 +21,6 @@ export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
   const { data: session } = useSession();
   const [showSearch, setShowSearch] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [open, setOpen] = useState(false);
-
 
   const lastScrollYRef = useRef(0);
 
@@ -90,7 +76,6 @@ export default function Header() {
       `}</style>
       {/* Desktop  Navigation */}
       
-
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
         <div className="flex">
           <Link href="/" className="flex items-center gap-2">
@@ -121,10 +106,8 @@ export default function Header() {
             <NotebookPen />
           </Link>
 
-          <UserSection />
           
           <NotificationBell />
-
           {/* <UserCard /> */}
           <Link href="/cart" className="relative">
             <ShoppingCart
@@ -132,11 +115,13 @@ export default function Header() {
               size={24}
             />
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-primary-foreground text-primary text-[11px] sm:text-xs font-bold rounded-full sm:w-6 w-5 h-5 sm:h-6 flex items-center justify-center">
+              <span className="absolute -top-2 -right-2.5 border border-white bg-primary text-white shadow-2xl text-[11px] sm:text-xs font-bold rounded-full sm:w-5 w-5 h-5 sm:h-5 flex items-center justify-center">
                 {totalItems}
               </span>
             )}
           </Link>
+          <UserSection />
+
         </div>
       </nav>
       {/* Mobile Navigation */}
@@ -244,7 +229,7 @@ export function UserSection() {
 
       {/* Cart / Count Badge */}
       <div className="relative">
-        <h2 className="border py-1.5 font-semibold bg-white text-primary px-2 border-white rounded-md text-sm">
+        <h2 className="border text-nowrap py-1.5 font-semibold bg-white text-primary px-2 border-white rounded-md text-sm">
           Wallet Amt:{" "}
           {isLoggedIn
             ? isLoading
@@ -278,7 +263,7 @@ export function NotificationBell({ isMobile }: { isMobile?: boolean }) {
       <Link href="/notification" className="flex flex-col items-center relative text-xs">
         <Bell size={22} className="animate-ring" />
         {notificationCount > 0 && (
-          <span className="absolute -top-1 right-3 bg-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full shadow-md">
+          <span className="absolute -top-1 right-3 bg-primary text-white shadow-2xl text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
             {notificationCount}
           </span>
         )}
@@ -291,7 +276,7 @@ export function NotificationBell({ isMobile }: { isMobile?: boolean }) {
     <Link href="/notification" className="relative">
       <Bell className="text-primary-foreground hover:opacity-80 transition animate-ring" size={24} />
       {notificationCount > 0 && (
-        <span className="absolute -top-2 -right-2 bg-primary-foreground text-primary text-[11px] sm:text-xs font-bold rounded-full sm:w-5 w-5 h-5 sm:h-5 flex items-center justify-center shadow-md">
+        <span className="absolute -top-2 -right-2 bg-primary text-white shadow-2xl text-[11px] sm:text-[11px] font-bold rounded-full sm:w-5 w-5 h-5 sm:h-5 flex items-center justify-center border border-white">
           {notificationCount}
         </span>
       )}

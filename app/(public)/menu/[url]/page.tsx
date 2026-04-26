@@ -4,8 +4,6 @@ import { Category, ProductDataTypesList, ProductResponse, ProductTypes, SubCateg
 import { CATALOG_DETAIL } from '@/lib/constants'
 import ProductCard from '@/components/ProductCard'
 import CategoryFilter from '@/components/shared/category-filter'
-import Link from 'next/link'
-import { ArrowLeftIcon } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import BackPath from '@/components/shared/back-path'
 import { isObject } from 'framer-motion'

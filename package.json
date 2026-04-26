@@ -64,6 +64,7 @@
     "react-redux": "^9.2.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
+    "redux-persist": "^6.0.0",
     "server-only": "^0.0.1",
     "sonner": "^1.7.4",
     "stripe": "^20.4.0",
