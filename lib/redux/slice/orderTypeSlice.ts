@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { TruckElectric } from "lucide-react";
 
 type OrderTypeState = {
   isDineIn: boolean;
@@ -6,7 +7,7 @@ type OrderTypeState = {
 };
 
 const initialState: OrderTypeState = {
-  isDineIn: false,
+  isDineIn: true,
   tableNumber: null,
 };
 

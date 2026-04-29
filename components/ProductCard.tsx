@@ -19,6 +19,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       parseFloat(product.ac_price)) *
     100,
   );
+  
   return (
     <Link href={`/product/${product.url}`}>
       <motion.div
@@ -29,7 +30,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer h-full flex flex-col"
       >
         {/* Image */}
-        <div className="relative w-full h-48 bg-gray-100 overflow-hidden">
+        <div className="relative w-full h-50 bg-gray-100 overflow-hidden">
           <motion.div
             whileHover={{ scale: 1.08 }}
             transition={{ duration: 0.3 }}
@@ -39,7 +40,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               src={`${imageBaseUrl}${product.image}`}
               alt={product.name}
               fill
-              className="object-contain object-center"
+              className="object-cover object-top"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </motion.div>

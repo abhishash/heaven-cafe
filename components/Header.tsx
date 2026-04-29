@@ -3,10 +3,10 @@
 import dynamic from "next/dynamic";
 
 const OrderTypeModal = dynamic(() => import("./pop-up/Order-type-modal"));
-const DineDeliveryToggle = dynamic(() => import("./shared/dine-delivery-toggle"));
+const DineDeliveryToggle = dynamic(() => import("./shared/delivery-toggle"));
 
 import Link from "next/link";
-import { Bell, MenuIcon, NotebookPen, ShoppingCart, User, UserIcon,} from "lucide-react";
+import { Bell, MenuIcon, NotebookPen, ShoppingCart, User, UserIcon, } from "lucide-react";
 import Image from "next/image";
 import { SearchBar } from "./Search-bar";
 import { useSession } from "next-auth/react";
@@ -16,11 +16,13 @@ import { useState, useEffect, useRef } from "react";
 import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
 import { useQuery } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
   const { data: session } = useSession();
   const [showSearch, setShowSearch] = useState(true);
+  const isMobile = useIsMobile();
 
   const lastScrollYRef = useRef(0);
 
@@ -75,23 +77,26 @@ export default function Header() {
         }
       `}</style>
       {/* Desktop  Navigation */}
-      
+
       <nav className="container mx-auto pl-0 py-1.5 pr-2 hidden sm:flex items-center justify-between">
-        <div className="flex">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="text-primary-foreground font-bold text-2xl">
-              <Image
-                src="/logo/final-logo.png"
-                className=""
-                priority={true}
-                alt="main-logo"
-                width={140}
-                height={120}
-              />
-            </div>
-          </Link>
-          <DineDeliveryToggle />
-        </div>
+        {
+          !isMobile ? <div className="flex">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="text-primary-foreground font-bold text-2xl">
+                <Image
+                  src="/logo/final-logo.png"
+                  className=""
+                  priority={true}
+                  alt="main-logo"
+                  width={140}
+                  height={120}
+                />
+              </div>
+            </Link>
+            <DineDeliveryToggle />
+          </div> : null
+        }
+
         <OrderTypeModal />
         <div className="flex items-center gap-4">
           {/* Desktop Search */}
@@ -106,7 +111,6 @@ export default function Header() {
             <NotebookPen />
           </Link>
 
-          
           <NotificationBell />
           {/* <UserCard /> */}
           <Link href="/cart" className="relative">
@@ -141,20 +145,22 @@ export default function Header() {
             />
           </Link>
           {/* Toggle (Dine / Delivery) */}
-          <div className="">
-            <div className="w-full">
-              {/* Your existing toggle */}
-              <DineDeliveryToggle />
-            </div>
-          </div>
+          {
+            isMobile ? <div className="">
+              <div className="w-full">
+                {/* Your existing toggle */}
+                <DineDeliveryToggle />
+              </div>
+            </div> : null
+          }
+
         </div>
 
         <div
-          className={`px-2 z-40 transition-[max-height,opacity] duration-300 ${
-            showSearch
-              ? "max-h-20 opacity-100 pb-3"
-              : "max-h-0 opacity-0 pb-0 pointer-events-none"
-          }`}
+          className={`px-2 z-40 transition-[max-height,opacity] duration-300 ${showSearch
+            ? "max-h-20 opacity-100 pb-3"
+            : "max-h-0 opacity-0 pb-0 pointer-events-none"
+            }`}
         >
           <SearchBar placeholder="Search products..." />
         </div>

@@ -108,9 +108,7 @@ export default function CartPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Tax</span>
                   <span className="font-semibold">
-                    {
-                      formatPrice(0, "INR")
-                    }
+                    {formatPrice(0, "INR")}
                   </span>
                 </div>
               </div>

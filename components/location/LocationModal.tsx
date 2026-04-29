@@ -8,11 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-import dynamic from "next/dynamic";
-
-const LiveMap = dynamic(() => import("./LiveMap"), {
-  ssr: false,
-});
+import LiveMap from "./LiveMap";
 
 export default function LocationModal({
   open,

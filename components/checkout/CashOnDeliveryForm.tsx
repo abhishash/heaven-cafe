@@ -14,6 +14,7 @@ interface CashOnDeliveryFormProps {
   amount: number;
   onSubmit: (details: DeliveryDetails) => Promise<void>;
   isLoading?: boolean;
+  deliveryPrice: number
 }
 
 export interface DeliveryDetails {
@@ -30,6 +31,7 @@ export interface DeliveryDetails {
 export default function CashOnDeliveryForm({
   orderId,
   amount,
+  deliveryPrice,
   onSubmit,
   isLoading = false,
 }: CashOnDeliveryFormProps) {
@@ -83,7 +85,7 @@ export default function CashOnDeliveryForm({
       <div className="p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg flex gap-2">
         <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
         <p className="text-sm text-blue-700 dark:text-blue-300">
-          You will pay <strong>{formatPrice(amount + 20, "INR")}</strong> when your order arrives.
+          You will pay <strong>{formatPrice(amount + deliveryPrice, "INR")}</strong> when your order arrives.
         </p>
       </div>
 

@@ -17,6 +17,7 @@ const initialState: CartState = {
   items: [],
   totalAmount: 0,
   totalPrice: 0,
+  delhiveryCharge: "0",
   loading: false,
   initialized: false,
 };
@@ -148,11 +149,13 @@ const cartSlice = createSlice({
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
         const res = action.payload;
+        console.log(res);
 
         // 🔥 adjust based on your API response
         state.items = res?.data || [];
         state.totalAmount = res?.total_qty
         state.totalPrice = res?.totalPrice || 0;
+        state.delhiveryCharge = res?.delhivery_charge || 0;
         state.loading = false;
         state.initialized = true;
       })

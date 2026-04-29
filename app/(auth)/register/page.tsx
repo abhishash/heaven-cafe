@@ -187,12 +187,6 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Confirm Password Field */}
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword" className="text-foreground font-semibold">
-                Confirm Password
-              </Label>
-            </div>
 
 
 

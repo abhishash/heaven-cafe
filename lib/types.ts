@@ -192,6 +192,7 @@ export interface CartState {
   totalAmount: number;
   totalPrice: number;
   initialized: boolean;
+  delhiveryCharge: string;
 }
 
 export interface UserAddress {

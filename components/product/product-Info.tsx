@@ -58,8 +58,6 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
       type: "custom",
     }).then((res) => {
       if (res?.status) {
-        console.log('Add to Cart Response:', res);
-        toast.success(res?.message);
         dispatch(addToCart({ ...res?.data, customization }));
       } else {
         toast.warning(res?.message);
@@ -124,6 +122,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
     }
   }
   console.log('Product Info Rendered with product:', product);
+  
   return (
     <>
 

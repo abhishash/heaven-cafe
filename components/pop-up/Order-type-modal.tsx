@@ -21,12 +21,12 @@ export default function OrderTypeModal() {
       const timer = setTimeout(() => {
         setOpen(true);
       }, 3000); // 3 seconds delay
-
+  
       return () => clearTimeout(timer);
     }
   }, []);
 
-  const handleOpenChange = (isOpen: boolean) => {
+  const handleOpenChange = () => {
     localStorage.setItem("hasSeenOrderTypeModal", "true");
     setOpen(false);
   };
@@ -59,7 +59,7 @@ export default function OrderTypeModal() {
           {/* DINING */}
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={() => dispatch(toggleOrderType())}
+            onClick={() => { dispatch(toggleOrderType()); handleOpenChange(); }}
             className={`relative flex-1 text-xl cursor-pointer items-center flex px-3 py-1.5 rounded-lg border transition-all duration-300
         ${isDineIn
                 ? "bg-primary text-white border-primary"
@@ -87,7 +87,7 @@ export default function OrderTypeModal() {
           {/* DELIVERY */}
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={() => dispatch(toggleOrderType())}
+            onClick={() => { dispatch(toggleOrderType()); handleOpenChange(); }}
             className={`relative flex-1 gap-x-1 text-xl cursor-pointer items-center flex p-3 rounded-lg border transition-all duration-300
         ${!isDineIn
                 ? "bg-primary text-white border-primary"

@@ -17,13 +17,17 @@ export default function DineDeliveryToggle() {
     const { data: session } = useSession();
 
     const getLocationAndOpen = () => {
+        const isClosed = localStorage.getItem("locationModalClosed");
+
+        if (isClosed === "true") return;
+
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            () => {
                 if (!session?.user?.isAddress) {
                     setOpen(true);
                 }
             },
-            (error) => {
+            () => {
                 toast.warning("Please allow location access to continue.");
                 setOpen(false);
             }
@@ -31,6 +35,8 @@ export default function DineDeliveryToggle() {
     };
 
     useEffect(() => {
+        if (isDineIn) return; // ✅ STOP for dine-in
+
         if (!navigator.permissions) {
             getLocationAndOpen();
             return;
@@ -39,15 +45,11 @@ export default function DineDeliveryToggle() {
         navigator.permissions
             .query({ name: "geolocation" as PermissionName })
             .then((result) => {
-                if (result.state === "granted") {
-                    getLocationAndOpen(); // already allowed
-                } else if (result.state === "prompt") {
-                    getLocationAndOpen(); // trigger permission popup
-                } else {
-                    setOpen(false);
+                if (result.state === "granted" || result.state === "prompt") {
+                    getLocationAndOpen();
                 }
             });
-    }, []);
+    }, [isDineIn]); // ✅ important dependency
 
     return (
         <div className="flex sm:flex-row flex-row-reverse items-center justify-start px-4 sm:justify-center gap-4">
@@ -55,7 +57,10 @@ export default function DineDeliveryToggle() {
             <button
                 onClick={() => {
                     dispatch(toggleOrderType());
-                    if (!isDineIn && !session?.user?.isAddress) {
+
+                    const goingToDelivery = isDineIn; // because state will flip
+
+                    if (goingToDelivery && !session?.user?.isAddress) {
                         getLocationAndOpen();
                     }
                 }}
@@ -68,7 +73,14 @@ export default function DineDeliveryToggle() {
                         }`}
                 />
             </button>
-            <LocationModal open={open} setOpen={setOpen} />
+            <LocationModal open={open} setOpen={(val) => {
+                setOpen(val);
+
+                // ❗ when user closes modal → save flag
+                if (!val) {
+                    localStorage.setItem("locationModalClosed", "true");
+                }
+            }} />
             {/* Dine-in/Takeaway Label */}
             <AnimatePresence mode="wait">
                 <motion.span

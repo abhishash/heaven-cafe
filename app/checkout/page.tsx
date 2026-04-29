@@ -28,6 +28,8 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [storedType, setStoredType] = useState<string>("token");
+  const isDineIn = useSelector((state: RootState) => state.orderType.isDineIn);
+  const tableNumber = useSelector((state: RootState) => state.orderType?.tableNumber);
 
   const normalizedMethod = paymentMethod?.trim().toLowerCase() || "";
   const isCOD = normalizedMethod === "cod" || normalizedMethod.includes("cash");
@@ -50,7 +52,7 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  const { items: cart, totalPrice } = useSelector((state: RootState) => state.cart);
+  const { items: cart, totalPrice, delhiveryCharge } = useSelector((state: RootState) => state.cart);
 
   const { data, isPending: isPaymentMethodsPending } = useQuery<PaymentMethodsResponse>({
     queryKey: [`payment-methods`],
@@ -69,7 +71,7 @@ export default function CheckoutPage() {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (orderData: {
       order_type: string,
-      table_no?: number,
+      table_no?: number | undefined,
       payment_method: string,
       card_number?: string,
       payment_id?: string,
@@ -84,8 +86,8 @@ export default function CheckoutPage() {
 
   const placeOrder = async (paymentMethodName: string, details: { cardNumber?: string; paymentId?: string } = {}) => {
     const response = await mutateAsync({
-      order_type: storedType === "dining" ? "token" : storedType,
-      table_no: storedType === "dining" ? 10 : undefined,
+      order_type: isDineIn ? "token" : "delivery",
+      table_no: isDineIn ? (tableNumber ? Number(tableNumber) : undefined) : undefined,
       payment_method: paymentMethodName,
       card_number: details.cardNumber,
       payment_id: details.paymentId,
@@ -195,6 +197,7 @@ export default function CheckoutPage() {
                     amount={totalPrice}
                     onSubmit={handleCODSubmit}
                     isLoading={isPending}
+                    deliveryPrice={isDineIn ? 0 : parseFloat(delhiveryCharge)}
                   />
                 )}
 
@@ -216,7 +219,7 @@ export default function CheckoutPage() {
                 {isRazorpay && (
                   <RazorpayCheckout
                     orderId={orderId}
-                    amount={totalPrice + 20}
+                    amount={totalPrice + (isDineIn ? 0 : parseFloat(delhiveryCharge))}
                     customerEmail={session?.user?.email ?? "customer@example.com"}
                     customerName={session?.user?.name ?? "Customer"}
                     disabled={isPlacingOrder}
@@ -276,11 +279,11 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between mb-2">
                 <p className="text-muted-foreground">Delivery</p>
-                <p className="font-medium">{formatPrice(20, "INR")}</p>
+                <p className="font-medium">{formatPrice(isDineIn ? 0 : parseFloat(delhiveryCharge), "INR")}</p>
               </div>
               <div className="flex justify-between font-bold text-lg pt-2 border-t text-primary">
                 <p>Total</p>
-                <p>{formatPrice(totalPrice + 20, "INR")}</p>
+                <p>{formatPrice(totalPrice + (isDineIn ? 0 : parseFloat(delhiveryCharge)), "INR")}</p>
               </div>
             </div>
           </div>
