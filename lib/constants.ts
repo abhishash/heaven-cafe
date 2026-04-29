@@ -26,7 +26,7 @@ export const CATALOG_DETAIL = {
     method: "GET",
 }
 
-export const PROMATIONS = {
+export const PROMOTIONS = {
     endpoint: "promotionals",
     method: "GET",
 }
