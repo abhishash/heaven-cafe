@@ -11,9 +11,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
             <CustomerHeader />
-            <div className="min-h-screen flex my-20 px-0 sm:px-10 container mx-auto bg-background">
+            <div className="min-h-screen sticky top-20 mb-16 mt-20 sm:mt-20 gap-x-6 flex max-w-6xl mx-auto bg-background">
                 <BottomNavigation />
-                <main className="w-full">
+                <main className="flex-1">
                     {children}
                 </main>
             </div>

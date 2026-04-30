@@ -9,7 +9,6 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
-import Image from 'next/image';
 
 export function BottomNavigation() {
   const pathname = usePathname();

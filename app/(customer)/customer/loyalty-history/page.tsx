@@ -22,11 +22,11 @@ export default function LoyalityPage() {
   const pointsHistory = loyaltyPoints?.points || [];
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
       {/* Header with brush stroke */}
-      <div className="relative bg-white">
+      <div className="relative bg-white w-full">
         {/* Orange brush stroke background */}
-        <div className="h-40 bg-gradient-to-r from-primary via-secondary to-primary relative overflow-hidden">
+        <div className="h-32 sm:h-36 bg-gradient-to-r from-primary via-secondary to-primary relative overflow-hidden">
           <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 1228 180" preserveAspectRatio="none">
             <path
               d="M 0,60 Q 100,30 250,50 T 600,40 T 1000,60 L 1228,0 L 1228,120 Q 1100,140 800,130 T 300,140 L 0,150 Z"
@@ -38,7 +38,7 @@ export default function LoyalityPage() {
         </div>
 
         {/* Content container */}
-        <div className="flex flex-col items-center justify-center pt-8 pb-12 relative z-10 -mt-32">
+        <div className="flex flex-col items-center justify-center pt-8 relative z-10 -mt-32">
           {/* Crown icon */}
           <div className="mb-6 flex items-center justify-center w-20 h-20 bg-yellow-400 rounded-full border-4 border-yellow-300 shadow-lg">
             <svg
@@ -51,27 +51,27 @@ export default function LoyalityPage() {
           </div>
 
           {/* Points and title */}
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">{availablePoints} Coins</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{availablePoints} Coins</h1>
         </div>
       </div>
 
       {/* History section */}
-      <div className="max-w-4xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">History</h2>
+      <div className="w-full px-6 max-h-[80dvh] no-scrollbar overflow-y-auto py-2">
+        <div className="flex items-center justify-between mt-2 mb-4">
+          <h2 className="text-2xl font-bold text-primary">History</h2>
 
           {/* Time filter dropdown */}
           <div className="relative">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center gap-2 px-4 py-2 border-2 border-gray-800 rounded-full font-medium text-gray-900 hover:bg-gray-100 transition-colors"
+              className="flex items-center cursor-pointer gap-2 px-4 py-2 border-2 border-primary rounded-full font-medium text-primary hover:bg-gray-100 transition-colors"
             >
               {timeFilter}
               <ChevronDown className="w-4 h-4" />
             </button>
 
             {isOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-gray-800 rounded-lg shadow-lg z-20">
+              <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-primary rounded-lg shadow-lg z-20">
                 {timeOptions.map((option) => (
                   <button
                     key={option}
@@ -79,7 +79,7 @@ export default function LoyalityPage() {
                       setTimeFilter(option)
                       setIsOpen(false)
                     }}
-                    className="w-full text-left px-4 py-3 hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg transition-colors"
+                    className="w-full cursor-pointer text-left px-4 py-3 hover:bg-primary/10 first:rounded-t-lg last:rounded-b-lg transition-colors"
                   >
                     {option}
                   </button>
@@ -90,21 +90,22 @@ export default function LoyalityPage() {
         </div>
 
         {/* Transaction list */}
-        <div className="space-y-6">
+        <div className="space-y-1">
           {
             isLoading ? "Loading..." : pointsHistory?.map((transaction) => (
               <div
                 key={transaction.id}
-                className="flex items-center justify-between p-6 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
+                className="flex items-center justify-between px-4 py-4 rounded-sm bg-white border-gray-200 border-2 border-dotted transition-shadow"
               >
                 <div className="flex-1">
-                  <h3 className="font-bold text-gray-900 text-lg">{transaction?.order_no ?? transaction?.description}</h3>
-                  <p className="text-gray-500 text-sm">  {transaction?.created_at ? new Date(transaction?.created_at).toLocaleDateString('en-US', { day: 'numeric', year: 'numeric', month: 'long' }) : "N/A"}</p>
+                  <h3 className="font-semibold text-gray-900 text-base">{transaction?.order_no} || {transaction?.created_at ? new Date(transaction?.created_at).toLocaleDateString('en-US', { day: 'numeric', year: 'numeric', month: 'long' }) : "N/A"} </h3>
+                  <p className="text-gray-500 text-sm">  </p>
+                  <p className='text-gray-500 text-sm'>{transaction?.description}</p>
                 </div>
 
                 {/* Points badge */}
                 <div
-                  className={`flex items-center justify-center w-16 h-16 rounded-full font-bold text-lg ml-4 ${transaction.type === 'debit'
+                  className={`flex items-center justify-center w-12 h-12 rounded-full font-bold text-lg ml-4 ${transaction.type === 'debit'
                     ? 'bg-gray-400 text-white'
                     : 'bg-yellow-400 text-yellow-700 border-2 border-yellow-300'
                     }`}

@@ -28,25 +28,25 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    <div className="pb-5 pt-10 px-4">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">My Orders</h1>
+      <div className="mb-2">
+        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-1">My Orders</h1>
         <p className="text-muted-foreground">Track and manage all your cafe orders</p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-card rounded-lg border border-border p-4">
-          <p className="text-sm text-muted-foreground mb-1">Total Orders</p>
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
+        <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Total Orders</p>
           <p className="text-2xl font-bold text-foreground">{stats.total}</p>
         </div>
-        <div className="bg-card rounded-lg border border-border p-4">
-          <p className="text-sm text-muted-foreground mb-1">Delivered</p>
+        <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Delivered</p>
           <p className="text-2xl font-bold text-green-600">{stats.delivered}</p>
         </div>
-        <div className="bg-card rounded-lg border border-border p-4">
-          <p className="text-sm text-muted-foreground mb-1">In Progress</p>
+        <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">In Progress</p>
           <p className="text-2xl font-bold text-blue-600">{stats.processing}</p>
         </div>
       </div>
@@ -62,7 +62,7 @@ export default function OrdersPage() {
             <button
               key={status}
               onClick={() => setFilter(status)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${filter === status
+              className={`px-2.5 sm:px-4 py-1.5 sm:py-2 cursor-pointer rounded-full text-xs sm:text-sm font-medium transition-colors ${filter === status
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted text-muted-foreground hover:bg-muted/80'
                 }`}
@@ -75,7 +75,7 @@ export default function OrdersPage() {
 
       {/* Orders List */}
       {
-        isLoading ? <p>Loading...</p> : <div className="space-y-4">
+        isLoading ? <p>Loading...</p> : <div className="space-y-4 max-h-screen no-scrollbar overflow-y-auto">
           {isArray(data) ? (
             data?.map((order) => (
               <OrderCard key={order.id} order={order} />

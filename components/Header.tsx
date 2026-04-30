@@ -111,7 +111,7 @@ export default function Header() {
             <NotebookPen />
           </Link>
           
-          <WishlistIcon />
+          {/* <WishlistIcon /> */}
           
           <NotificationBell />
           {/* <UserCard /> */}
