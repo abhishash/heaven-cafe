@@ -57,7 +57,7 @@ export default function OrdersPage() {
           <Filter className="w-5 h-5 text-muted-foreground" />
           <p className="font-semibold text-foreground">Filter Orders</p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5">
           {(['all', 'delivered', 'processing', 'cancelled'] as FilterStatus[]).map((status) => (
             <button
               key={status}
