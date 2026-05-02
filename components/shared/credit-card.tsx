@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 const CreditCard = ({ cartName, status, balance, holderName, cardNumber, expiry, actionButton }: { balance?: string; cartName: string; holderName: string, cardNumber: string; expiry: string, status: ReactNode; actionButton?: ReactNode }) => {
   return (
-    <div className="flex md:flex-row min-w-[200px] flex-col items-center justify-center md:gap-20 gap-12">
+    <div className="flex md:flex-row min-w-[196px] sm:min-w-[200px] flex-col items-center justify-center md:gap-20 gap-12">
       <div className="flex flex-col w-full">
         <div className="grid grid-cols-4 justify-between bg-[#210D09ED] text-white min-h-40 w-full max-w-xs rounded-lg px-3.5 py-1.5 shadow-xl transition duration-400">
           <div className="flex relative gap-2 col-span-4 flex-col text-left mt-2">
