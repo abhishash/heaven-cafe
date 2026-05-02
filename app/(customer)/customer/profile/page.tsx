@@ -6,14 +6,22 @@ import { useGetUserCardsQuery, useGetUserDetailQuery, useSetPrimaryCardMutation,
 import { User, Mail, Phone, Calendar, ShoppingBag, Crown, Edit2, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
-import Image from "next/image";
 import CardSkeleton from '@/components/customer/placeholder/CardSkeleton';
+import CreditCard from '@/components/shared/credit-card';
+import { formatExpiry } from '@/lib/utils';
+import { motion } from "framer-motion";
+import { useRef } from "react";
 
 
 export default function ProfilePage() {
+  const sliderRef = useRef(null);
+  const [width, setWidth] = useState(0);
+  const containerRef = useRef(null);
+
+
   const membershipColor = {
     bronze: 'bg-orange-100 text-orange-800',
     silver: 'bg-gray-100 text-gray-800',
@@ -34,6 +42,21 @@ export default function ProfilePage() {
   const { data: userCards, isLoading: isUserCardsLoading, refetch } = useGetUserCardsQuery();
   const [setPrimaryCard, { isLoading: isSetPrimaryCardLoading }] = useSetPrimaryCardMutation();
   const [applyCard, { isLoading: isApplyCardLoading }] = useApplyCardMutation();
+
+  useEffect(() => {
+    const calculateWidth = () => {
+      if (sliderRef.current && containerRef.current) {
+        const scrollWidth = sliderRef.current.scrollWidth;
+        const offsetWidth = containerRef.current.offsetWidth;
+        setWidth(scrollWidth - offsetWidth);
+      }
+    };
+
+    calculateWidth();
+    window.addEventListener("resize", calculateWidth);
+
+    return () => window.removeEventListener("resize", calculateWidth);
+  }, [userCards]);
 
   const handleApplyCard = async (id: number) => {
     try {
@@ -66,9 +89,9 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    <div className="px-4 mt-10 mb-10 sm:my-0">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-4 sm:mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">My Profile</h1>
         <p className="text-muted-foreground">Manage your account settings and preferences</p>
       </div>
@@ -124,221 +147,173 @@ export default function ProfilePage() {
       </div>
 
       {/* Membership Section */}
-      <div className="bg-card rounded-lg border border-border p-6 mb-6">
+      <div className="bg-card rounded-lg border border-border p-3 sm:p-6 mb-6">
         <h3 className="text-lg font-bold text-foreground mb-4">Membership Benefits</h3>
         <p className="text-muted-foreground mb-4">{membershipBenefit[mockUserProfile.membershipTier]}</p>
         {isUserCardsLoading ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(3)].map((_, i) => (
             <CardSkeleton key={i} />
           ))}
-        </div> : <div className="grid md:grid-cols-3 gap-4">
-          {userCards?.available_card_types?.map((tier) => {
+        </div> : <div ref={containerRef} className="overflow-hidden max-w-[315px] sm:max-w-[720px]">
+          <motion.div
+            ref={sliderRef}
+            drag="x"
+            className="flex gap-1 sm:gap-4 cursor-grab active:cursor-grabbing"
+            dragConstraints={{ left: -width, right: 0 }}
+            dragElastic={0.08}
+            dragTransition={{ bounceStiffness: 200, bounceDamping: 25 }}
+          >
+            {userCards?.available_card_types?.map((tier) => {
 
-            return (
-              <div
-                key={tier.id}
-                className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
-        ${"border-border hover:border-primary/50"
-                  }`}
-              >
-                {/* Card Image */}
-                <div className="w-full h-32 relative mb-3">
-                  <Image
-                    src={`${process.env.ASSET_ENDPOINS}/${tier.image}`}
-                    alt={tier.name}
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-
-                {/* Title */}
-                <p className="font-semibold text-xs capitalize">
-                  {tier.name}
-                </p>
-
-                {/* Discount */}
-                <p className="text-xs text-muted-foreground mt-1">
-                  {tier.discount_percent
-                    ? `${tier.discount_percent}% Discount`
-                    : "Special Discount Available"}
-                </p>
-
-                {/* Description (HTML safe render) */}
-                <div
-                  className="text-xs text-muted-foreground mt-2 line-clamp-3"
-                  dangerouslySetInnerHTML={{ __html: tier.description }}
-                />
-
-                {/* Active Badge */}
-                <button
-                  onClick={() => handleApplyCard(tier.id)}
-                  disabled={isApplyCardLoading}
-                  className="mt-3 text-xs font-medium text-primary"
-                >
-                  {isApplyCardLoading ? 'Applying...' : 'Apply Card'}
-                </button>
-              </div>
-            );
-          })}
-
-          {userCards?.applied_cards?.map((tier) => {
-            const appliedcards = tier?.card_type;
-            const isActive = tier?.status === 1;
-            const isPrimary = tier?.is_primary === 1;
-
-            return (
-              <div
-                key={appliedcards?.id}
-                className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
-        ${isPrimary || isActive
-                    ? "border-green-500 bg-green-50"
-                    : "border-border hover:border-primary/50"
-                  }`}
-              >
-                {/* Card Image */}
-                <div className="w-full h-32 relative mb-3">
-                  <Image
-                    src={`${process.env.ASSET_ENDPOINS}/${appliedcards?.image}`}
-                    alt={appliedcards?.name}
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-
-                {/* Title */}
-                <p className="font-semibold text-xs capitalize">
-                  Card: {tier?.card_name}
-                </p>
-
-                {/* Title */}
-                <p className="font-semibold text-xs capitalize">
-                  Balance: {tier?.balance} <br /> Exy Date: {new Date(tier?.expiry_date).toLocaleDateString()}
-                </p>
-
-                {/* Title */}
-                <p className="font-semibold text-xs capitalize">
-                  Card: {tier?.card_number}
-                </p>
-
-
-                {/* Active Badge */}
-                {isPrimary ? (
-                  <div className="mt-3 text-xs font-medium text-green-500">
-                    Primary
-                  </div>
-                ) : isActive ? (
-                  <button
-                    disabled={isSetPrimaryCardLoading}
-                    onClick={() => {
-                      setPrimaryCard(tier?.id?.toString()).then(() => {
-                        refetch();
-                        toast.success("Primary card updated successfully!");
-                      }).catch(() => {
-                        toast.error("Failed to set primary card. Please try again.");
-                      })
-                    }}
-                    className="mt-3 cursor-pointer text-xs font-medium text-orange-500"
+              return (
+                <>
+                  <motion.div
+                    key={tier.id}
+                    className="min-w-[260px] shrink-0"
+                    whileTap={{ scale: 0.95 }}
                   >
-                    {isSetPrimaryCardLoading ? 'Setting...' : 'Set as Primary'}
-                  </button>
-                ) : null}
-              </div>
-            );
-          })}
-
-          {userCards?.leads?.map((tier) => {
-            const appliedcards = tier?.card_type;
-            const isActive = tier?.status;
-
-            return (
-              <div
-                key={appliedcards?.id}
-                className={`p-4 rounded-xl border-2 transition-all shadow-sm hover:shadow-md
-        ${isActive === "approved"
-                    ? "border-green-500 bg-green-50" : isActive === "pending" ? " border-yellow-500 bg-yellow-50" : "border-border hover:border-primary/50"
-                  }`}
-              >
-                {/* Card Image */}
-                <div className="w-full h-32 relative mb-3">
-                  <Image
-                    src={`${process.env.ASSET_ENDPOINS}/${appliedcards?.image}`}
-                    alt={appliedcards?.name}
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-
-                {/* Title */}
-                <p className="font-semibold text-xs capitalize">
-                  CRN No.: {tier?.crn}
-                </p>
-
-                {/* Title */}
-                <p className="font-semibold text-xs capitalize">
-                  Name: {tier?.name} <br /> Phone: {tier?.phone}
-                </p>
 
 
-                {/* Active Badge */}
-                {isActive === "pending" ? (
-                  <div className="mt-3 text-xs font-medium text-yellow-500">
-                    {tier?.status}
-                  </div>
-                ) : isActive === "approved" ? (
-                  <div className="mt-3 text-xs font-medium text-green-500">
-                    Set as Primary
-                  </div>
-                ) : isActive === "rejected" ? (
-                  <div className="mt-3 text-xs font-medium text-red-500">
-                    Rejected
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
 
+                    <CreditCard cartName={tier?.name} status={""} actionButton={<button
+                      onClick={() => handleApplyCard(tier.id)}
+                      disabled={isApplyCardLoading}
+                      className="mt-3 text-xs bg-primary text-white font-medium px-2 py-1 rounded-md cursor-pointer absolute bottom-1/2 right-0"
+                    >
+                      {isApplyCardLoading ? 'Applying...' : 'Apply Card'}
+                    </button>} cardNumber={"XXXX XXXX XXXX XXXX"} holderName={tier?.name} expiry={formatExpiry(tier?.created_at)} />
+                  </motion.div>
+                </>
+              );
+            })}
+
+            {userCards?.applied_cards?.map((tier) => {
+              const appliedcards = tier?.card_type;
+              const isActive = tier?.status === 1;
+              const isPrimary = tier?.is_primary === 1;
+
+              const statusBadge = (() => {
+                if (isPrimary) {
+                  return (
+                    <span className=" bg-green-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
+                      Primary
+                    </span>
+                  );
+                }
+
+                if (isActive) {
+                  return (
+                    <span className=" bg-green-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">
+                      Active
+                    </span>
+                  );
+                }
+
+                return null;
+              })();
+
+              const actionButton = (() => {
+                if (!isPrimary && isActive) {
+                  return (
+                    <button
+                      disabled={isSetPrimaryCardLoading}
+                      onClick={async () => {
+                        try {
+                          await setPrimaryCard(tier?.id?.toString());
+                          refetch();
+                          toast.success("Primary card updated!");
+                        } catch {
+                          toast.error("Failed to update");
+                        }
+                      }}
+                      className="w-full py-2 absolute bottom-1 rounded-md cursor-pointer text-xs font-semibold bg-orange-500/20 text-white transition disabled:opacity-50"
+                    >
+                      {isSetPrimaryCardLoading ? "Setting..." : "Set as Primary"}
+                    </button>
+                  );
+                }
+
+                return null;
+              })();
+
+              return (
+                <motion.div
+                  key={tier.id}
+                  className="min-w-[260px] shrink-0"
+                  whileTap={{ scale: 0.95 }}
+                >
+
+                  <CreditCard cartName={appliedcards?.name} balance={tier?.balance} actionButton={actionButton} status={statusBadge} cardNumber={tier?.card_number} holderName={tier?.name} expiry={formatExpiry(tier?.expiry_date)} />
+                </motion.div>
+              );
+            })}
+
+            {userCards?.leads?.map((tier) => {
+              const appliedcards = tier?.card_type;
+              const isActive = tier?.status;
+              const status = (() => {
+                switch (isActive) {
+                  case "pending":
+                    return (
+                      <div className="mt-2 text-[10px] bg-yellow-100 text-yellow-600 py-0.5 px-2 rounded-xl">
+                        {tier?.status}
+                      </div>
+                    );
+
+                  case "approved":
+                    return (
+                      <div className="mt-2 text-[10px] font-medium bg-green-100 text-green-600 py-0.5 px-2 rounded-xl">
+                        Approved
+                      </div>
+                    );
+
+                  case "rejected":
+                    return (
+                      <div className="mt-2 text-[10px] font-medium bg-red-100 text-red-500 py-0.5 px-2 rounded-xl">
+                        Rejected
+                      </div>
+                    );
+
+                  case "processing":
+                    return (
+                      <div className="mt-2 text-[10px] font-medium bg-yellow-100 text-yellow-600 py-0.5 px-2 rounded-xl">
+                        Processing
+                      </div>
+                    );
+
+                  default:
+                    return null;
+                }
+              })();
+
+
+              return (
+                <motion.div
+                  key={tier.id}
+                  className="min-w-[260px] shrink-0"
+                  whileTap={{ scale: 0.95 }}
+                >
+
+                  <CreditCard cartName={appliedcards?.name} status={status} cardNumber={tier?.crn} holderName={tier?.name} expiry={formatExpiry(tier?.created_at)} />
+                </motion.div>
+              );
+            })}
+          </motion.div>
         </div>}
 
       </div>
 
-      {/* Statistics */}
-      <div className="bg-card rounded-lg border border-border p-6 mb-6">
-        <h3 className="text-lg font-bold text-foreground mb-4">Account Statistics</h3>
-        <div className="grid md:grid-cols-3 gap-4">
-          <div className="bg-muted rounded-lg p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <ShoppingBag className="w-5 h-5 text-primary" />
-              <p className="text-sm text-muted-foreground">Total Orders</p>
-            </div>
-            <p className="text-3xl font-bold text-foreground">{mockUserProfile.totalOrders}</p>
-          </div>
-          <div className="bg-muted rounded-lg p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <Calendar className="w-5 h-5 text-primary" />
-              <p className="text-sm text-muted-foreground">Member Since</p>
-            </div>
-            <p className="text-lg font-semibold text-foreground">
-              {new Date(mockUserProfile.joinDate).toLocaleDateString('en-US', { year: '2-digit', month: 'short' })}
-            </p>
-          </div>
-          <div className="bg-muted rounded-lg p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <Crown className="w-5 h-5 text-primary" />
-              <p className="text-sm text-muted-foreground">Status</p>
-            </div>
-            <p className="text-lg font-semibold text-foreground capitalize">{mockUserProfile.membershipTier}</p>
-          </div>
-        </div>
-      </div>
 
       {/* Actions */}
       <div className="space-y-3">
-        <button className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
-          Edit Profile
-        </button>
-        <button className="w-full border border-border text-foreground py-3 rounded-lg font-semibold hover:bg-muted transition-colors">
-          Change Password
-        </button>
+        <div className='flex gap-x-4'>
+          <button className="w-full cursor-pointer bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+            Edit Profile
+          </button>
+          <button className="w-full cursor-pointer border border-border text-foreground py-3 rounded-lg font-semibold hover:bg-muted transition-colors">
+            Change Password
+          </button>
+        </div>
         <button onClick={handleLogout} disabled={loading} className="w-full cursor-pointer flex items-center justify-center gap-2 border border-destructive text-destructive py-3 rounded-lg font-semibold hover:bg-destructive/5 transition-colors">
           <LogOut className="w-5 h-5" />
           {loading ? 'Logging out...' : 'Logout'}

@@ -28,7 +28,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <div className="pb-5 pt-10 px-4">
+    <div className="pb-5 sm:pt-0 pt-10 px-4">
       {/* Header */}
       <div className="mb-2">
         <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-1">My Orders</h1>

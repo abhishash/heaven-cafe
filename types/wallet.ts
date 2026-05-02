@@ -22,7 +22,7 @@ export interface WalletPointsResponse {
   points: WalletPointItem[];
 }
 
-export type LeadStatus = "pending" | "approved" | "rejected";
+export type LeadStatus = "pending" | "approved" | "rejected" | "processing";
 
 export interface CardType {
   id: number;
