@@ -69,6 +69,7 @@ export interface AppliedCard {
   created_at: string; // ISO
   updated_at: string; // ISO
   card_type: CardType;
+  name: string;
 }
 
 export interface CardType {

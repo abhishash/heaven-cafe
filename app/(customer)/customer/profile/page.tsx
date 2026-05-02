@@ -17,9 +17,9 @@ import { useRef } from "react";
 
 
 export default function ProfilePage() {
-  const sliderRef = useRef(null);
+  const sliderRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(0);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
 
   const membershipColor = {
