@@ -22,7 +22,7 @@ export function OrderCard({ order }: { order: Order }) {
       {
         isArray(order.products) ? <div className="px-3 sm:px-6 py-2 sm:py-4 border-b border-gray-100">
           <div className="flex items-center gap-2 overflow-x-auto">
-            {order.products.slice(0, 4).map((item) => (
+            {order.products.slice(0, 3).map((item) => (
               <div
                 key={item.id}
                 className="flex-shrink-0 sm:w-20 w-16 h-16 sm:h-20 rounded-lg bg-gray-100 overflow-hidden"
@@ -44,9 +44,9 @@ export function OrderCard({ order }: { order: Order }) {
                 )}
               </div>
             ))}
-            {order?.products?.length > 4 && (
-              <div className="flex-shrink-0 w-20 h-20 rounded-lg bg-gray-200 flex items-center justify-center">
-                <span className="text-xs font-medium text-gray-600">+{order.products.length - 4}</span>
+            {order?.products?.length > 3 && (
+              <div className="flex-shrink-0 sm:w-20 w-16 h-16 sm:h-20 rounded-lg bg-gray-200 flex items-center justify-center">
+                <span className="text-xs font-medium text-gray-600">+{order.products.length - 3}</span>
               </div>
             )}
           </div>
