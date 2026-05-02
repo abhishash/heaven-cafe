@@ -4,7 +4,7 @@ import { useState } from "react";
 import { mockAddresses } from "@/lib/mockData";
 import { CustomerLayout } from "@/components/customer/CustomerLayout";
 import { AddressCard } from "@/components/customer/AddressCard";
-import { Plus } from "lucide-react";
+import { Coffee, MapPin, MessageCircle, Plus, RotateCcw } from "lucide-react";
 import {
   useDeleteAddressMutation,
   useGetAddressesQuery,
@@ -40,30 +40,21 @@ export default function AddressesPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+    <div className="px-4 mt-10 sm:mt-0">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+      <div className="mb-4 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
           Delivery Addresses
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-base text-muted-foreground">
           Manage your delivery addresses for faster checkout
         </p>
       </div>
 
-      {/* Add New Address Button */}
-      {/* <button
-        onClick={() => setShowAddForm(!showAddForm)}
-        className="w-full mb-6 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-      >
-        <Plus className="w-5 h-5" />
-        Add New Address
-      </button> */}
-
       <div>
         <button
           onClick={() => setOpen(true)}
-          className="w-full mb-6 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+          className="w-full mb-6 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-2 sm:py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
         >
           <Plus className="w-5 h-5" />
           Add New Address
@@ -71,116 +62,6 @@ export default function AddressesPage() {
         <LocationModal open={open} setOpen={setOpen} />
       </div>
 
-      {/* Add Address Form */}
-      {showAddForm && (
-        <div className="bg-card rounded-lg border border-border p-6 mb-6">
-          <h3 className="text-lg font-bold text-foreground mb-4">
-            Add New Address
-          </h3>
-          <form onSubmit={handleAddAddress} className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Address Label
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., Home, Work, Gym"
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Type
-                </label>
-                <select className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input">
-                  <option>Home</option>
-                  <option>Work</option>
-                  <option>Other</option>
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Street Address
-              </label>
-              <input
-                type="text"
-                placeholder="Enter your street address"
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input"
-              />
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  City
-                </label>
-                <input
-                  type="text"
-                  placeholder="City"
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  State
-                </label>
-                <input
-                  type="text"
-                  placeholder="State"
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  ZIP Code
-                </label>
-                <input
-                  type="text"
-                  placeholder="ZIP Code"
-                  className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                placeholder="Enter your phone number"
-                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input"
-              />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input type="checkbox" id="default" className="w-4 h-4" />
-              <label htmlFor="default" className="text-sm text-foreground">
-                Set as default address
-              </label>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                type="submit"
-                className="flex-1 bg-primary text-primary-foreground py-2 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-              >
-                Save Address
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowAddForm(false)}
-                className="flex-1 border border-border text-foreground py-2 rounded-lg font-semibold hover:bg-muted transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
       {isLoading ? (
         <p>Loading...</p>
       ) : (
@@ -196,18 +77,71 @@ export default function AddressesPage() {
               />
             ))
           ) : (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground text-lg mb-4">
-                No addresses saved yet
-              </p>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                Add Your First Address
-              </button>
-            </div>
+            <main className="bg-gradient-to-b from-secondary via-secondary to-white flex items-center justify-center px-4 py-8">
+              <div className="w-full max-w-xl">
+                {/* Decorative Icon Section */}
+                <div className="flex justify-center mb-4 sm:mb-10">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-200 to-amber-200 rounded-full blur-xl opacity-50"></div>
+                    <div className="relative bg-gradient-to-br from-orange-400 to-orange-600 rounded-full p-8 shadow-2xl">
+                      <MapPin className="sm:w-14 h-10 w-10 sm:h-14 text-white" strokeWidth={1.5} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Main Content Card */}
+                <div className=" rounded-3xl shadow-none sm:shadow-2xl overflow-hidden">
+                  <div className="p-0 sm:p-8 md:p-10 space-y-6">
+                    {/* Heading */}
+                    <p className="text-orange-600 text-2xl text-center sm:text-4xl font-semibold">
+                      Address not Found.
+                    </p>
+
+                    {/* Main Description */}
+                    <p className="text-gray-600 text-center text-sm md:text-base leading-relaxed">
+                      Add a delivery address to get started. This helps us show accurate delivery options and faster checkout.
+                    </p>
+
+                    {/* Helpful Actions Box */}
+                    <div className="bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-100 rounded-2xl p-6 space-y-4">
+                      <h2 className="font-bold text-gray-900 text-center text-lg">How can we help?</h2>
+
+                      {/* Action Items */}
+                      <div className="space-y-3">
+                        {/* Try Different Address */}
+                        <div className="flex gap-4 items-start p-4 bg-white rounded-xl hover:bg-orange-50 transition-colors duration-200">
+                          <div className="bg-orange-100 rounded-lg p-2.5 flex-shrink-0">
+                            <RotateCcw className="w-5 h-5 text-orange-600" />
+                          </div>
+                          <div className="text-left">
+                            <p className="font-semibold text-gray-900">Try another address</p>
+                            <p className="text-xs sm:text-sm text-gray-600">Enter a nearby location in our delivery zone</p>
+                          </div>
+                        </div>
+
+                        {/* Get Notified */}
+                        <div className="flex gap-4 items-start p-4 bg-white rounded-xl hover:bg-orange-50 transition-colors duration-200">
+                          <div className="bg-orange-100 rounded-lg p-2.5 flex-shrink-0">
+                            <MessageCircle className="w-5 h-5 text-orange-600" />
+                          </div>
+                          <div className="text-left">
+                            <p className="font-semibold text-gray-900">Get notified when we arrive</p>
+                            <p className="text-xs sm:text-sm text-gray-600">We&apos;ll let you know as soon as we expand to your area</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick Tips */}
+                    <div className="bg-blue-50 border-l-4 mx-2 border-blue-400 p-4 rounded-lg">
+                      <p className="text-sm text-blue-900">
+                        <span className="font-semibold">💡 Tip:</span> Try entering a nearby neighborhood or office address that might be within our zone.
+                      </p>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+            </main>
           )}
         </div>
       )}
