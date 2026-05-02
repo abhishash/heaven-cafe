@@ -36,7 +36,7 @@ export default function OrdersPage() {
       </div>
 
       {/* Stats Cards */}
-      {/* <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
         <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
           <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Total Orders</p>
           <p className="text-2xl font-bold text-foreground">{stats.total}</p>
@@ -49,7 +49,7 @@ export default function OrdersPage() {
           <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">In Progress</p>
           <p className="text-2xl font-bold text-blue-600">{stats.processing}</p>
         </div>
-      </div> */}
+      </div>
 
       {/* Filter Section */}
       <div className="mb-6">
