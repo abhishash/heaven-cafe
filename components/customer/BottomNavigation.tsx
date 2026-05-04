@@ -16,7 +16,6 @@ export function BottomNavigation() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
-  console.log("Session data in BottomNavigation:", session);
 
   const isActive = (path: string) => {
     return pathname.startsWith(path);

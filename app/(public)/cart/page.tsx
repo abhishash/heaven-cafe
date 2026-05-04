@@ -148,11 +148,24 @@ export default function CartPage() {
                   )}
                 </div>
 
-                <Link href="/checkout">
-                  <Button size="lg" className="w-full cursor-pointer bg-primary rounded-full hover:bg-primary/80 text-white font-bold">
-                    Proceed to Checkout
-                  </Button>
-                </Link>
+                {
+                  isDineIn ? tableNumber ? <Link href="/checkout">
+                    <Button size="lg" className="w-full cursor-pointer bg-primary rounded-full hover:bg-primary/80 text-white font-bold">
+                      Proceed to Checkout
+                    </Button>
+                  </Link> :
+                    <Button size="lg" className="w-full cursor-pointer bg-primary/20 hover:bg-primary/20 rounded-full  text-white font-bold">
+                      Proceed to Checkout
+                    </Button>
+                    : data?.data?.length > 0 ? <Link href="/checkout">
+                      <Button size="lg" className="w-full cursor-pointer bg-primary rounded-full hover:bg-primary/80 text-white font-bold">
+                        Proceed to Checkout
+                      </Button>
+                    </Link> : <Button size="lg" className="w-full cursor-pointer bg-primary/20 hover:bg-primary/20 rounded-full  text-white font-bold">
+                      Proceed to Checkout
+                    </Button>
+                }
+
               </div>
               {isDineIn && <TableNumber setOpen={setOpen} open={open} />}
               <AddressPopUp setOpen={setShowAddress} open={showAddress} addresses={data?.data} refetch={refetch} />

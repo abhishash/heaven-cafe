@@ -11,11 +11,15 @@ import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { setTableNumber } from "@/lib/redux/slice/orderTypeSlice";
 import { RootState } from "@/lib/redux/store";
+import { useVerifyTableMutation } from "@/store/services/wallet-point-api";
+import { toast } from "sonner";
+import Spinner from "../shared/spinner";
 
 export default function TableNumber({ setOpen, open }: { setOpen: (value: boolean) => void, open: boolean }) {
   const [tableInput, setTableInput] = useState("");
   const tableNumber = useSelector((state: RootState) => state.orderType?.tableNumber);
   const dispatch = useDispatch();
+  const [verifyTable, { isLoading }] = useVerifyTableMutation();
 
   useEffect(() => {
     if (!tableNumber) {
@@ -27,11 +31,20 @@ export default function TableNumber({ setOpen, open }: { setOpen: (value: boolea
     }
   }, [tableNumber]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!tableInput) return;
-    dispatch(setTableNumber(tableInput));
 
-    setOpen(false);
+    try {
+      const result = await verifyTable(tableInput).unwrap();
+      // optional: you can use result if needed
+      dispatch(setTableNumber(tableInput));
+
+    } catch (error) {
+      toast.error((error as any)?.data?.message as string);
+    } finally {
+      setOpen(false);
+    }
+
   };
 
   return (
@@ -69,9 +82,10 @@ export default function TableNumber({ setOpen, open }: { setOpen: (value: boolea
 
           <button
             onClick={handleSubmit}
-            className="bg-primary cursor-pointer text-white py-3 rounded-xl font-medium hover:bg-primary/90 transition"
+            disabled={isLoading}
+            className="bg-primary flex justify-center cursor-pointer text-white py-3 rounded-xl font-medium hover:bg-primary/90 transition"
           >
-            Confirm Table
+            {isLoading ? <div className="flex gap-x-2" ><Spinner width={24} height={24} /> Confirm Table</div> : "Confirm Table"}
           </button>
         </div>
       </DialogContent>

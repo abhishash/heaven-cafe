@@ -33,9 +33,13 @@ export const walletApi = createApi({
       query: () => "loyalty/points",
       // ✅ Typed response
       transformResponse: (response: WalletPointsResponse) => response,
+    }),
+    verifyTable: builder.mutation<Order[], string>({
+      query: (tableno) => `/table-no/${tableno}`,
 
+      transformResponse: (response: OrdersResponse) => response.data,
     }),
   }),
 });
 
-export const { useGetWalletPointQuery, useGetLoyalityPointQuery } = walletApi;
+export const { useGetWalletPointQuery, useGetLoyalityPointQuery, useVerifyTableMutation } = walletApi;
