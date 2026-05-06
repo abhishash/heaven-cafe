@@ -111,7 +111,6 @@ export default function Header() {
             <NotebookPen />
           </Link>
           
-          {/* <WishlistIcon /> */}
           
           <NotificationBell />
           {/* <UserCard /> */}
@@ -170,12 +169,10 @@ export default function Header() {
         {/* ✅ BOTTOM NAV (FIXED) */}
         <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
           <div className="flex justify-around items-center py-2">
-            <NotificationBell isMobile={true} />
+            <NotificationBell  isMobile={true} />
             
-            <WishlistIcon isMobile={true} />
-
             {/* Menu */}
-            <Link href="/menu" className="flex flex-col items-center text-xs">
+            <Link href="/menu" className="flex text-primary flex-col items-center text-xs">
               <MenuIcon size={22} />
               Menu
             </Link>
@@ -183,11 +180,11 @@ export default function Header() {
             {/* Cart */}
             <Link
               href="/cart"
-              className="flex flex-col items-center relative text-xs"
+              className="flex flex-col text-primary items-center relative text-xs"
             >
-              <ShoppingCart size={22} />
+              <ShoppingCart className="text-primary" size={22} />
               {totalItems > 0 && (
-                <span className="absolute -top-1 right-3 bg-black text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                <span className="absolute -top-1 -right-2 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
                   {totalItems}
                 </span>
               )}
@@ -198,7 +195,7 @@ export default function Header() {
             {session?.user ? (
               <Link
                 href="/customer/orders"
-                className="flex flex-col items-center text-xs"
+                className="flex flex-col text-primary items-center text-xs"
               >
                 <User size={22} />
                 Profile
@@ -271,8 +268,8 @@ export function NotificationBell({ isMobile }: { isMobile?: boolean }) {
 
   if (isMobile) {
     return (
-      <Link href="/notification" className="flex flex-col items-center relative text-xs">
-        <Bell size={22} className="animate-ring" />
+      <Link href="/notification" className="flex text-primary flex-col items-center relative text-xs">
+        <Bell size={22} className="animate-ring text-primary" />
         {notificationCount > 0 && (
           <span className="absolute -top-1 right-3 bg-primary text-white shadow-2xl text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
             {notificationCount}
