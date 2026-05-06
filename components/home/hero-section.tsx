@@ -28,11 +28,6 @@ const HeroSection = () => {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/login">
-                <Button size="lg" variant="outline" className="h-14 text-base w-full sm:w-auto border-2 border-primary text-primary hover:bg-primary/10">
-                  Sign In to Account
-                </Button>
-              </Link>
             </div>
 
             {/* Stats */}
@@ -54,7 +49,7 @@ const HeroSection = () => {
 
           {/* Right Visual */}
           <div className="flex items-center justify-center">
-            <div className="relative w-full h-96">
+            <div className="relative w-full h-72 sm:h-96">
               {/* Decorative card */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl backdrop-blur-sm"></div>
               <div className="absolute inset-4 bg-card rounded-2xl border-2 oberflow-hidden border-primary/30 flex items-center justify-center">

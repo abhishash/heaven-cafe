@@ -13,34 +13,13 @@ interface FAQItemProps {
 }
 
 export function FAQItem({ question, answer, isOpen = false, onToggle }: FAQItemProps) {
-  const [open, setOpen] = useState(isOpen);
-
-  // const handleToggle = () => {
-  //   if (onToggle) {
-  //     onToggle();
-  //   } else {
-  //     setOpen(!open);
-  //   }
-  // };
-
-
 
   return (
     <details className="">
       <summary className="font-semibold text-foreground text-sm md:text-base">{question}</summary>
-      {/* <button
-        // onClick={handleToggle}
-        className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/50 transition-colors"
-      >
-        <ChevronDown
-          className={`w-5 h-5 text-primary transition-transform ${open ? 'rotate-180' : ''}`}
-        />
-      </button> */}
-      {/* {open && ( */}
-        <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border">
-          <HtmlRender html={answer} />
-        </div>
-      {/* )} */}
+      <div className="px-4 pb-4 pt-0 text-sm text-muted-foreground border-t border-border">
+        <HtmlRender html={answer} />
+      </div>
     </details>
   );
 }

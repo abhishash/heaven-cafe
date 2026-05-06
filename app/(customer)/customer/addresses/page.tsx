@@ -63,7 +63,7 @@ export default function AddressesPage() {
         <p>Loading...</p>
       ) : (
         //  {/* Addresses List */}
-        <div className="space-y-4">
+        <div className="space-y-4 max-h-[70vh] overflow-y-auto no-scrollbar">
           {addresses.length > 0 ? (
             addresses.map((address) => (
               <AddressCard

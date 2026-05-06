@@ -238,17 +238,8 @@ export default function SupportPage() {
       {/* FAQ Tab */}
       {activeTab === 'faq' && (
         <div>
-          {/* Search Bar */}
-          <div className="mb-6">
-            <input
-              type="text"
-              placeholder="Search FAQs..."
-              className="w-full px-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input"
-            />
-          </div>
-
           {/* FAQ Items */}
-          <div className="space-y-4">
+          <div className="space-y-2 bg-primary/5 border border-primary/20 rounded-xl">
             {data?.map((faq, index) => (
               <FAQItem
                 key={index}

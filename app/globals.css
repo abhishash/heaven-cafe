@@ -183,3 +183,86 @@ body::-webkit-scrollbar-thumb:hover {
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+
+
+/* Details Tag */
+
+
+details {
+  border: 1px solid hsl(var(--border));
+  border-radius: 10px;
+  background: hsl(var(--background));
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+details[open] {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+
+summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-weight: 600;
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+summary:hover {
+  background: hsl(var(--muted) / 0.5);
+}
+
+/* Remove default arrow */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
+  transition: transform 0.3s ease;
+}
+
+details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+
+details>div {
+  padding: 0 16px 16px;
+  font-size: 14px;
+  color: hsl(var(--muted-foreground));
+  border-top: 1px solid hsl(var(--border));
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+details>div {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+details[open]>div {
+  max-height: 500px;
+  /* adjust based on content */
+}

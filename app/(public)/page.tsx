@@ -95,10 +95,10 @@ export default async function Home() {
           <div className="text-center py-10">Loading promotions...</div>
         }
       >
-        {isArray(promotionalsData) && promotionalsData.length > 0 ? (
-          <section className="pb-10 pt-10 px-6">
+        {isArray(promotionalsData) ? (
+          <section className="py-6 sm:py-10 px-4 sm:px-6">
             <div className="container mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                 {promotionalsData.map((promo, index) => (
                   <Link
                     href={promo?.url_link || "#"}
@@ -130,12 +130,12 @@ export default async function Home() {
       {/* Favorite And Extra Product Banners */}
       <Suspense fallback={"loading...."}>
         {data?.map((item, index) => (
-          <section key={index} className="pb-20 pt-10 px-6">
+          <section key={index} className="pb-6 sm:pb-20 pt-6 sm:pt-10 px-4 sm:px-6">
             <div className="container mx-auto">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-12 text-primary text-balance">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-12 text-primary text-balance">
                 {item?.name}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                 {item?.products?.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
