@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./slice/cartSlice";
 import walletReducer from "./slice/walletSlice";
-import { api } from "@/store/services/api";
+import { api } from "@/store/services/master-api";
 import { orderApi } from "@/store/services/order-api";
 import { walletApi } from "@/store/services/wallet-point-api";
 import { userApi } from "@/store/services/customer-api";

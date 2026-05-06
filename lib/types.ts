@@ -244,10 +244,20 @@ export interface OrderProducts {
   }[]
 }
 
+export interface OrderStatusCount {
+  total: number;
+  bg_color: string;   // hex color (e.g. "#CCFBF1")
+  text_color: string; // hex color (e.g. "#115E59")
+}
 
 export interface OrderResponse {
   status: boolean;
   message: string;
+  count: Record<string, OrderStatusCount>;
+  total: number;
+  bg_color: string;   // hex color (e.g. "#CCFBF1")
+  text_color: string; // hex color (e.g. "#115E59")
+  total_orders: number;
   data: Order;
 }
 

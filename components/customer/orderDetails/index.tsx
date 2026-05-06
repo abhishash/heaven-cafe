@@ -1,28 +1,49 @@
 'use client';
 
-import { mockOrders } from '@/lib/mockData';
-import { CustomerLayout } from '@/components/customer/CustomerLayout';
-import { ArrowLeft, MapPin, Clock, CheckCircle, XCircle, Info, User, Wallet } from 'lucide-react';
+import { ArrowLeft, MapPin, Info, User, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { useGetOrderByIdQuery } from '@/store/services/order-api';
-import { decodeId, encodeId } from '@/lib/utils';
+import { decodeId } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { OrderItem } from './OrderItem';
-import { isObject } from '@/lib/type-guards';
+
+interface OptionalItem {
+    id: string | number;
+    name: string;
+    description?: string;
+    quantity?: string | number;
+    price?: string | number;
+}
+
+interface OrderDetails {
+    order_no: string;
+    location?: string;
+    payment_method?: string;
+    customer_name?: string;
+    customer_phone?: string;
+    items?: Array<any>;
+    optional_items?: OptionalItem[];
+    total_amount: string | number;
+    total_discount: string | number;
+    tax_charges?: string | number;
+    final_amount: string | number;
+}
 
 interface OrderDetailsPageProps {
     orderId: string;
 }
 
 export default function OrderDetailsPage({ orderId }: OrderDetailsPageProps) {
-    const { data: order, isLoading } = useGetOrderByIdQuery(Number(decodeId(orderId)))
+    const response = useGetOrderByIdQuery(Number(decodeId(orderId)));
+    const order = response.data as OrderDetails | undefined;
+    const { isLoading } = response;
 
     if (isLoading) {
         return <p>Loading...</p>
     }
 
-    if (!isObject(order)) {
+    if (!order) {
         return (
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
                 <p className="text-center text-muted-foreground text-lg">Order not found</p>
@@ -145,7 +166,7 @@ export default function OrderDetailsPage({ orderId }: OrderDetailsPageProps) {
                                 <Info className="w-4 h-4 text-gray-400" />
                             </span>
                             <span className="font-semibold text-gray-900">
-                                ₹{order.tax_charges || '15.84'}
+                              {/* {formatPrice()}  ₹{order.tax_charges || '15.84'} */}
                             </span>
                         </div>
 

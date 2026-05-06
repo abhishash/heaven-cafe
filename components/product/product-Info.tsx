@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { isObject } from "@/lib/type-guards";
 import LoginModal from "../customer/modal/LoginModal";
 import { FieldValues } from "react-hook-form";
+import Spinner from "../shared/spinner";
 
 
 interface ProductInfoProps {
@@ -183,7 +184,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
             size="lg"
             className="w-full cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-lg py-6"
           >
-            {isPending ? '✓ Added to Cart!' : 'Add to Cart'}
+            {isPending ? <> <Spinner width={20} height={20} /> Added to Cart </>  : 'Add to Cart'}
           </Button>
         }
 

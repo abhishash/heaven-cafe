@@ -9,6 +9,7 @@ import { isArray } from '@/lib/type-guards'
 import { imageBaseUrl } from '@/lib/constants'
 import Link from 'next/link'
 import { Order } from '@/types/order'
+import { Badge } from '../ui/badge'
 
 export function OrderCard({ order }: { order: Order }) {
   const [imageError, setImageError] = useState<{ [key: number]: boolean }>({})
@@ -56,7 +57,10 @@ export function OrderCard({ order }: { order: Order }) {
 
       {/* Order Details */}
       <div className="px-3 sm:px-6 py-2 sm:py-4 space-y-3">
-        <span className="font-semibold text-sm text-foreground">{order?.products?.map(item => item?.name).join(", ")}</span>
+        <div className='flex gap-x-2 '>
+          <span className="font-semibold text-sm text-foreground">#{order?.order_no}</span>
+          <Badge style={{color : order?.text_color , backgroundColor : order?.bg_color}} >{order?.status}</Badge>
+        </div>
         {/* Date */}
         <p className="text-xs text-gray-500">{formatIndianDateTime(order?.created_at)}</p>
 

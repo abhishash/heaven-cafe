@@ -20,13 +20,26 @@ export interface Order {
   final_amount: string;
   payment_method: string;
   created_at: string; // ISO date
+  bg_color: string,
+  text_color: string,
   products: Product[];
   order_rating: number | null;
+}
+
+export interface OrderStatusCount {
+  total: number;
+  bg_color: string;   // hex color (e.g. "#CCFBF1")
+  text_color: string; // hex color (e.g. "#115E59")
 }
 
 export interface OrdersResponse {
   status: boolean;
   message: string;
+  total: number;
+  count: Record<string, OrderStatusCount>;
+  total_orders: number;
+  bg_color: string;   // hex color (e.g. "#CCFBF1")
+  text_color: string; // hex color (e.g. "#115E59")
   data: Order[];
 }
 

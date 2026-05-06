@@ -2,6 +2,18 @@ import { ADDRESSES } from "@/lib/constants";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 const APIENDPOINT = process.env.API_ENDPOINT;
+
+type FAQItem = {
+  name: string;
+  description: string;
+};
+
+type FAQResponse = {
+  status: boolean;
+  message: string;
+  data: FAQItem[];
+};
+
 export const api = createApi({
     reducerPath: 'api',
     baseQuery: fetchBaseQuery({
@@ -18,20 +30,14 @@ export const api = createApi({
     }),
     tagTypes: ["addresses"],
     endpoints: (builder) => ({
-        getAddresses: builder.query({
-            query: () => ADDRESSES.endpoint,
-            providesTags: ["addresses"]
-        }),
-        deleteAddress: builder.mutation({
-            query: (id: number) => ({
-                url: `delete-address`,
-                method: "DELETE",
-                body: { id }
+        getFAQ: builder.query<FAQItem[], void>({
+            query: () => ({
+                url: `faq`,
+                method: "GET",
             }),
-            // ✅ auto refetch after delete
-            invalidatesTags: ["addresses"],
+            transformResponse: (response: FAQResponse) => response?.data,
         }),
     })
 })
 
-export const { useGetAddressesQuery, useDeleteAddressMutation } = api;
+export const { useGetFAQQuery } = api;

@@ -7,6 +7,7 @@ import { ChatMessage } from '@/components/customer/ChatMessage';
 import { SupportTicketCard } from '@/components/customer/SupportTicketCard';
 import { FAQItem } from '@/components/customer/FAQItem';
 import { MessageCircle, Ticket, HelpCircle, Send, Plus } from 'lucide-react';
+import { useGetFAQQuery } from '@/store/services/master-api';
 
 type SupportTab = 'chat' | 'tickets' | 'faq';
 
@@ -16,6 +17,8 @@ export default function SupportPage() {
   const [newMessage, setNewMessage] = useState('');
   const [tickets, setTickets] = useState(mockSupportTickets);
   const [showNewTicketForm, setShowNewTicketForm] = useState(false);
+
+  const { data, isLoading } = useGetFAQQuery();
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -246,11 +249,11 @@ export default function SupportPage() {
 
           {/* FAQ Items */}
           <div className="space-y-4">
-            {mockFAQs.map((faq) => (
+            {data?.map((faq, index) => (
               <FAQItem
-                key={faq.id}
-                question={faq.question}
-                answer={faq.answer}
+                key={index}
+                question={faq.name}
+                answer={faq.description}
                 isOpen={false}
               />
             ))}

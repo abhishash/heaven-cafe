@@ -24,11 +24,11 @@ export const orderApi = createApi({
   }),
   tagTypes: ["orders"],
   endpoints: (builder) => ({
-    getOrders: builder.query<Order[], void>({
-      query: () => ORDERS.endpoint,
+    getOrders: builder.query<OrdersResponse, string>({
+      query: (status) => `${ORDERS.endpoint}/${status}`,
 
       // ✅ Typed response
-      transformResponse: (response: OrdersResponse) => response.data,
+      transformResponse: (response: OrdersResponse) => response,
 
       providesTags: ["orders"],
     }),

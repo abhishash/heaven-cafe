@@ -14,7 +14,6 @@ interface OrderDetailsPageProps {
 
 export default async function Page({ params }: OrderDetailsPageProps) {
   const { orderId } = await params;
-  console.log(decodeURIComponent(orderId));
   
   return (
     <OrderDetailsPage orderId={decodeURIComponent(orderId)} />

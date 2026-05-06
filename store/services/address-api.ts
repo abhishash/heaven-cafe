@@ -1,3 +1,4 @@
+import { ADDRESSES } from "@/lib/constants";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 
@@ -20,8 +21,7 @@ export const addressApi = createApi({
             return headers;
         },
     }),
-
-    tagTypes: ["Addresses"],
+    tagTypes: ["addresses"],
 
     endpoints: (builder) => ({
         /* ---------------- ADD NEW ADDRESS ---------------- */
@@ -31,18 +31,32 @@ export const addressApi = createApi({
                 method: "POST",
                 body,
             }),
-            invalidatesTags: ["Addresses"],
+            invalidatesTags: ["addresses"],
         }),
 
-        setDefaultAddress :  builder.mutation({
+        setDefaultAddress: builder.mutation({
             query: (body) => ({
                 url: "/change-address",
                 method: "POST",
                 body,
             }),
-            invalidatesTags: ["Addresses"],
+            invalidatesTags: ["addresses"],
+        }),
+
+        getAddresses: builder.query({
+            query: () => ADDRESSES.endpoint,
+            providesTags: ["addresses"]
+        }),
+        deleteAddress: builder.mutation({
+            query: (id: number) => ({
+                url: `delete-address`,
+                method: "DELETE",
+                body: { id }
+            }),
+            // ✅ auto refetch after delete
+            invalidatesTags: ["addresses"],
         }),
     }),
 });
 
-export const { useAddNewAddressMutation, useSetDefaultAddressMutation } = addressApi;
+export const { useGetAddressesQuery, useDeleteAddressMutation, useAddNewAddressMutation, useSetDefaultAddressMutation } = addressApi;

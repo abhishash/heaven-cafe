@@ -2,11 +2,9 @@
 
 import { useState } from 'react';
 import { mockOrders } from '@/lib/mockData';
-import { CustomerLayout } from '@/components/customer/CustomerLayout';
 import { OrderCard } from '@/components/customer/OrderCard';
 import { Filter } from 'lucide-react';
 import { useGetOrdersQuery } from '@/store/services/order-api';
-import orders from 'razorpay/dist/types/orders';
 import { isArray } from '@/lib/type-guards';
 
 type FilterStatus = 'all' | 'delivered' | 'processing' | 'cancelled';
@@ -14,18 +12,10 @@ type FilterStatus = 'all' | 'delivered' | 'processing' | 'cancelled';
 export default function OrdersPage() {
   const [filter, setFilter] = useState<FilterStatus>('all');
 
-  const filteredOrders =
-    filter === 'all'
-      ? mockOrders
-      : mockOrders.filter((order) => order.status === filter);
-
-  const { data, isLoading } = useGetOrdersQuery();
-
-  const stats = {
-    total: mockOrders.length,
-    delivered: mockOrders.filter((o) => o.status === 'delivered').length,
-    processing: mockOrders.filter((o) => o.status === 'processing').length,
-  };
+  const { data, isLoading } = useGetOrdersQuery(filter === "all" ? "" : filter);
+  const orders = data?.data;
+  
+  const stats = { ...data?.count };
 
   return (
     <div className="pb-5 sm:pt-0 pt-10 px-4">
@@ -36,18 +26,30 @@ export default function OrdersPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
+      <div className="grid grid-cols-4 gap-2 sm:gap-4 mb-4">
         <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
           <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Total Orders</p>
-          <p className="text-2xl font-bold text-foreground">{stats.total}</p>
+          {
+            isLoading ? <p>Loading...</p> :
+              <p className="text-2xl font-bold text-foreground">{data?.total_orders}</p>
+          }
         </div>
         <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
-          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Delivered</p>
-          <p className="text-2xl font-bold text-green-600">{stats.delivered}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">In Delivered</p>
+          {
+            isLoading ? <p>Loading...</p> :
+              <p style={{ color: stats.Delivered?.text_color }} className="text-2xl font-bold">{stats.Delivered?.total}</p>
+          }
         </div>
         <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
-          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">In Progress</p>
-          <p className="text-2xl font-bold text-blue-600">{stats.processing}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Confirm Order</p>
+          {isLoading ? <p>Loading...</p> : <p style={{ color: stats?.["Confirm Order"]?.text_color }} className="text-2xl font-bold">{stats?.["Confirm Order"]?.total}</p>}
+        </div>
+        <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
+          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Shipped</p>
+          {
+            isLoading ? <p>Loading...</p> : <p style={{ color: stats?.shipped?.text_color }} className="text-2xl font-bold">{stats?.shipped?.total}</p>
+          }
         </div>
       </div>
 
@@ -58,7 +60,7 @@ export default function OrdersPage() {
           <p className="font-semibold text-foreground">Filter Orders</p>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {(['all', 'delivered', 'processing', 'cancelled'] as FilterStatus[]).map((status) => (
+          {(['all', 'Delivered', 'Confirm Order', 'Shipped'] as FilterStatus[]).map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
@@ -76,8 +78,8 @@ export default function OrdersPage() {
       {/* Orders List */}
       {
         isLoading ? <p>Loading...</p> : <div className="space-y-4 max-h-screen no-scrollbar overflow-y-auto">
-          {isArray(data) ? (
-            data?.map((order) => (
+          {isArray(orders) ? (
+            orders?.map((order) => (
               <OrderCard key={order.id} order={order} />
             ))
           ) : (

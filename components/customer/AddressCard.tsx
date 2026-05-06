@@ -3,15 +3,16 @@
 import { Address } from '@/lib/mockData';
 import { UserAddress } from '@/lib/types';
 import { MapPin, Check, Edit2, Trash2 } from 'lucide-react';
+import Spinner from '../shared/spinner';
 
 interface AddressCardProps {
   address: UserAddress;
   isEditable?: boolean;
-  onEdit?: (address: UserAddress) => void;
   onDelete?: (id: number) => void;
+  isLoading: boolean;
 }
 
-export function AddressCard({ address, isEditable = true, onEdit, onDelete }: AddressCardProps) {
+export function AddressCard({ address, isEditable = true, onDelete, isLoading }: AddressCardProps) {
   return (
     <div className="bg-card rounded-lg border border-border p-4 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
@@ -24,12 +25,25 @@ export function AddressCard({ address, isEditable = true, onEdit, onDelete }: Ad
             <p className="text-xs text-muted-foreground capitalize">{address.contact}</p>
           </div>
         </div>
-        {parseInt(address.is_default) ? (
-          <div className="flex items-center gap-1 bg-green-50 text-green-700 px-2 py-1 rounded-full">
-            <Check className="w-4 h-4" />
-            <span className="text-xs font-medium">Default</span>
-          </div>
-        ) : null}
+        <div className='flex'>
+          {(address.is_default) ? (
+
+            <div className="flex items-center gap-1 bg-green-50 text-green-700 px-2 py-1 rounded-full">
+              <Check className="w-4 h-4" />
+              <span className="text-xs font-medium">Default</span>
+            </div>
+
+          ) : null}
+          {onDelete && !(address.is_default) && (
+            <button
+              onClick={() => onDelete(address.id)}
+              disabled={isLoading}
+              className="flex items-center gap-2 text-sm font-medium text-destructive hover:bg-destructive/5 px-3 py-2 rounded-lg transition-colors"
+            >
+              {isLoading ? <Spinner width={16} height={16} /> : <Trash2 className="w-4 h-4" />}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="mb-4 ml-12">
@@ -37,29 +51,6 @@ export function AddressCard({ address, isEditable = true, onEdit, onDelete }: Ad
         <p className="text-sm text-muted-foreground">{address.address}, {address.state} {address.pincode}</p>
         <p className="text-sm text-muted-foreground mt-2">{address.country}</p>
       </div>
-
-      {isEditable && (
-        <div className="flex gap-2 ml-12">
-          {onEdit && (
-            <button
-              onClick={() => onEdit(address)}
-              className="flex items-center gap-2 text-sm font-medium text-primary hover:bg-primary/5 px-3 py-2 rounded-lg transition-colors"
-            >
-              <Edit2 className="w-4 h-4" />
-              Edit
-            </button>
-          )}
-          {onDelete && (
-            <button
-              onClick={() => onDelete(address.id)}
-              className="flex items-center gap-2 text-sm font-medium text-destructive hover:bg-destructive/5 px-3 py-2 rounded-lg transition-colors"
-            >
-              <Trash2 className="w-4 h-4" />
-              Delete
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }
