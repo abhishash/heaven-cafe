@@ -12,12 +12,12 @@ import { useSession } from 'next-auth/react';
 import { useMutation } from '@tanstack/react-query';
 import { fetchHandler } from '@/lib/fetch-handler';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
-import { useGetAddressesQuery } from '@/store/services/master-api';
 import { AddressResponse } from '@/lib/types';
 import TableNumber from '@/components/pop-up/table-number';
 import { useState } from 'react';
 import { SquarePen } from 'lucide-react';
 import AddressPopUp from '@/components/checkout/modal/address-pop';
+import { useGetAddressesQuery } from '@/store/services/address-api';
 
 export default function CartPage() {
   const [open, setOpen] = useState(false);
