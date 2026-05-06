@@ -11,7 +11,6 @@ import { toast } from 'sonner';
 import { useGetWalletPointQuery } from '@/store/services/wallet-point-api';
 
 interface CashOnDeliveryFormProps {
-    orderId: string;
     amount: number;
     onSubmit: (details: DeliveryDetails) => Promise<void>;
     isLoading?: boolean;
@@ -28,7 +27,6 @@ export interface DeliveryDetails {
 }
 
 export default function WalletOnDeliveryForm({
-    orderId,
     amount,
     onSubmit,
     isLoading = false,

@@ -122,17 +122,16 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
       alert("Error adding to cart");
     }
   }
-  console.log('Product Info Rendered with product:', product);
   
   return (
     <>
 
       <div className="flex flex-col">
-        <div className="mb-6">
+        <div className="mb-4 sm:mb-6">
           <span className="text-sm font-semibold text-orange-500 bg-orange-50 px-3 py-1 rounded">
             {product.category}
           </span>
-          <h1 className="text-4xl font-bold mt-4 text-gray-800">{product.name}</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold mt-2 sm:mt-4 text-gray-800">{product.name}</h1>
           <p className="text-2xl font-bold text-orange-600 mt-2">
             {formatPrice(product.price, "INR")}
           </p>
@@ -140,7 +139,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
         <HtmlRender html={product?.description} />
 
         {/* Quantity Selector */}
-        <div className="mb-8">
+        <div className="mb-4 sm:mb-8">
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             Quantity
           </label>

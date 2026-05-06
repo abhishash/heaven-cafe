@@ -7,7 +7,6 @@ import { createRazorpayOrder, verifyRazorpayPayment } from '@/app/actions/razorp
 import { formatPrice } from '@/lib/utils';
 
 interface RazorpayCheckoutProps {
-  orderId: string;
   amount: number;
   customerEmail: string;
   customerName: string;
@@ -17,7 +16,6 @@ interface RazorpayCheckoutProps {
 }
 
 export default function RazorpayCheckout({
-  orderId,
   amount,
   customerEmail,
   customerName,
@@ -55,7 +53,7 @@ export default function RazorpayCheckout({
       return;
     }
 
-    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+    if (!process.env.RAZORPAY_KEY_ID) {
       const message = 'Razorpay public key is not configured.';
       setError(message);
       onError(message);
@@ -69,7 +67,7 @@ export default function RazorpayCheckout({
       // Create order on server
       const orderResponse = await createRazorpayOrder({
         amount,
-        orderId,
+        orderId: "123",
         customerEmail,
         customerName,
       });
@@ -84,12 +82,12 @@ export default function RazorpayCheckout({
 
       // Open Razorpay checkout
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: process.env.RAZORPAY_KEY_ID,
         order_id: orderResponse.orderId,
         amount: orderResponse.amount,
         currency: orderResponse.currency,
         name: 'Heaven Cafe',
-        description: `Order #${orderId}`,
+        description: `Order #${"1231"}`,
         customer_notification: 1,
         prefill: {
           name: customerName,

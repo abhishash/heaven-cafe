@@ -19,20 +19,25 @@ export default function ProductCard({ product }: ProductCardProps) {
       parseFloat(product.ac_price)) *
     100,
   );
-  
+
+  const isOutOfStock = parseInt(product?.in_stock as string) <= 0;
+
+
   return (
-    <Link href={`/product/${product.url}`}>
+    <Link href={isOutOfStock ? "#" : `/product/${product.url}`}
+      className={isOutOfStock ? "pointer-events-none" : ""}>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -6 }}
+        whileHover={isOutOfStock ? {} : { y: -6 }}
         transition={{ duration: 0.3 }}
-        className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer h-full flex flex-col"
+        className={`bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer h-full flex flex-col 
+        ${isOutOfStock ? "opacity-60 grayscale" : ""}`}
       >
         {/* Image */}
         <div className="relative w-full h-36 sm:h-50 bg-gray-100 overflow-hidden">
           <motion.div
-            whileHover={{ scale: 1.08 }}
+            whileHover={isOutOfStock ? {} : { scale: 1.08 }}
             transition={{ duration: 0.3 }}
             className="w-full h-full"
           >
@@ -40,12 +45,18 @@ export default function ProductCard({ product }: ProductCardProps) {
               src={`${imageBaseUrl}${product.image}`}
               alt={product.name}
               fill
-              className="object-fill sm:object-cover object-top"
+              className={`object-fill sm:object-cover object-top ${isOutOfStock ? "blur-[1px]" : ""
+                }`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </motion.div>
+          {isOutOfStock && (
+            <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+              Out of Stock
+            </Badge>
+          )}
 
-          {discountPercentage && (
+          {discountPercentage && !isOutOfStock && (
             <Badge className="absolute top-2 right-2 bg-orange-500 hover:bg-orange-600">
               {discountPercentage} % Off
             </Badge>

@@ -12,7 +12,6 @@ type CardType = PaymentCard;
 type CardsListProps = {
     cards: CardType[];
     onAddCard?: () => void;
-    orderId: string;
     amount: number;
     onSubmit: (details: any) => Promise<void>;
     isLoading?: boolean;
@@ -21,7 +20,6 @@ type CardsListProps = {
 const CardsList = ({
     cards,
     onAddCard,
-    orderId,
     amount,
     onSubmit,
     isLoading = false,

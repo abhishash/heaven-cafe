@@ -109,62 +109,6 @@ export const mockAddresses: Address[] = [
   },
 ];
 
-// Mock orders
-export const mockOrders: Order[] = [
-  {
-    id: '1',
-    orderNumber: 'ORD-2024-001',
-    date: '2024-04-02',
-    status: 'delivered',
-    total: 42.50,
-    items: [
-      { id: '1', name: 'Cappuccino', quantity: 2, price: 5.50 },
-      { id: '2', name: 'Croissant', quantity: 2, price: 4.75 },
-      { id: '3', name: 'Avocado Toast', quantity: 1, price: 8.50 },
-      { id: '4', name: 'Blueberry Muffin', quantity: 1, price: 4.25 },
-    ],
-    deliveryAddress: mockAddresses[0],
-  },
-  {
-    id: '2',
-    orderNumber: 'ORD-2024-002',
-    date: '2024-04-01',
-    status: 'delivered',
-    total: 58.75,
-    items: [
-      { id: '5', name: 'Espresso', quantity: 3, price: 4.00 },
-      { id: '6', name: 'Iced Latte', quantity: 1, price: 6.25 },
-      { id: '7', name: 'Grilled Cheese Sandwich', quantity: 2, price: 9.50 },
-      { id: '8', name: 'Greek Salad', quantity: 1, price: 12.75 },
-    ],
-    deliveryAddress: mockAddresses[0],
-  },
-  {
-    id: '3',
-    orderNumber: 'ORD-2024-003',
-    date: '2024-03-30',
-    status: 'processing',
-    total: 35.25,
-    items: [
-      { id: '9', name: 'Americano', quantity: 2, price: 4.00 },
-      { id: '10', name: 'Blueberry Pancakes', quantity: 1, price: 11.50 },
-      { id: '11', name: 'Fresh Fruit Smoothie', quantity: 1, price: 8.75 },
-    ],
-    deliveryAddress: mockAddresses[1],
-  },
-  {
-    id: '4',
-    orderNumber: 'ORD-2024-004',
-    date: '2024-03-25',
-    status: 'cancelled',
-    total: 28.50,
-    items: [
-      { id: '12', name: 'Vanilla Latte', quantity: 1, price: 5.75 },
-      { id: '13', name: 'Chocolate Cake', quantity: 1, price: 7.25 },
-    ],
-    deliveryAddress: mockAddresses[0],
-  },
-];
 
 // Mock chat messages
 export const mockChatMessages: ChatMessage[] = [

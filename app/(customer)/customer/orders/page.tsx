@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { mockOrders } from '@/lib/mockData';
 import { OrderCard } from '@/components/customer/OrderCard';
 import { Filter } from 'lucide-react';
 import { useGetOrdersQuery } from '@/store/services/order-api';
 import { isArray } from '@/lib/type-guards';
+import { ShoppingBag, CheckCircle, PackageCheck, Truck } from "lucide-react";
+
 
 type FilterStatus = 'all' | 'delivered' | 'processing' | 'cancelled';
 
@@ -14,7 +15,7 @@ export default function OrdersPage() {
 
   const { data, isLoading } = useGetOrdersQuery(filter === "all" ? "" : filter);
   const orders = data?.data;
-  
+
   const stats = { ...data?.count };
 
   return (
@@ -26,31 +27,83 @@ export default function OrdersPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-2 sm:gap-4 mb-4">
-        <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
-          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Total Orders</p>
-          {
-            isLoading ? <p>Loading...</p> :
-              <p className="text-2xl font-bold text-foreground">{data?.total_orders}</p>
-          }
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5 mb-4">
+
+        {/* Total Orders */}
+        <div className="bg-card rounded-xl border border-border p-3 sm:p-4 flex items-start gap-3 hover:shadow-md transition">
+          <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
+            <ShoppingBag size={18} />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Total Orders</p>
+            {isLoading ? (
+              <p className="text-sm">Loading...</p>
+            ) : (
+              <p className="text-xl sm:text-2xl font-bold">{data?.total_orders}</p>
+            )}
+          </div>
         </div>
-        <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
-          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">In Delivered</p>
-          {
-            isLoading ? <p>Loading...</p> :
-              <p style={{ color: stats.Delivered?.text_color }} className="text-2xl font-bold">{stats.Delivered?.total}</p>
-          }
+
+        {/* Delivered */}
+        <div className="bg-card rounded-xl border border-border p-3 sm:p-4 flex items-start gap-3 hover:shadow-md transition">
+          <div className="p-2 rounded-lg bg-green-100 text-green-600">
+            <CheckCircle size={18} />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Delivered</p>
+            {isLoading ? (
+              <p className="text-sm">Loading...</p>
+            ) : (
+              <p
+                style={{ color: stats.Delivered?.text_color }}
+                className="text-xl sm:text-2xl font-bold"
+              >
+                {stats.Delivered?.total}
+              </p>
+            )}
+          </div>
         </div>
-        <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
-          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Confirm Order</p>
-          {isLoading ? <p>Loading...</p> : <p style={{ color: stats?.["Confirm Order"]?.text_color }} className="text-2xl font-bold">{stats?.["Confirm Order"]?.total}</p>}
+
+        {/* Confirm Order */}
+        <div className="bg-card rounded-xl border border-border p-3 sm:p-4 flex items-start gap-3 hover:shadow-md transition">
+          <div className="p-2 rounded-lg bg-yellow-100 text-yellow-600">
+            <PackageCheck size={18} />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Confirmed</p>
+            {isLoading ? (
+              <p className="text-sm">Loading...</p>
+            ) : (
+              <p
+                style={{ color: stats?.["Confirm Order"]?.text_color }}
+                className="text-xl sm:text-2xl font-bold"
+              >
+                {stats?.["Confirm Order"]?.total}
+              </p>
+            )}
+          </div>
         </div>
-        <div className="bg-card rounded-lg border border-border p-2 sm:p-4">
-          <p className="text-xs sm:text-sm text-muted-foreground mb-0.5 sm:mb-1">Shipped</p>
-          {
-            isLoading ? <p>Loading...</p> : <p style={{ color: stats?.shipped?.text_color }} className="text-2xl font-bold">{stats?.shipped?.total}</p>
-          }
+
+        {/* Shipped */}
+        <div className="bg-card rounded-xl border border-border p-3 sm:p-4 flex items-start gap-3 hover:shadow-md transition">
+          <div className="p-2 rounded-lg bg-purple-100 text-purple-600">
+            <Truck size={18} />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Shipped</p>
+            {isLoading ? (
+              <p className="text-sm">Loading...</p>
+            ) : (
+              <p
+                style={{ color: stats?.shipped?.text_color }}
+                className="text-xl sm:text-2xl font-bold"
+              >
+                {stats?.shipped?.total}
+              </p>
+            )}
+          </div>
         </div>
+
       </div>
 
       {/* Filter Section */}

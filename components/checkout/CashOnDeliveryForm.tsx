@@ -2,15 +2,12 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { formatPrice } from '@/lib/utils';
 import { toast } from 'sonner';
 
 interface CashOnDeliveryFormProps {
-  orderId: string;
   amount: number;
   onSubmit: (details: DeliveryDetails) => Promise<void>;
   isLoading?: boolean;
@@ -29,7 +26,6 @@ export interface DeliveryDetails {
 }
 
 export default function CashOnDeliveryForm({
-  orderId,
   amount,
   deliveryPrice,
   onSubmit,

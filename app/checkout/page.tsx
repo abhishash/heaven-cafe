@@ -14,7 +14,6 @@ import { RootState } from "@/lib/redux/store";
 import { isArray } from "@/lib/type-guards";
 import EmptyCart from "@/components/cart/empty-cart";
 import { formatPrice } from "@/lib/utils";
-import StripeCheckout from "@/components/stripe-checkout";
 import { fetchHandler } from "@/lib/fetch-handler";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -36,11 +35,10 @@ export default function CheckoutPage() {
   const isWallet = normalizedMethod === "wallet";
   const isStripe = normalizedMethod === "stripe";
   const isCard = normalizedMethod === "card";
-  
+
   // Agar selected method COD, Wallet, Stripe, ya Card nahi hai, toh usko Razorpay maan lo (Fallback for any unknown online method)
   const isRazorpay = normalizedMethod !== "" && !isCOD && !isWallet && !isStripe && !isCard;
 
-  const orderId = `ORD-${Date.now()}XXXXXX`;
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -121,10 +119,6 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleStripeSuccess = () => {
-    // clearCart();
-    router.push(`/order-confirmation?orderId=${orderId}&method=stripe`);
-  };
 
   const handleRazorpaySuccess = async (paymentId: string) => {
     try {
@@ -193,7 +187,6 @@ export default function CheckoutPage() {
               <div className="bg-card rounded-lg p-6 border border-border">
                 {isCOD && (
                   <CashOnDeliveryForm
-                    orderId={orderId}
                     amount={totalPrice}
                     onSubmit={handleCODSubmit}
                     isLoading={isPending}
@@ -205,20 +198,14 @@ export default function CheckoutPage() {
 
                 {isWallet && (
                   <WalletOnDeliveryForm
-                    orderId={orderId}
                     amount={totalPrice}
                     onSubmit={handleCODSubmit}
                     isLoading={isPending}
                   />
                 )}
 
-                {isStripe && (
-                  <StripeCheckout items={cart} />
-                )}
-
                 {isRazorpay && (
                   <RazorpayCheckout
-                    orderId={orderId}
                     amount={totalPrice + (isDineIn ? 0 : parseFloat(delhiveryCharge))}
                     customerEmail={session?.user?.email ?? "customer@example.com"}
                     customerName={session?.user?.name ?? "Customer"}
@@ -236,7 +223,6 @@ export default function CheckoutPage() {
                         console.log("Add card clicked");
                         // open modal / navigate
                       }}
-                      orderId={orderId}
                       amount={totalPrice}
                       onSubmit={handleCODSubmit}
                       isLoading={isPending}
