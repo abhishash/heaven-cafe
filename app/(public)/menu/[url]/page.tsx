@@ -30,14 +30,13 @@ export default async function CatalogPage({ params }: {
   const categories: Category[] = productResponse?.categories ?? [];
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
+    <main className="bg-gray-50 py-6 sm:py-12 px-4">
+      <div className="container mx-auto">
 
         {/* Category Filter */}
         <Suspense fallback="loading...">
-
-          <div className="mb-12">
-            <div className='flex items-center gap-4 mb-8'>
+          <div className="mb-5 sm:mb-10">
+            <div className='flex items-center gap-4'>
               <BackPath />
               <h2 className="text-lg font-semibold text-gray-700">{categories?.[0]?.name}</h2>
             </div>
@@ -51,7 +50,7 @@ export default async function CatalogPage({ params }: {
         </Suspense>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {isArray(products) ? (
             products?.map((product: ProductTypes) => (
               <ProductCard key={product.id} product={product} />
@@ -65,6 +64,4 @@ export default async function CatalogPage({ params }: {
       </div>
     </main>
   )
-
-
 }
