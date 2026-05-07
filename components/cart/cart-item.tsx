@@ -95,13 +95,26 @@ const CartItem = ({ item }: { item: CartItemTypes }) => {
 
             {/* Product Details */}
             <div className="flex-1">
-                <h3 className="font-bold text-lg text-gray-800">{item.name}</h3>
+                <div className="flex items-start">
+                    <h3 className="font-bold text-sm sm:text-lg text-gray-800">{item.name}</h3>
+                    {/* Remove Button */}
+                    {
+                        isRemoveCartLoading ? <button
+                            disabled={isRemoveCartLoading}
+                            className="sm:ml-4 ml-0 cursor-not-allowed p-2 text-red-500 hover:bg-transparent rounded"
+                        >
+                            <Spinner width={20} height={20} />
+                        </button> : <button
+                            onClick={() => removeItem(item.cart_id)}
+                            disabled={isRemoveCartLoading}
+                            className="sm:ml-4 ml-0 p-2 bg-gray-50 cursor-pointer text-red-500 hover:bg-transparent rounded"
+                        >
+                            <Trash2 size={18} />
 
-                {item?.customization && (
-                    <p className="text-sm text-orange-600 mt-2 italic">
-                        Note: {item.customization}
-                    </p>
-                )}
+                        </button>
+                    }
+                </div>
+
 
                 <div className="flex items-center gap-x-2 justify-between mt-4">
                     <span className="font-bold text-orange-600">
@@ -130,23 +143,6 @@ const CartItem = ({ item }: { item: CartItemTypes }) => {
                                 }
                             </button>
                         </div>
-                        {/* Remove Button */}
-                        {
-                            isRemoveCartLoading ? <button
-                                disabled={isRemoveCartLoading}
-                                className="sm:ml-4 ml-0 cursor-not-allowed p-2 text-red-500 hover:bg-transparent rounded"
-                            >
-                                <Spinner width={20} height={20} />
-                            </button> : <button
-                                onClick={() => removeItem(item.cart_id)}
-                                disabled={isRemoveCartLoading}
-                                className="sm:ml-4 ml-0 p-2 cursor-pointer text-red-500 hover:bg-transparent rounded"
-                            >
-                                <Trash2 size={18} />
-
-                            </button>
-                        }
-
                     </div>
                 </div>
             </div>

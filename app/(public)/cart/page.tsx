@@ -61,11 +61,11 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-12 px-4">
+    <main className="min-h-screen bg-gray-50 py-6 sm:py-12 px-4">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-gray-800">Shopping Cart</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-8 text-gray-800">Shopping Cart</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow">
@@ -74,7 +74,7 @@ export default function CartPage() {
               ))}
             </div>
 
-            <div className="mt-6 flex gap-4">
+            <div className="mt-4 sm:mt-6 flex gap-4">
               <Link href="/menu" className="flex-1">
                 <Button variant="outline" size="lg" className='w-full rounded-full border-2 text-gray-800 hover:border-primary cursor-pointer transition-al hover:bg-primary duration-300 font-bold' >
                   Continue Shopping
