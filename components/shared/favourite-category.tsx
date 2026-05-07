@@ -65,12 +65,11 @@ export const CategoriesCarousel = ({ title, subCategories }: ProductCarouselProp
         });
     };
     return (
-        <section className="bg-gradient-to-b from-slate-50 to-white px-0 sm:px-4 py-10">
+        <section className="bg-linear-to-b from-slate-50 to-white px-0 sm:px-4 py-6 sm:py-10">
 
             <div className="mx-auto container">
-
                 {/* Header */}
-                <div className="mb-10 px-3 flex items-center justify-between">
+                <div className="mb-6 sm:mb-10 px-3 flex items-center justify-between">
                     <h2 className="text-2xl sm:text-3xl text-primary font-bold">
                         {title}
                     </h2>
@@ -99,10 +98,10 @@ export const CategoriesCarousel = ({ title, subCategories }: ProductCarouselProp
                 {/* Scroll Container */}
                 <div className='relative'>
                     {/* Left Shadow */}
-                    <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-background to-transparent z-[9]" />
+                    <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-linear-to-r from-background to-transparent z-[9]" />
 
                     {/* Right Shadow */}
-                    <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-background to-transparent z-[9]" />
+                    <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-linear-to-l from-background to-transparent z-[9]" />
 
                     <div
                         ref={scrollRef}

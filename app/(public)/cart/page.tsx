@@ -61,9 +61,9 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-6 sm:py-12 px-4">
+    <main className="min-h-screen bg-gray-50 py-4 sm:py-12 px-4">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-8 text-gray-800">Shopping Cart</h1>
+        <h1 className="text-xl sm:text-4xl font-bold mb-2 sm:mb-8 text-gray-800">Shopping Cart</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
           {/* Cart Items */}
@@ -115,7 +115,7 @@ export default function CartPage() {
 
               <div className="flex justify-between mb-6">
                 <span className="text-lg font-bold text-gray-800">Total</span>
-                <span className="text-2xl font-bold text-orange-600">
+                <span className="text-xl sm:text-2xl font-bold text-orange-600">
                   {formatPrice(totalPrice, "INR")}
                 </span>
               </div>

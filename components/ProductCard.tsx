@@ -35,7 +35,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         ${isOutOfStock ? "opacity-60 grayscale" : ""}`}
       >
         {/* Image */}
-        <div className="relative w-full h-36 sm:h-50 bg-gray-100 overflow-hidden">
+        <div className="relative w-full h-32 sm:h-50 bg-gray-100 overflow-hidden">
           <motion.div
             whileHover={isOutOfStock ? {} : { scale: 1.08 }}
             transition={{ duration: 0.3 }}

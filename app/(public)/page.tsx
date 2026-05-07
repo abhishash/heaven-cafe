@@ -146,22 +146,24 @@ export default async function Home() {
       </Suspense>
 
       {/* Call to Action */}
-      <section className="bg-secondary container mx-auto rounded-2xl sm:px-6 lg:px-8 py-10 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4 text-primary">
-            Ready to Order?
-          </h2>
-          <p className="text-lg mb-8 text-muted-foreground">
-            Browse our complete menu and find exactly what you're craving.
-          </p>
-          <Link href="/menu">
-            <Button
-              size="lg"
-              className="bg-primary cursor-pointer text-primary-foreground hover:opacity-90 font-bold"
-            >
-              Explore Full Menu
-            </Button>
-          </Link>
+      <section className="sm:px-6 lg:px-8 px-3" >
+        <div className="bg-secondary container mx-auto py-6 sm:py-10 rounded-2xl">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-primary">
+              Ready to Order?
+            </h2>
+            <p className="text-lg mb-4 sm:mb-8 text-muted-foreground">
+              Browse our complete menu and find exactly what you're craving.
+            </p>
+            <Link href="/menu">
+              <Button
+                size="lg"
+                className="bg-primary cursor-pointer text-primary-foreground hover:opacity-90 font-bold"
+              >
+                Explore Full Menu
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -175,25 +177,28 @@ export default async function Home() {
       </Suspense>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r my-10 container mx-auto px-4 sm:px-6 lg:px-8 py-20 from-secondary to-secondary rounded-2xl">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h3 className="text-3xl font-bold text-primary mb-4">
-            Ready to Experience Heaven?
-          </h3>
-          <p className="text-primary/90 mb-8 text-lg">
-            Sign up today and enjoy exclusive deals on your first order.
-          </p>
-          <Link href="/register">
-            <Button size="lg" className="cursor-pointer h-14 text-lg">
-              Create Account
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
+
+      <section className="px-3 sm:px-0">
+        <div className="bg-linear-to-r my-6 px-4 sm:px-6 lg:px-8 sm:my-10 py-10 sm:py-20 container mx-auto from-secondary to-secondary rounded-2xl">
+          <div className="max-w-4xl mx-auto px-0 sm:px-6 text-center">
+            <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-4">
+              Ready to Experience Heaven?
+            </h3>
+            <p className="text-primary/90 mb-6 sm:mb-8 text-lg">
+              Sign up today and enjoy exclusive deals on your first order.
+            </p>
+            <Link href="/register">
+              <Button size="lg" className="cursor-pointer h-14 text-lg">
+                Create Account
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
       {/* Features Section */}
       <section className="">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-20 ">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20 ">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="text-4xl flex justify-center mb-4">
