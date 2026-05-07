@@ -54,7 +54,7 @@ export function BottomNavigation() {
     <>
       {/* Mobile Bottom Navigation Bar */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-sidebar border-t border-border shadow-lg md:hidden z-40">
-        <div className="flex justify-around items-center h-20">
+        <div className="flex justify-around items-center h-15">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -63,12 +63,12 @@ export function BottomNavigation() {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${active
-                  ? 'text-primary border-t-2 border-primary'
-                  : 'text-muted-foreground hover:text-foreground'
+                  ? 'border-t-2 border-primary'
+                  : 'hover:text-foreground'
                   }`}
               >
-                <Icon className="w-6 h-6 mb-1" />
-                <span className="text-xs font-medium">{item.label}</span>
+                <Icon className="w-6 h-6 mb-1 text-primary" />
+                <span className="text-xs font-medium text-primary">{item.label}</span>
               </Link>
             );
           })}
