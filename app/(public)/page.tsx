@@ -24,6 +24,7 @@ import { isArray } from "@/lib/type-guards";
 import { Suspense } from "react";
 import CategorySkeleton from "@/components/home/placeholder/category-skeleton";
 import { SafeImage } from "@/components/shared/safe-image";
+import PermotionBanner from "@/components/home/permotion-banner";
 
 export default async function Home() {
   const homePageBanners = await fetchHandler<{
@@ -90,42 +91,7 @@ export default async function Home() {
       <HeroSection />
 
       {/* Promotional Offers Section */}
-      <Suspense
-        fallback={
-          <div className="text-center py-10">Loading promotions...</div>
-        }
-      >
-        {isArray(promotionalsData) ? (
-          <section className="py-6 sm:py-10 px-4 sm:px-6">
-            <div className="container mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-                {promotionalsData.map((promo, index) => (
-                  <Link
-                    href={promo?.url_link || "#"}
-                    key={index}
-                    target="_blank"
-                    className="block overflow-hidden rounded-2xl group relative h-40 md:h-54 shadow-md"
-                  >
-                    <SafeImage
-                      src={promo.image}
-                      width={500}
-                      height={300}
-                      alt={promo.name}
-                      className="w-full h-full object-fill transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 transition-colors" />
-                    <div className="absolute bottom-4 left-4">
-                      <span className="bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-bold shadow-sm">
-                        {promo.name}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        ) : null}
-      </Suspense>
+      <PermotionBanner promotionalsData={promotionalsData} />
 
       {/* Favorite And Extra Product Banners */}
       <Suspense fallback={"loading...."}>

@@ -1,6 +1,6 @@
 const Loading = () => {
     return (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex items-center justify-center min-h-[calc(100dvh-260px)]">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 220 220"
@@ -113,32 +113,6 @@ const Loading = () => {
                         height="18"
                         rx="9"
                         fill="#FB923C"
-                    />
-                </g>
-
-                {/* <!-- Magnifying Glass --> */}
-                <g>
-                    <circle
-                        cx="148"
-                        cy="150"
-                        r="24"
-                        stroke="url(#glassGradient)"
-                        stroke-width="8"
-                        fill="rgba(255,255,255,0.65)"
-                    >
-                        <animate
-                            attributeName="r"
-                            values="22;25;22"
-                            dur="1.4s"
-                            repeatCount="indefinite"
-                        />
-                    </circle>
-
-                    <path
-                        d="M165 167L184 186"
-                        stroke="#EA580C"
-                        stroke-width="10"
-                        stroke-linecap="round"
                     />
                 </g>
 

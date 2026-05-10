@@ -1,6 +1,6 @@
 'use client';
 
-import { mockUserProfile, mockOrders } from '@/lib/mockData';
+import { mockUserProfile } from '@/lib/mockData';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
 import { useGetUserCardsQuery, useGetUserDetailQuery, useSetPrimaryCardMutation, useApplyCardMutation } from '@/store/services/customer-api';
 import { User, Mail, Phone, Calendar, ShoppingBag, Crown, Edit2, LogOut } from 'lucide-react';
@@ -9,7 +9,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
-import CardSkeleton from '@/components/customer/placeholder/CardSkeleton';
 import CreditCard from '@/components/shared/credit-card';
 import { formatExpiry } from '@/lib/utils';
 import { motion } from "framer-motion";
@@ -147,7 +146,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Membership Section */}
-      <div className="bg-card rounded-lg border border-border p-3 sm:p-6 mb-6">
+      {/* <div className="bg-card rounded-lg border border-border p-3 sm:p-6 mb-6">
         <h3 className="text-lg font-bold text-foreground mb-4">Membership Benefits</h3>
         <p className="text-muted-foreground mb-4">{membershipBenefit[mockUserProfile.membershipTier]}</p>
         {isUserCardsLoading ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -301,7 +300,7 @@ export default function ProfilePage() {
           </motion.div>
         </div>}
 
-      </div>
+      </div> */}
 
 
       {/* Actions */}

@@ -203,7 +203,7 @@ export default function Header() {
             ) : (
               <Link
                 href="/login"
-                className="flex flex-col items-center text-xs"
+                className="flex flex-col text-primary items-center text-xs"
               >
                 <User size={22} />
                 Login

@@ -55,7 +55,7 @@ export default function OrderDetailsPage({ orderId }: OrderDetailsPageProps) {
         <div className="min-h-screen bg-gray-50">
             <div className="">
                 {/* Header */}
-                <div className="bg-white border-b">
+                <div className="bg-white mt-8 border-b">
                     <Link href="/customer/orders" className="px-6 py-4 flex items-center gap-3">
                         <ArrowLeft className="w-6 h-6 text-gray-900" />
                         <h1 className="text-2xl font-bold text-gray-900">ORDER #{order.order_no}</h1>

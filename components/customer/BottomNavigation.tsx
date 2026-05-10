@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
+import EditProfileModal, { ProfileData } from './modal/EditProfileModal';
 
 export function BottomNavigation() {
   const pathname = usePathname();
@@ -16,6 +17,26 @@ export function BottomNavigation() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [profileData, setProfileData] = useState<ProfileData>({
+    name: 'John Doe',
+    phone: '+1 (555) 123-4567',
+    gender: 'male',
+    image: undefined,
+  })
+  const [imagePreview, setImagePreview] = useState<string>('')
+
+  const handleSaveProfile = (data: ProfileData) => {
+    setProfileData(data)
+    if (data.image instanceof File) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(data.image)
+    }
+  }
 
   const isActive = (path: string) => {
     return pathname.startsWith(path);
@@ -28,7 +49,6 @@ export function BottomNavigation() {
       if (data.success) {
         dispatch(clearCart());
         const signOutRes = await signOut({ callbackUrl: "/login", redirect: false });
-        console.log("Sign out response:", signOutRes);
         if (signOutRes?.url) {
           router.push("/");
         } else {
@@ -113,7 +133,7 @@ export function BottomNavigation() {
                 </div>
 
                 {/* Right Arrow */}
-                <button className='cursor-pointer'>
+                <button className='cursor-pointer' onClick={() => setIsModalOpen(true)} >
                   <ChevronRight className="text-gray-500" />
                 </button>
               </div>
@@ -156,6 +176,14 @@ export function BottomNavigation() {
             <span className="text-sm font-medium"> {loading ? 'Logging out...' : 'Logout'}</span>
           </button>
         </div>
+
+        {/* Edit Profile Modal */}
+        <EditProfileModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSaveProfile}
+          initialData={profileData}
+        />
       </aside>
     </>
   );
