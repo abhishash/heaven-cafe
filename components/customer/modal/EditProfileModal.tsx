@@ -182,6 +182,7 @@ export default function EditProfileModal({
             {/* Gender Field */}
             <div className="space-y-2">
               <Label htmlFor="gender">Gender</Label>
+              <input
                 disabled={true}
                 placeholder="Enter your phone number"
                 value={formData.phone}
