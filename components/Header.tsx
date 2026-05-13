@@ -6,7 +6,7 @@ const OrderTypeModal = dynamic(() => import("./pop-up/Order-type-modal"));
 const DineDeliveryToggle = dynamic(() => import("./shared/delivery-toggle"));
 
 import Link from "next/link";
-import { Bell, Heart, MenuIcon, NotebookPen, ShoppingCart, User, UserIcon, Wallet} from "lucide-react";
+import { Bell, Heart, MenuIcon, NotebookPen, ShoppingCart, User, UserIcon, Wallet } from "lucide-react";
 import Image from "next/image";
 import { SearchBar } from "./Search-bar";
 import { useSession } from "next-auth/react";
@@ -110,8 +110,8 @@ export default function Header() {
           >
             <NotebookPen />
           </Link>
-          
-          
+
+
           <NotificationBell />
           {/* <UserCard /> */}
           <Link href="/cart" className="relative">
@@ -169,13 +169,14 @@ export default function Header() {
         {/* ✅ BOTTOM NAV (FIXED) */}
         <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
           <div className="flex justify-around items-center py-2">
-            <NotificationBell  isMobile={true} />
-            
+
+
             {/* Menu */}
             <Link href="/menu" className="flex text-primary flex-col items-center text-xs">
               <MenuIcon size={22} />
               Menu
             </Link>
+            <NotificationBell isMobile={true} />
 
             {/* Cart */}
             <Link

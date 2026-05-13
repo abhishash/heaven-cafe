@@ -2,23 +2,32 @@
 
 import { mockUserProfile } from '@/lib/mockData';
 import { clearCart } from '@/lib/redux/slice/cartSlice';
-import { useGetUserCardsQuery, useGetUserDetailQuery, useSetPrimaryCardMutation, useApplyCardMutation } from '@/store/services/customer-api';
+import { useGetUserCardsQuery, useGetUserDetailQuery, useSetPrimaryCardMutation, useApplyCardMutation, useEditProfileMutation } from '@/store/services/customer-api';
 import { User, Mail, Phone, Calendar, ShoppingBag, Crown, Edit2, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
-import CreditCard from '@/components/shared/credit-card';
-import { formatExpiry } from '@/lib/utils';
+// import CreditCard from '@/components/shared/credit-card';
+// import { formatExpiry } from '@/lib/utils';
 import { motion } from "framer-motion";
 import { useRef } from "react";
+import EditProfileModal, { ProfileData } from '@/components/customer/modal/EditProfileModal';
 
 
 export default function ProfilePage() {
   const sliderRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [profileData, setProfileData] = useState<ProfileData>({
+    name: 'John Doe',
+    phone: '+1 (555) 123-4567',
+    gender: 'male',
+    image: undefined,
+  });
+  const [imagePreview, setImagePreview] = useState<string>('')
 
 
   const membershipColor = {
@@ -27,11 +36,11 @@ export default function ProfilePage() {
     gold: 'bg-yellow-100 text-yellow-800',
   };
 
-  const membershipBenefit = {
-    bronze: 'Get basic discounts and exclusive offers',
-    silver: 'Enjoy 5% off and free delivery on orders over $20',
-    gold: 'Get 10% off all orders, free delivery, and exclusive specials',
-  };
+  // const membershipBenefit = {
+  //   bronze: 'Get basic discounts and exclusive offers',
+  //   silver: 'Enjoy 5% off and free delivery on orders over $20',
+  //   gold: 'Get 10% off all orders, free delivery, and exclusive specials',
+  // };
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -39,7 +48,8 @@ export default function ProfilePage() {
 
   const { data: userProfile, isLoading } = useGetUserDetailQuery();
   const { data: userCards, isLoading: isUserCardsLoading, refetch } = useGetUserCardsQuery();
-  const [setPrimaryCard, { isLoading: isSetPrimaryCardLoading }] = useSetPrimaryCardMutation();
+  // const [setPrimaryCard, { isLoading: isSetPrimaryCardLoading }] = useSetPrimaryCardMutation();
+  const [editProfile, { isLoading: isEditProfileLoading }] = useEditProfileMutation();
   const [applyCard, { isLoading: isApplyCardLoading }] = useApplyCardMutation();
 
   useEffect(() => {
@@ -57,15 +67,26 @@ export default function ProfilePage() {
     return () => window.removeEventListener("resize", calculateWidth);
   }, [userCards]);
 
-  const handleApplyCard = async (id: number) => {
-    try {
-      await applyCard({ card_type_id: id }).unwrap();
-      toast.success("Card applied successfully");
-      refetch();
-    } catch (err) {
-      toast.error("Failed to apply card");
+  // const handleApplyCard = async (id: number) => {
+  //   try {
+  //     await applyCard({ card_type_id: id }).unwrap();
+  //     toast.success("Card applied successfully");
+  //     refetch();
+  //   } catch (err) {
+  //     toast.error("Failed to apply card");
+  //   }
+  // };
+
+  const handleSaveProfile = (data: ProfileData) => {
+    setProfileData(data)
+    if (data.image instanceof File) {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(data.image)
     }
-  };
+  }
 
   const handleLogout = async () => {
     setLoading(true);
@@ -88,65 +109,66 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="px-4 mt-10 mb-10 sm:my-0">
-      {/* Header */}
-      <div className="mb-4 sm:mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">My Profile</h1>
-        <p className="text-muted-foreground">Manage your account settings and preferences</p>
-      </div>
+    <>
+      <div className="px-4 mt-10 mb-10 sm:my-0">
+        {/* Header */}
+        <div className="mb-4 sm:mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">My Profile</h1>
+          <p className="text-muted-foreground">Manage your account settings and preferences</p>
+        </div>
 
-      {/* Profile Header Card */}
-      <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-border p-6 mb-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center gap-4 flex-1">
-            <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-primary-foreground flex-shrink-0">
-              <User className="w-8 h-8" />
+        {/* Profile Header Card */}
+        <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-lg border border-border p-6 mb-8">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex items-center gap-4 flex-1">
+              <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-primary-foreground flex-shrink-0">
+                <User className="w-8 h-8" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">{isLoading ? 'Loading...' : userProfile?.name}</h2>
+                <p className="text-muted-foreground">Member since {isLoading ? 'Loading...' : userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'N/A'}</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">{isLoading ? 'Loading...' : userProfile?.name}</h2>
-              <p className="text-muted-foreground">Member since {isLoading ? 'Loading...' : userProfile?.created_at ? new Date(userProfile.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }) : 'N/A'}</p>
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${membershipColor[mockUserProfile.membershipTier]}`}>
+              <Crown className="w-5 h-5" />
+              <span className="font-semibold capitalize">{mockUserProfile.membershipTier} Member</span>
             </div>
-          </div>
-          <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${membershipColor[mockUserProfile.membershipTier]}`}>
-            <Crown className="w-5 h-5" />
-            <span className="font-semibold capitalize">{mockUserProfile.membershipTier} Member</span>
           </div>
         </div>
-      </div>
 
-      {/* Contact Information */}
-      <div className="bg-card rounded-lg border border-border p-6 mb-6">
-        <h3 className="text-lg font-bold text-foreground mb-4">Contact Information</h3>
-        <div className="space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Mail className="w-5 h-5 text-primary" />
+        {/* Contact Information */}
+        <div className="bg-card rounded-lg border border-border p-6 mb-6">
+          <h3 className="text-lg font-bold text-foreground mb-4">Contact Information</h3>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Mail className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground mb-1">Email</p>
+                <p className="font-medium break-all text-foreground">{isLoading ? 'Loading...' : userProfile?.email}</p>
+              </div>
+              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                <Edit2 className="w-5 h-5 text-muted-foreground" />
+              </button>
             </div>
-            <div className="flex-1">
-              <p className="text-sm text-muted-foreground mb-1">Email</p>
-              <p className="font-medium break-all text-foreground">{isLoading ? 'Loading...' : userProfile?.email}</p>
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Phone className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-muted-foreground mb-1">Phone Number</p>
+                <p className="font-medium text-foreground">{isLoading ? 'Loading...' : userProfile?.phone}</p>
+              </div>
+              <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                <Edit2 className="w-5 h-5 text-muted-foreground" />
+              </button>
             </div>
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-              <Edit2 className="w-5 h-5 text-muted-foreground" />
-            </button>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Phone className="w-5 h-5 text-primary" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm text-muted-foreground mb-1">Phone Number</p>
-              <p className="font-medium text-foreground">{isLoading ? 'Loading...' : userProfile?.phone}</p>
-            </div>
-            <button className="p-2 hover:bg-muted rounded-lg transition-colors">
-              <Edit2 className="w-5 h-5 text-muted-foreground" />
-            </button>
           </div>
         </div>
-      </div>
 
-      {/* Membership Section */}
-      {/* <div className="bg-card rounded-lg border border-border p-3 sm:p-6 mb-6">
+        {/* Membership Section */}
+        {/* <div className="bg-card rounded-lg border border-border p-3 sm:p-6 mb-6">
         <h3 className="text-lg font-bold text-foreground mb-4">Membership Benefits</h3>
         <p className="text-muted-foreground mb-4">{membershipBenefit[mockUserProfile.membershipTier]}</p>
         {isUserCardsLoading ? <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -303,21 +325,29 @@ export default function ProfilePage() {
       </div> */}
 
 
-      {/* Actions */}
-      <div className="space-y-3">
-        <div className='flex gap-x-4'>
-          <button className="w-full cursor-pointer bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
-            Edit Profile
-          </button>
-          <button className="w-full cursor-pointer border border-border text-foreground py-3 rounded-lg font-semibold hover:bg-muted transition-colors">
-            Change Password
+        {/* Actions */}
+        <div className="space-y-3">
+          <div className='flex gap-x-4'>
+            <button onClick={() => setIsModalOpen(true)} className="w-full cursor-pointer bg-primary text-primary-foreground py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors">
+              Edit Profile
+            </button>
+            <button className="w-full cursor-pointer border border-border text-foreground py-3 rounded-lg font-semibold hover:bg-muted transition-colors">
+              Change Password
+            </button>
+          </div>
+          <button onClick={handleLogout} disabled={loading} className="w-full cursor-pointer flex items-center justify-center gap-2 border border-destructive text-destructive py-3 rounded-lg font-semibold hover:bg-destructive/5 transition-colors">
+            <LogOut className="w-5 h-5" />
+            {loading ? 'Logging out...' : 'Logout'}
           </button>
         </div>
-        <button onClick={handleLogout} disabled={loading} className="w-full cursor-pointer flex items-center justify-center gap-2 border border-destructive text-destructive py-3 rounded-lg font-semibold hover:bg-destructive/5 transition-colors">
-          <LogOut className="w-5 h-5" />
-          {loading ? 'Logging out...' : 'Logout'}
-        </button>
       </div>
-    </div>
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveProfile}
+        initialData={profileData}
+      />
+    </>
   );
 }

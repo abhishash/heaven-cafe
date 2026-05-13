@@ -12,7 +12,7 @@ import { useGetFAQQuery } from '@/store/services/master-api';
 type SupportTab = 'chat' | 'tickets' | 'faq';
 
 export default function SupportPage() {
-  const [activeTab, setActiveTab] = useState<SupportTab>('chat');
+  const [activeTab, setActiveTab] = useState<SupportTab>('tickets');
   const [messages, setMessages] = useState(mockChatMessages);
   const [newMessage, setNewMessage] = useState('');
   const [tickets, setTickets] = useState(mockSupportTickets);
@@ -71,7 +71,6 @@ export default function SupportPage() {
       {/* Tab Navigation */}
       <div className="flex border-b border-border mb-8 overflow-x-auto">
         {[
-          { id: 'chat', label: 'Live Chat', icon: MessageCircle },
           { id: 'tickets', label: 'Support Tickets', icon: Ticket },
           { id: 'faq', label: 'FAQ', icon: HelpCircle },
         ].map(({ id, label, icon: Icon }) => (
@@ -89,60 +88,7 @@ export default function SupportPage() {
         ))}
       </div>
 
-      {/* Live Chat Tab */}
-      {activeTab === 'chat' && (
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Chat Messages */}
-          <div className="md:col-span-2 bg-card rounded-lg border border-border flex flex-col h-96 md:h-auto">
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
-              ))}
-            </div>
-
-            {/* Chat Input */}
-            <div className="border-t border-border p-4">
-              <form onSubmit={handleSendMessage} className="flex gap-2">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Type your message..."
-                  className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-foreground bg-input"
-                />
-                <button
-                  type="submit"
-                  className="bg-primary text-primary-foreground p-2 rounded-lg hover:bg-primary/90 transition-colors"
-                >
-                  <Send className="w-5 h-5" />
-                </button>
-              </form>
-            </div>
-          </div>
-
-          {/* Chat Info */}
-          <div className="space-y-4">
-            <div className="bg-primary/10 rounded-lg border border-primary/20 p-4">
-              <h3 className="font-semibold text-foreground mb-2">We&apos;re here to help!</h3>
-              <p className="text-sm text-muted-foreground mb-4">Our support team typically responds within 5 minutes during business hours (8 AM - 10 PM).</p>
-              <div className="space-y-2 text-sm">
-                <p className="text-muted-foreground"><span className="font-medium">Response time:</span> ~5 min</p>
-                <p className="text-muted-foreground"><span className="font-medium">Available:</span> 8 AM - 10 PM</p>
-              </div>
-            </div>
-
-            <div className="bg-card rounded-lg border border-border p-4">
-              <h3 className="font-semibold text-foreground mb-3">Common Issues</h3>
-              <ul className="space-y-2 text-sm">
-                <li className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">Order status</li>
-                <li className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">Delivery problems</li>
-                <li className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">Billing & payments</li>
-                <li className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors">Account issues</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      )}
+     
 
       {/* Support Tickets Tab */}
       {activeTab === 'tickets' && (
@@ -248,19 +194,7 @@ export default function SupportPage() {
                 isOpen={false}
               />
             ))}
-          </div>
-
-          {/* Still Need Help */}
-          <div className="mt-8 bg-primary/5 rounded-lg border border-primary/20 p-6 text-center">
-            <h3 className="text-lg font-semibold text-foreground mb-2">Didn&apos;t find your answer?</h3>
-            <p className="text-muted-foreground mb-4">Feel free to reach out to our support team</p>
-            <button
-              onClick={() => setActiveTab('chat')}
-              className="inline-block bg-primary text-primary-foreground px-6 py-2 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-            >
-              Start Live Chat
-            </button>
-          </div>
+          </div>         
         </div>
       )}
     </div>

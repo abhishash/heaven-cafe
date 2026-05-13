@@ -10,13 +10,13 @@ const Loading = () => {
             >
                 <defs>
                     <linearGradient id="bgGlow" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#FDBA74" />
-                        <stop offset="100%" stop-color="#F97316" />
+                        <stop offset="0%" floodColor="#FDBA74" />
+                        <stop offset="100%" floodColor="#F97316" />
                     </linearGradient>
 
                     <linearGradient id="glassGradient" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stop-color="#FB923C" />
-                        <stop offset="100%" stop-color="#EA580C" />
+                        <stop offset="0%" floodColor="#FB923C" />
+                        <stop offset="100%" floodColor="#EA580C" />
                     </linearGradient>
 
                     <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
@@ -24,8 +24,8 @@ const Loading = () => {
                             dx="0"
                             dy="8"
                             stdDeviation="8"
-                            flood-color="#FDBA74"
-                            flood-opacity="0.45"
+                            floodColor="#FDBA74"
+                            floodOpacity="0.45"
                         />
                     </filter>
                 </defs>

@@ -131,11 +131,6 @@ export function BottomNavigation() {
                     7906948573
                   </p>
                 </div>
-
-                {/* Right Arrow */}
-                <button className='cursor-pointer' onClick={() => setIsModalOpen(true)} >
-                  <ChevronRight className="text-gray-500" />
-                </button>
               </div>
 
             </div>
@@ -177,13 +172,6 @@ export function BottomNavigation() {
           </button>
         </div>
 
-        {/* Edit Profile Modal */}
-        <EditProfileModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSave={handleSaveProfile}
-          initialData={profileData}
-        />
       </aside>
     </>
   );

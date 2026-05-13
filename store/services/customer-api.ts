@@ -25,6 +25,11 @@ export const userApi = createApi({
             transformResponse: (response: AuthResponse) => response.user,
             providesTags: ["user"]
         }),
+        editProfile: builder.mutation<User, void>({
+            query: () => "/edit-profile",
+            transformResponse: (response: AuthResponse) => response.user,
+            invalidatesTags: ["user"]
+        }),
         getUserCards: builder.query<CardApiResponse, void>({
             query: () => "/card",
             transformResponse: (response: CardApiResponse) => response,
@@ -46,4 +51,4 @@ export const userApi = createApi({
     })
 })
 
-export const { useGetUserDetailQuery, useGetUserCardsQuery, useSetPrimaryCardMutation, useApplyCardMutation } = userApi;
+export const { useGetUserDetailQuery, useGetUserCardsQuery, useSetPrimaryCardMutation, useApplyCardMutation, useEditProfileMutation } = userApi;

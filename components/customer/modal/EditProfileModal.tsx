@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Camera } from 'lucide-react'
+import { Camera, Edit3Icon, EditIcon } from 'lucide-react'
 
 interface EditProfileModalProps {
   isOpen: boolean
@@ -107,10 +107,10 @@ export default function EditProfileModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-6 py-4 px-2 overflow-y-auto no-scrollbar max-h-[50vh] sm:max-h-[60vh]">
           {/* Image Upload Section */}
           <div className="flex flex-col items-center gap-4">
-            <div className="relative w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+            <div className="relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
               {imagePreview ? (
                 <img
                   src={imagePreview}
@@ -134,7 +134,7 @@ export default function EditProfileModal({
               size="sm"
               onClick={handleOpenFilePicker}
             >
-              <Camera className="w-4 h-4 mr-2" />
+              <EditIcon className="w-4 h-4 mr-2" />
               Change Photo
             </Button>
           </div>
@@ -180,21 +180,10 @@ export default function EditProfileModal({
             </div>
 
             {/* Gender Field */}
-            <div className="space-y-2">
-              <Label htmlFor="gender">Gender</Label>
-              <input
-                disabled={true}
-                placeholder="Enter your phone number"
-                value={formData.phone}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            {/* Gender Field */}
-            <div className="space-y-2">
+            <div className="space-y-2 w-full">
               <Label htmlFor="gender">Gender</Label>
               <Select value={formData.gender} onValueChange={handleGenderChange}>
-                <SelectTrigger id="gender">
+                <SelectTrigger className='w-full' id="gender">
                   <SelectValue placeholder="Select your gender" />
                 </SelectTrigger>
                 <SelectContent>
