@@ -34,7 +34,7 @@ export const orderApi = createApi({
     }),
 
     getOrderById: builder.query<Order, number>({
-      query: (orderId) => `orders/${orderId}`,
+      query: (orderId) => `orders/details/${orderId}`,
 
       // ✅ Typed response
       transformResponse: (response: OrderResponse) => response?.data,
