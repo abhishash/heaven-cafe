@@ -19,10 +19,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       parseFloat(product.ac_price)) *
     100,
   );
-
-  const isOutOfStock = parseInt(product?.in_stock as string) <= 0;
-
-
+  
   return (
     <Link href={isOutOfStock ? "#" : `/product/${product.url}`}
       className={isOutOfStock ? "pointer-events-none" : ""}>
@@ -35,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         ${isOutOfStock ? "opacity-60 grayscale" : ""}`}
       >
         {/* Image */}
-        <div className="relative w-full h-32 sm:h-50 bg-gray-100 overflow-hidden">
+        <div className="relative w-full h-50 bg-gray-100 overflow-hidden">
           <motion.div
             whileHover={isOutOfStock ? {} : { scale: 1.08 }}
             transition={{ duration: 0.3 }}
@@ -45,8 +42,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               src={`${imageBaseUrl}${product.image}`}
               alt={product.name}
               fill
-              className={`object-fill sm:object-cover object-top ${isOutOfStock ? "blur-[1px]" : ""
-                }`}
+              className="object-contain object-center"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </motion.div>

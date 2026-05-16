@@ -206,6 +206,7 @@ export default function CheckoutPage() {
 
                 {isRazorpay && (
                   <RazorpayCheckout
+                    orderId={orderId}
                     amount={totalPrice + (isDineIn ? 0 : parseFloat(delhiveryCharge))}
                     customerEmail={session?.user?.email ?? "customer@example.com"}
                     customerName={session?.user?.name ?? "Customer"}

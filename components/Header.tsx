@@ -111,7 +111,6 @@ export default function Header() {
             <NotebookPen />
           </Link>
 
-
           <NotificationBell />
           {/* <UserCard /> */}
           <Link href="/cart" className="relative">
