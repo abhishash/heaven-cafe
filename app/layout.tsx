@@ -15,16 +15,13 @@ const geist = Geist({
 })
 
 export const metadata: Metadata = {
+  manifest: '/manifest.json',
+  themeColor: '#000000',
   title: 'FastBite - Fast Food E-Commerce',
   description: 'Order delicious fast food online. Burgers, chicken, sides, and more delivered fast.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/favicon.png',
-        media: '(prefers-color-scheme: light)',
-      }
-    ],
+    icon: '/favicon.png',
     apple: '/favicon.png',
   },
 }
