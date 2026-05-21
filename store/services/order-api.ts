@@ -7,6 +7,18 @@ import { OrderResponse } from "@/lib/types";
 
 const APIENDPOINT = process.env.API_ENDPOINT;
 
+interface UpdatePaymentStatusPayload {
+  payment_id: string;
+  order_id: string;
+  status: "success" | "failed";
+}
+
+interface UpdatePaymentStatusResponse {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+
 export const orderApi = createApi({
   reducerPath: "orderApi",
   baseQuery: fetchBaseQuery({
@@ -38,9 +50,23 @@ export const orderApi = createApi({
 
       // ✅ Typed response
       transformResponse: (response: OrderResponse) => response?.data,
+    }),
 
+    updatePaymentStatus: builder.mutation<
+      UpdatePaymentStatusResponse,
+      UpdatePaymentStatusPayload
+    >({
+      query: (body) => ({
+        url: "orders/success",
+        method: "POST",
+        body,
+      }),
     }),
   }),
 });
 
-export const { useGetOrdersQuery, useGetOrderByIdQuery } = orderApi;
+export const {
+  useGetOrdersQuery,
+  useGetOrderByIdQuery,
+  useUpdatePaymentStatusMutation,
+} = orderApi;

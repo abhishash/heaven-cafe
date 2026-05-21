@@ -1,18 +1,28 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { createRazorpayOrder, verifyRazorpayPayment } from '@/app/actions/razorpay';
-import { formatPrice } from '@/lib/utils';
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import {
+  createRazorpayOrder,
+  verifyRazorpayPayment,
+} from "@/app/actions/razorpay";
+import { formatPrice } from "@/lib/utils";
 
 interface RazorpayCheckoutProps {
   amount: number;
   customerEmail: string;
   customerName: string;
   disabled?: boolean;
-  onSuccess: (paymentId: string) => void;
+  onSuccess: (data: {
+    payment_id: string;
+    razorpay_order_id: string;
+    order_id: string;
+    status: "success";
+  }) => void;
   onError: (error: string) => void;
+  paymentMethod: string;
+  placeOrder: any;
 }
 
 export default function RazorpayCheckout({
@@ -21,7 +31,9 @@ export default function RazorpayCheckout({
   customerName,
   disabled = false,
   onSuccess,
+  placeOrder,
   onError,
+  paymentMethod,
 }: RazorpayCheckoutProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,14 +42,14 @@ export default function RazorpayCheckout({
   useEffect(() => {
     // Load Razorpay script
     if (!window.Razorpay) {
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.async = true;
       script.onload = () => {
         scriptLoaded.current = true;
       };
       script.onerror = () => {
-        setError('Failed to load Razorpay. Please refresh and try again.');
+        setError("Failed to load Razorpay. Please refresh and try again.");
       };
       document.body.appendChild(script);
     } else {
@@ -47,14 +59,14 @@ export default function RazorpayCheckout({
 
   const handlePayment = async () => {
     if (!scriptLoaded.current) {
-      const message = 'Razorpay is not loaded. Please refresh and try again.';
+      const message = "Razorpay is not loaded. Please refresh and try again.";
       setError(message);
       onError(message);
       return;
     }
 
-    if (!process.env.RAZORPAY_KEY_ID) {
-      const message = 'Razorpay public key is not configured.';
+    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+      const message = "Razorpay public key is not configured.";
       setError(message);
       onError(message);
       return;
@@ -64,41 +76,57 @@ export default function RazorpayCheckout({
     setError(null);
 
     try {
-      // Create order on server
+      // =========================
+      // FIRST -> PLACE ORDER
+      // =========================
+
+      const orderNo = await placeOrder(paymentMethod);
+
+      // =========================
+      // SECOND -> CREATE RAZORPAY ORDER
+      // =========================
+
       const orderResponse = await createRazorpayOrder({
         amount,
-        orderId: "123",
+        orderId: orderNo,
         customerEmail,
         customerName,
       });
 
       if (!orderResponse.success) {
-        const message = orderResponse.error || 'Failed to create order';
+        const message = orderResponse.error || "Failed to create order";
         setError(message);
         onError(message);
         setIsLoading(false);
         return;
       }
 
-      // Open Razorpay checkout
+      // =========================
+      // THIRD -> OPEN RAZORPAY
+      // =========================
+
       const options = {
-        key: process.env.RAZORPAY_KEY_ID,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         order_id: orderResponse.orderId,
         amount: orderResponse.amount,
         currency: orderResponse.currency,
-        name: 'Heaven Cafe',
-        description: `Order #${"1231"}`,
-        customer_notification: 1,
+        name: "Heaven Cafe",
+        description: `Order #${orderNo}`,
+
         prefill: {
           name: customerName,
           email: customerEmail,
         },
+
         handler: async (response: {
           razorpay_payment_id: string;
           razorpay_order_id: string;
           razorpay_signature: string;
         }) => {
-          // Verify payment on server
+          // =========================
+          // VERIFY PAYMENT
+          // =========================
+
           const verifyResponse = await verifyRazorpayPayment({
             razorpayOrderId: response.razorpay_order_id,
             razorpayPaymentId: response.razorpay_payment_id,
@@ -106,14 +134,29 @@ export default function RazorpayCheckout({
           });
 
           if (verifyResponse.success) {
-            onSuccess(response.razorpay_payment_id);
+            // SUCCESS CALLBACK
+            onSuccess({
+              payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              order_id: orderNo,
+              status: "success",
+            });
+
+            // REDIRECT
+            // router.push(
+            //   `/order-confirmation?orderId=${orderNo}&paymentId=${response.razorpay_payment_id}&method=razorpay`,
+            // );
           } else {
-            const message = verifyResponse.error || 'Payment verification failed';
+            const message =
+              verifyResponse.error || "Payment verification failed";
+
             setError(message);
             onError(message);
           }
+
           setIsLoading(false);
         },
+
         modal: {
           ondismiss: () => {
             setIsLoading(false);
@@ -122,10 +165,12 @@ export default function RazorpayCheckout({
       };
 
       const razorpay = new window.Razorpay(options);
+
       razorpay.open();
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : 'An error occurred';
+        err instanceof Error ? err.message : "An error occurred";
+
       setError(errorMessage);
       onError(errorMessage);
       setIsLoading(false);

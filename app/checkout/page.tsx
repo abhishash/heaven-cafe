@@ -22,13 +22,16 @@ import { clearCart } from "@/lib/redux/slice/cartSlice";
 import { PaymentMethodsResponse } from "@/types/order";
 import WalletOnDeliveryForm from "@/components/checkout/WalletOnDeliveryForm";
 import CardsList from "@/components/checkout/CardsList";
+import { useUpdatePaymentStatusMutation } from "@/store/services/order-api";
 
 export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [storedType, setStoredType] = useState<string>("token");
   const isDineIn = useSelector((state: RootState) => state.orderType.isDineIn);
-  const tableNumber = useSelector((state: RootState) => state.orderType?.tableNumber);
+  const tableNumber = useSelector(
+    (state: RootState) => state.orderType?.tableNumber,
+  );
 
   const normalizedMethod = paymentMethod?.trim().toLowerCase() || "";
   const isCOD = normalizedMethod === "cod" || normalizedMethod.includes("cash");
@@ -37,7 +40,8 @@ export default function CheckoutPage() {
   const isCard = normalizedMethod === "card";
 
   // Agar selected method COD, Wallet, Stripe, ya Card nahi hai, toh usko Razorpay maan lo (Fallback for any unknown online method)
-  const isRazorpay = normalizedMethod !== "" && !isCOD && !isWallet && !isStripe && !isCard;
+  const isRazorpay =
+    normalizedMethod !== "" && !isCOD && !isWallet && !isStripe && !isCard;
 
   const { data: session } = useSession();
   const dispatch = useDispatch();
@@ -50,42 +54,56 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  const { items: cart, totalPrice, delhiveryCharge } = useSelector((state: RootState) => state.cart);
+  const {
+    items: cart,
+    totalPrice,
+    delhiveryCharge,
+  } = useSelector((state: RootState) => state.cart);
 
-  const { data, isPending: isPaymentMethodsPending } = useQuery<PaymentMethodsResponse>({
-    queryKey: [`payment-methods`],
-    queryFn: () =>
-      fetchHandler({
-        endpoint: "payment-methods",
-        method: "GET",
-        token: session?.user?.accessToken,
-      }),
-  });
+  const { data, isPending: isPaymentMethodsPending } =
+    useQuery<PaymentMethodsResponse>({
+      queryKey: [`payment-methods`],
+      queryFn: () =>
+        fetchHandler({
+          endpoint: "payment-methods",
+          method: "GET",
+          token: session?.user?.accessToken,
+        }),
+    });
 
   const paymentMethods = data?.data || [];
-  const cardPayments = paymentMethods.filter((method) => method?.name === "card");
+  const cardPayments = paymentMethods.filter(
+    (method) => method?.name === "card",
+  );
   const cards = cardPayments?.[0]?.cards || [];
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (orderData: {
-      order_type: string,
-      table_no?: number | undefined,
-      payment_method: string,
-      card_number?: string,
-      payment_id?: string,
+      order_type: string;
+      table_no?: number | undefined;
+      payment_method: string;
+      card_number?: string;
+      payment_id?: string;
     }) =>
       fetchHandler({
         endpoint: "orders",
         method: "POST",
         data: { ...orderData },
         token: session?.user?.accessToken,
-      })
+      }),
   });
 
-  const placeOrder = async (paymentMethodName: string, details: { cardNumber?: string; paymentId?: string } = {}) => {
+  const placeOrder = async (
+    paymentMethodName: string,
+    details: { cardNumber?: string; paymentId?: string } = {},
+  ) => {
     const response = await mutateAsync({
       order_type: isDineIn ? "token" : "delivery",
-      table_no: isDineIn ? (tableNumber ? Number(tableNumber) : undefined) : undefined,
+      table_no: isDineIn
+        ? tableNumber
+          ? Number(tableNumber)
+          : undefined
+        : undefined,
       payment_method: paymentMethodName,
       card_number: details.cardNumber,
       payment_id: details.paymentId,
@@ -99,16 +117,18 @@ export default function CheckoutPage() {
     return response.order_no as string;
   };
 
-
   const handleCODSubmit = async (details: DeliveryDetails) => {
     try {
       setIsPlacingOrder(true);
-      const orderNo = await placeOrder(paymentMethod, { cardNumber: details.card_number });
-      const confirmationMethod = paymentMethod === "card" ? "card" : paymentMethod;
+      const orderNo = await placeOrder(paymentMethod, {
+        cardNumber: details.card_number,
+      });
+      const confirmationMethod =
+        paymentMethod === "card" ? "card" : paymentMethod;
 
       setTimeout(() => {
         router.push(
-          `/order-confirmation?orderId=${orderNo}&method=${confirmationMethod}`
+          `/order-confirmation?orderId=${orderNo}&method=${confirmationMethod}`,
         );
       }, 100);
     } catch (error) {
@@ -119,18 +139,40 @@ export default function CheckoutPage() {
     }
   };
 
+  const [updatePaymentStatus] = useUpdatePaymentStatusMutation();
 
-  const handleRazorpaySuccess = async (paymentId: string) => {
+  const handleRazorpaySuccess = async (data: {
+    payment_id: string;
+    razorpay_order_id: string;
+    order_id: string;
+    status: "success";
+  }) => {
     try {
       setIsPlacingOrder(true);
-      const orderNo = await placeOrder(paymentMethod, { paymentId });
+
+      await updatePaymentStatus({
+        payment_id: data.payment_id,
+        order_id: data.order_id,
+        status: data.status,
+      });
+
       router.push(
-        `/order-confirmation?orderId=${orderNo}&paymentId=${paymentId}&method=${paymentMethod}`,
+        `/order-confirmation?orderId=${data.order_id}&paymentId=${data.payment_id}&method=${paymentMethod}`,
       );
     } catch (error) {
+      await updatePaymentStatus({
+        payment_id: data.payment_id,
+        order_id: data.order_id,
+        status: "failed",
+      });
+
       const message =
-        error instanceof Error ? error.message : "Failed to place Razorpay order";
+        error instanceof Error
+          ? error.message
+          : "Failed to update payment status";
+
       toast.error(message);
+
       setIsPlacingOrder(false);
     }
   };
@@ -140,24 +182,19 @@ export default function CheckoutPage() {
     toast.error(error);
   };
 
-
   if (isPlacingOrder) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-sm text-muted-foreground">
-            Placing your order...
-          </p>
+          <p className="text-sm text-muted-foreground">Placing your order...</p>
         </div>
       </div>
     );
   }
 
   if (!isArray(cart)) {
-    return (
-      <EmptyCart />
-    );
+    return <EmptyCart />;
   }
 
   return (
@@ -206,29 +243,33 @@ export default function CheckoutPage() {
 
                 {isRazorpay && (
                   <RazorpayCheckout
-                    amount={totalPrice + (isDineIn ? 0 : parseFloat(delhiveryCharge))}
-                    customerEmail={session?.user?.email ?? "customer@example.com"}
+                    amount={
+                      totalPrice + (isDineIn ? 0 : parseFloat(delhiveryCharge))
+                    }
+                    customerEmail={
+                      session?.user?.email ?? "customer@example.com"
+                    }
                     customerName={session?.user?.name ?? "Customer"}
                     disabled={isPlacingOrder}
                     onSuccess={handleRazorpaySuccess}
                     onError={handleRazorpayError}
+                    paymentMethod={paymentMethod}
+                    placeOrder={placeOrder}
                   />
                 )}
 
-                {
-                  isCard && (
-                    <CardsList
-                      cards={cards}
-                      onAddCard={() => {
-                        console.log("Add card clicked");
-                        // open modal / navigate
-                      }}
-                      amount={totalPrice}
-                      onSubmit={handleCODSubmit}
-                      isLoading={isPending}
-                    />
-                  )
-                }
+                {isCard && (
+                  <CardsList
+                    cards={cards}
+                    onAddCard={() => {
+                      console.log("Add card clicked");
+                      // open modal / navigate
+                    }}
+                    amount={totalPrice}
+                    onSubmit={handleCODSubmit}
+                    isLoading={isPending}
+                  />
+                )}
               </div>
             )}
           </div>
@@ -244,9 +285,7 @@ export default function CheckoutPage() {
                 >
                   <div>
                     <p className="font-medium">{item.name}</p>
-                    <p className="text-muted-foreground">
-                      Qty: {item.qty}
-                    </p>
+                    <p className="text-muted-foreground">Qty: {item.qty}</p>
                   </div>
                   <p className="font-medium">
                     {formatPrice(item?.price, "INR")}
@@ -265,11 +304,21 @@ export default function CheckoutPage() {
               </div>
               <div className="flex justify-between mb-2">
                 <p className="text-muted-foreground">Delivery</p>
-                <p className="font-medium">{formatPrice(isDineIn ? 0 : parseFloat(delhiveryCharge), "INR")}</p>
+                <p className="font-medium">
+                  {formatPrice(
+                    isDineIn ? 0 : parseFloat(delhiveryCharge),
+                    "INR",
+                  )}
+                </p>
               </div>
               <div className="flex justify-between font-bold text-lg pt-2 border-t text-primary">
                 <p>Total</p>
-                <p>{formatPrice(totalPrice + (isDineIn ? 0 : parseFloat(delhiveryCharge)), "INR")}</p>
+                <p>
+                  {formatPrice(
+                    totalPrice + (isDineIn ? 0 : parseFloat(delhiveryCharge)),
+                    "INR",
+                  )}
+                </p>
               </div>
             </div>
           </div>
