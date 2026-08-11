@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
 
-import nextPWA from '@ducanh2912/next-pwa';
+// import nextPWA from '@ducanh2912/next-pwa';
 
-const withPWA = nextPWA({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
-});
+// const withPWA = nextPWA({
+//   dest: 'public',
+//   register: true,
+//   skipWaiting: true,
+//   disable: process.env.NODE_ENV === 'development',
+// });
 
 const nextConfig = {
   reactStrictMode: true,
@@ -20,7 +20,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'awcai.cloud',
+        hostname: 'cafe.heavenkart.online',
       },
       {
         protocol: 'https',
@@ -40,4 +40,4 @@ const nextConfig = {
   turbopack: {},
 };
 
-export default withPWA(nextConfig);
+export default nextConfig;

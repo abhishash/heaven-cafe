@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
                         throw new Error(res?.message as string);
                     }
                 } catch (error: any) {
+                    console.log(error, "---error---");
                     throw new Error(
                         (error?.message as string) || "Something went wrong!"
                     );

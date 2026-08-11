@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Apple, Eye, EyeOff, Lock, Mail, Play } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,7 +56,7 @@ export default function LoginPage() {
 
     <div className="w-full max-w-md">
       {/* Logo and Header */}
-      <div className="text-center mb-4">
+      <div className="text-center my-4 sm:mb-4">
         <Link href="/" className="flex justify-center items-center gap-2">
           <div className="text-primary-foreground font-bold text-2xl">
             <Image src="/logo/header-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />
@@ -150,16 +150,6 @@ export default function LoginPage() {
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-card text-muted-foreground">Or continue with</span>
             </div>
-          </div>
-
-          {/* Social Buttons */}
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="h-11 border-muted bg-background hover:bg-muted">
-              <span className="text-lg">🍎</span>
-            </Button>
-            <Button variant="outline" className="h-11 border-muted bg-background hover:bg-muted">
-              <span className="text-lg">📱</span>
-            </Button>
           </div>
 
           {/* Sign Up Link */}

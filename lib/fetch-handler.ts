@@ -1,12 +1,14 @@
 const API_ENDPOINT = process.env.API_ENDPOINT;
-export type methods = "GET" | "POST" | "PUT" | "DELETE";
+
+export type Methods = "GET" | "POST" | "PUT" | "DELETE";
 
 export type FetchHandlerProps<T> = {
   endpoint: string;
-  method?: "GET" | "POST" | "PUT" | "DELETE";
+  method?: Methods;
   data?: T;
   token?: string;
 };
+
 export const fetchHandler = async <T>({
   endpoint,
   method = "GET",
@@ -14,23 +16,68 @@ export const fetchHandler = async <T>({
   token,
   revalidate = 60,
 }: FetchHandlerProps<T> & { revalidate?: number }) => {
+  try {
+    const url = `${API_ENDPOINT}${endpoint}`;
 
-  const res = await fetch(`${API_ENDPOINT}${endpoint}`, {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-    body: data ? JSON.stringify(data) : undefined,
-     // Next.js caching
-     next: { revalidate }, // 🔥 cache for X seconds
-    
-  });
+    const res = await fetch(url, {
+      method,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...(token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : {}),
+      },
+      ...(data !== undefined && method !== "GET"
+        ? {
+            body: JSON.stringify(data),
+          }
+        : {}),
+      next: {
+        revalidate,
+      },
+    });
 
-  if (!res.ok) {
-    const error = await res.json();
-    return error;
+    // Response ko pehle text ke form mein read karo
+    const responseText = await res.text();
+
+    let responseData: any;
+
+    try {
+      responseData = responseText
+        ? JSON.parse(responseText)
+        : null;
+    } catch {
+      responseData = {
+        message: responseText || "Unknown server error",
+      };
+    }
+
+    if (!res.ok) {
+      return {
+        status: false,
+        message:
+          responseData?.message ||
+          responseData?.error ||
+          `Request failed with status ${res.status}`,
+        data: responseData,
+      };
+    }
+
+    return responseData;
+  } catch (error) {
+    console.error("FETCH ERROR:", error);
+
+    return {
+      success: false,
+      status: 0,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong",
+      data: null,
+    };
   }
-
-  return res.json();
 };
