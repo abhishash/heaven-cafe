@@ -48,7 +48,7 @@ export default function Categories({ title, categories }: { title: string, categ
     <section className="mx-auto container px-0 sm:px-4 py-2 sm:py-4">
 
       {/* Header */}
-      <div className="mb-6 px-2 sm:px-0 sm:mb-10 flex justify-between items-center">
+      <div className="mb-3 px-2 sm:px-0 sm:mb-10 flex justify-between items-center">
         <h2 className="text-2xl sm:text-3xl text-primary font-bold">
           {title}
         </h2>
@@ -76,12 +76,12 @@ export default function Categories({ title, categories }: { title: string, categ
         {/* Slider */}
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto scroll-smooth gap-6 scrollbar-hide"
+          className="flex overflow-x-auto scroll-smooth gap-3 sm:gap-6 scrollbar-hide"
         >
           {pages.map((page, index) => (
             <div
               key={index}
-              className="grid grid-cols-2 sm:grid-cols-6 grid-rows-2 gap-4 sm:gap-6 min-w-full"
+              className="grid grid-cols-2 sm:grid-cols-6 grid-rows-2 gap-y-4 gap-x-2 sm:gap-6 min-w-full"
             >
               {page.map((category) => (
                 <motion.div
@@ -90,13 +90,13 @@ export default function Categories({ title, categories }: { title: string, categ
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ y: -6 }}
                   transition={{ duration: 0.3 }}
-                  className=" transition-shadow duration-300 overflow-hidden cursor-pointer h-full"
+                  className="transition-shadow duration-300 overflow-hidden cursor-pointer h-full"
                 >
                   <Link
                     href={`/menu/${category.url}`}
-                    className="flex flex-col items-center hover:scale-105 transition"
+                    className="flex flex-col bg-linear-to-t from-secondary to-primary py-2 rounded-xl items-center hover:scale-105 transition"
                   >
-                    <div className="h-40 w-40 overflow-hidden rounded-xl shadow-lg">
+                    <div className="overflow-hidden sm:h-40 w-36 h-36 sm:w-40 rounded-xl shadow-lg">
                       <SafeImage
                         src={category.image}
                         alt={category.name}
