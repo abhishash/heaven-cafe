@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
 import Categpries from "@/components/home/categories";
 import ImageCarousel from "@/components/shared/image-carousel";
-import { fetchHandler, methods } from "@/lib/fetch-handler";
+import { fetchHandler, Methods } from "@/lib/fetch-handler";
 import {
   BannerDataTypes,
   CategoryResponse,
@@ -32,7 +32,7 @@ export default async function Home() {
   }>({
     ...(HOMEPAGE_SLIDERS as {
       endpoint: string;
-      method: methods;
+      method: Methods;
     }),
   });
 
@@ -45,7 +45,7 @@ export default async function Home() {
   const categoryResponse = await fetchHandler<CategoryResponse>({
     ...(CATEGORIES as {
       endpoint: string;
-      method: methods;
+      method: Methods;
     }),
   });
 
@@ -54,7 +54,7 @@ export default async function Home() {
   }>({
     ...(HOMEPAGE_PRODUCTS as {
       endpoint: string;
-      method: methods;
+      method: Methods;
     }),
   });
 
@@ -64,7 +64,7 @@ export default async function Home() {
     data: { name: string; url_link: string; image: string }[];
   }>({
     endpoint: "promotionals",
-    method: "GET" as methods,
+    method: "GET" as Methods,
   });
 
   const { data: promotionalsData } = promotionalRes;
@@ -142,26 +142,6 @@ export default async function Home() {
         <FavouriteCategory />
       </Suspense>
 
-      {/* CTA Section */}
-
-      <section className="px-3 sm:px-0">
-        <div className="bg-linear-to-r my-6 px-4 sm:px-6 lg:px-8 sm:my-10 py-10 sm:py-20 container mx-auto from-secondary to-secondary rounded-2xl">
-          <div className="max-w-4xl mx-auto px-0 sm:px-6 text-center">
-            <h3 className="text-2xl sm:text-3xl font-bold text-primary mb-4">
-              Ready to Experience Heaven?
-            </h3>
-            <p className="text-primary/90 mb-6 sm:mb-8 text-lg">
-              Sign up today and enjoy exclusive deals on your first order.
-            </p>
-            <Link href="/register">
-              <Button size="lg" className="cursor-pointer h-14 text-lg">
-                Create Account
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
       {/* Features Section */}
       <section className="">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20 ">

@@ -3,7 +3,7 @@ import { ChefHat, Home, MapPin } from 'lucide-react'
 
 export default function EmptyCart() {
     return (
-        <main className="min-h-screen bg-gradient-to-b from-background to-amber-50 flex items-center justify-center overflow-hidden relative">
+        <main className="min-h-[calc(100dvh-100px)] bg-gradient-to-b from-background to-amber-50 flex items-center justify-center overflow-hidden relative">
             {/* Decorative burger elements */}
             <div className="absolute top-10 left-10 text-6xl opacity-20 animate-bounce" style={{ animationDelay: '0s' }}>
                 🍔

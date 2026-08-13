@@ -47,17 +47,97 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Right Visual */}
+          {/* Premium Cafe Hero Visual */}
           <div className="flex items-center justify-center">
-            <div className="relative w-full h-72 sm:h-96">
-              {/* Decorative card */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-3xl backdrop-blur-sm"></div>
-              <div className="absolute inset-4 bg-card rounded-2xl border-2 oberflow-hidden border-primary/30 flex items-center justify-center">
-                <div className="text-center flex items-center flex-col">
-                  <Image src="/images/fast-food.png" alt="fast food image" width={120} height={120} />
-                  <p className="text-2xl font-bold text-foreground mt-4">Fresh & Delicious</p>
-                  <p className="text-muted-foreground">Premium quality ingredients</p>
+            <div className="relative w-full h-72 sm:h-96 overflow-hidden rounded-[2rem]">
+
+              {/* Floating Glow */}
+              <div className="absolute -top-10 -right-10 z-0 h-40 w-40 rounded-full bg-primary/30 blur-3xl animate-pulse" />
+              <div className="absolute -bottom-10 -left-10 z-0 h-40 w-40 rounded-full bg-secondary/30 blur-3xl animate-pulse" />
+
+              {/* Outer Glass Frame */}
+              <div className="absolute inset-0 rounded-[2rem] border border-white/20 bg-white/5 shadow-2xl backdrop-blur-sm" />
+
+              {/* Video Container */}
+              <div className="absolute inset-3 sm:inset-4 overflow-hidden rounded-[1.5rem] border border-white/20">
+
+                {/* Food Video */}
+                <video
+                  className="
+          absolute inset-0
+          h-full w-full
+          object-cover
+          scale-105
+          animate-cafe-zoom
+        "
+                  src="/videos/fast-food.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
+
+                {/* Premium Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+                {/* Soft Color Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/20" />
+
+                {/* Glass Content Card */}
+                <div className="absolute bottom-5 left-5 right-5 sm:bottom-7 sm:left-7 sm:right-7">
+
+                  <div className="
+          rounded-2xl
+          border border-white/20
+          bg-white/10
+          px-5 py-4
+          backdrop-blur-xl
+          shadow-xl
+        ">
+
+                    <div className="flex items-center gap-3">
+
+                      {/* Food Icon */}
+                      <div className="
+              flex h-11 w-11 shrink-0
+              items-center justify-center
+              rounded-xl
+              bg-white/15
+              border border-white/20
+              backdrop-blur-md
+            ">
+                        <span className="text-xl">🍔</span>
+                      </div>
+
+                      <div>
+                        <p className="text-lg font-bold text-white">
+                          Fresh & Delicious
+                        </p>
+
+                        <p className="text-sm text-white/70">
+                          Premium quality ingredients
+                        </p>
+                      </div>
+
+                    </div>
+                  </div>
                 </div>
+
+                {/* Top Badge */}
+                <div className="
+        absolute top-4 left-4
+        rounded-full
+        border border-white/20
+        bg-black/20
+        px-3 py-1.5
+        text-xs font-medium
+        text-white
+        backdrop-blur-md
+      ">
+                  ✨ Heaven Cafe
+                </div>
+
               </div>
             </div>
           </div>

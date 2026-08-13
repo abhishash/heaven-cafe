@@ -6,7 +6,7 @@ const OrderTypeModal = dynamic(() => import("./pop-up/Order-type-modal"));
 const DineDeliveryToggle = dynamic(() => import("./shared/delivery-toggle"));
 
 import Link from "next/link";
-import { Bell, Heart, MenuIcon, NotebookPen, ShoppingCart, User, UserIcon, Wallet } from "lucide-react";
+import { Bell, Compass, Heart, MenuIcon, NotebookPen, ShoppingCart, User, UserIcon, UtensilsCrossed, Wallet } from "lucide-react";
 import Image from "next/image";
 import { SearchBar } from "./Search-bar";
 import { useSession } from "next-auth/react";
@@ -17,12 +17,14 @@ import { useGetWalletPointQuery } from "@/store/services/wallet-point-api";
 import { useQuery } from "@tanstack/react-query";
 import { fetchHandler } from "@/lib/fetch-handler";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const totalItems = useSelector((root: RootState) => root.cart.totalAmount);
   const { data: session } = useSession();
   const [showSearch, setShowSearch] = useState(true);
   const isMobile = useIsMobile();
+  const pathname = usePathname();
 
   const lastScrollYRef = useRef(0);
 
@@ -170,46 +172,63 @@ export default function Header() {
         <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
           <div className="flex justify-around items-center py-2">
 
+            {/* Explore */}
+            <Link
+              href="/"
+              className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname === "/"
+                ? "text-primary font-semibold bg-primary/10"
+                : "text-gray-500 bg-transparent"
+                }`}
+            >
+              <Compass size={22} />
+              <span>Explore</span>
+            </Link>
 
             {/* Menu */}
-            <Link href="/menu" className="flex text-primary flex-col items-center text-xs">
-              <MenuIcon size={22} />
-              Menu
+            <Link
+              href="/menu"
+              className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/menu")
+                ? "text-primary font-semibold bg-primary/10"
+                : "text-gray-500 bg-transparent"
+                }`}
+            >
+              <UtensilsCrossed size={22} />
+              <span>Menu</span>
             </Link>
+
+            {/* Notifications */}
             <NotificationBell isMobile={true} />
 
             {/* Cart */}
             <Link
               href="/cart"
-              className="flex flex-col text-primary items-center relative text-xs"
+              className={`flex flex-col rounded-md px-4 py-1.5 items-center text-xs ${pathname.startsWith("/cart")
+                ? "text-primary font-semibold bg-primary/10"
+                : "text-gray-500 bg-transparent"
+                }`}
             >
-              <ShoppingCart className="text-primary" size={22} />
+              <ShoppingCart size={22} />
+
               {totalItems > 0 && (
                 <span className="absolute -top-1 -right-2 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
                   {totalItems}
                 </span>
               )}
-              Cart
+
+              <span>Cart</span>
             </Link>
 
-            {/* Profile */}
-            {session?.user ? (
-              <Link
-                href="/customer/orders"
-                className="flex flex-col text-primary items-center text-xs"
-              >
-                <User size={22} />
-                Profile
-              </Link>
-            ) : (
-              <Link
-                href="/login"
-                className="flex flex-col text-primary items-center text-xs"
-              >
-                <User size={22} />
-                Login
-              </Link>
-            )}
+            {/* Profile / Login */}
+            <Link
+              href="/customer/orders"
+              className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/customer")
+        ? "text-primary font-semibold bg-primary/10"
+        : "text-gray-500 bg-transparent"
+        }`}
+            >
+              <User size={22} />
+              <span>Profile</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -265,12 +284,17 @@ export function NotificationBell({ isMobile }: { isMobile?: boolean }) {
     enabled: !!session?.user?.accessToken,
   });
 
+  const pathname = usePathname();
+
   const notificationCount = data?.notifications?.length || 0;
 
   if (isMobile) {
     return (
-      <Link href="/notification" className="flex text-primary flex-col items-center relative text-xs">
-        <Bell size={22} className="animate-ring text-primary" />
+      <Link href="/notification" className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/notification")
+        ? "text-primary font-semibold bg-primary/10"
+        : "text-gray-500 bg-transparent"
+        }`}>
+        <Bell size={22} className="animate-ring" />
         {notificationCount > 0 && (
           <span className="absolute -top-1 right-3 bg-primary text-white shadow-2xl text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
             {notificationCount}
