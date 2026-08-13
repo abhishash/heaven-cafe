@@ -96,9 +96,9 @@ export default async function Home() {
       {/* Favorite And Extra Product Banners */}
       <Suspense fallback={"loading...."}>
         {data?.map((item, index) => (
-          <section key={index} className="pb-6 sm:pb-20 pt-6 sm:pt-10 px-4 sm:px-6">
+          <section key={index} className="pb-6 sm:pb-20 pt-2 sm:pt-6 md:pt-10 px-4 sm:px-6">
             <div className="container mx-auto">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-12 text-primary text-balance">
+              <h2 className="sm:text-2xl text-xl md:text-3xl font-bold sm:mb-6 mb-2 md::mb-12 text-primary text-balance">
                 {item?.name}
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">

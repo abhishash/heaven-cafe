@@ -3,7 +3,7 @@
 import { Instagram, Twitter, Facebook, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { fetchHandler, methods } from "@/lib/fetch-handler";
+import { fetchHandler, Methods } from "@/lib/fetch-handler";
 import { CMS } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import { CmsResponse } from "@/lib/types";
@@ -19,7 +19,7 @@ export function Footer() {
       fetchHandler({
         ...(CMS as {
           endpoint: string;
-          method: methods;
+          method: Methods;
         }),
       }),
   });
