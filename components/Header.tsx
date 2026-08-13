@@ -187,7 +187,7 @@ export default function Header() {
             {/* Menu */}
             <Link
               href="/menu"
-              className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/menu")
+              className={`flex flex-col rounded-md px-3 py-1.5 items-center text-xs ${pathname.startsWith("/menu")
                 ? "text-primary font-semibold bg-primary/10"
                 : "text-gray-500 bg-transparent"
                 }`}
