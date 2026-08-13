@@ -92,11 +92,11 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
     mouseStartX.current = null;
     mouseEndX.current = null;
   };
-
+  // container mx-auto px-4 sm:px-6 py-4 sm:py-10
   return (
-    <section className="w-full pb-8 px-0 sm:px-0 sm:pb-12">
+    <section className="container mx-auto px-4 sm:px-6 py-4 sm:py-10">
       <div
-        className="group relative w-full h-54 sm:h-105 overflow-hidden bg-green-50 "
+        className="group relative w-full h-48 sm:h-105 overflow-hidden bg-green-50 "
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
@@ -111,7 +111,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
           return (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-0"
+              className={`absolute inset-0 rounded-2xl overflow-hidden transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-0"
                 }`}
             >
               <div className="relative h-full w-full">
