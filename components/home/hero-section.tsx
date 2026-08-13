@@ -34,15 +34,15 @@ const HeroSection = () => {
             <div className="grid grid-cols-3 gap-0 justify-between sm:gap-6 pt-4 sm::pt-8 border-t border-muted">
               <div className="flex flex-col items-center">
                 <p className="text-2xl sm:text-3xl font-bold text-primary">10K+</p>
-                <p className="text-muted-foreground text-sm sm:text-base">Happy Customers</p>
+                <p className="text-muted-foreground text-sm sm:text-base text-center">Happy Customers</p>
               </div>
               <div className="flex flex-col items-center">
                 <p className="text-2xl sm:text-3xl font-bold text-primary">10+</p>
-                <p className="text-muted-foreground text-sm sm:text-base">Menu Items</p>
+                <p className="text-muted-foreground text-sm sm:text-base text-center">Menu Items</p>
               </div>
               <div className="flex flex-col items-center">
                 <p className="text-2xl sm:text-3xl font-bold text-primary">4.9★</p>
-                <p className="text-muted-foreground text-sm sm:text-base">Average Rating</p>
+                <p className="text-muted-foreground text-sm sm:text-base text-center">Average Rating</p>
               </div>
             </div>
           </div>

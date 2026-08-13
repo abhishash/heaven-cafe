@@ -100,7 +100,7 @@ export default function Categories({ title, categories }: { title: string, categ
                       />
                     </div>
 
-                    <h3 className="mt-2 text-lg text-center font-medium">
+                    <h3 className="mt-1 px-1 sm:mt-2 line-clamp-1 text-base sm:text-lg text-center font-medium">
                       {category.name}
                     </h3>
                   </Link>
