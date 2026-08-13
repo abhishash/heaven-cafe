@@ -48,8 +48,8 @@ export default function Categories({ title, categories }: { title: string, categ
     <section className="mx-auto container px-4 sm:px-4 py-2 sm:py-4">
 
       {/* Header */}
-      <div className="mb-3 px-2 sm:px-0 sm:mb-10 flex justify-between items-center">
-        <h2 className="text-2xl sm:text-3xl text-primary font-bold">
+      <div className="mb-3 sm:mb-10 flex justify-between items-center">
+        <h2 className="text-xl sm:text-3xl md:text-2xl text-primary font-bold">
           {title}
         </h2>
 
@@ -65,12 +65,12 @@ export default function Categories({ title, categories }: { title: string, categ
       </div>
 
       {/* Slider Wrapper */}
-      <div className="relative">
+      <div className="relative"> 
 
         {/* Slider */}
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto scroll-smooth gap-3 sm:gap-6 scrollbar-hide"
+          className="flex overflow-x-auto rounded-lg scroll-smooth gap-3 sm:gap-6 scrollbar-hide"
         >
           {pages.map((page, index) => (
             <div
@@ -90,7 +90,7 @@ export default function Categories({ title, categories }: { title: string, categ
                     href={`/menu/${category.url}`}
                     className="flex flex-col bg-linear-to-t from-secondary to-primary py-2 rounded-xl items-center hover:scale-105 transition"
                   >
-                    <div className="overflow-hidden sm:h-40 w-36 h-32 sm:w-40">
+                    <div className="overflow-hidden sm:h-40 w-36 h-28 sm:w-40">
                       <SafeImage
                         src={category.image}
                         alt={category.name}
