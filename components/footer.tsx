@@ -28,53 +28,53 @@ export function Footer() {
     <>
       <footer className="bg-primary mb-12 sm:mb-0 space-y-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 py-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-10 py-10">
             {/* Logo + Social */}
-            <div className="flex justify-center flex-col items-center">
+            <div className="flex items-center order-3 sm:order-1 flex-col">
               <Link href="/" className="flex items-center gap-2">
                 <div className="text-primary-foreground font-bold text-2xl">
                   <Image src="/logo/final-logo.png" className='' alt='main-logo' width={160} height={120} />
                 </div>
               </Link>
 
-              <div className="flex gap-4 my-3">
+              <div className="flex gap-1 sm:gap-4 my-1 sm:my-3">
                 <Button
                   variant="ghost"
                   size="icon"
                   className="text-secondary cursor-pointer hover:text-gray-900"
                 >
-                  <Instagram className="size-6" />
+                  <Instagram className="size-5 sm:size-6" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="text-secondary cursor-pointer hover:text-gray-900"
                 >
-                  <Twitter className="size-6" />
+                  <Twitter className="size-5 sm:size-6" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="text-secondary cursor-pointer hover:text-gray-900"
                 >
-                  <Facebook className="size-6" />
+                  <Facebook className="size-5 sm:size-6" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
                   className="text-secondary cursor-pointer hover:text-gray-900"
                 >
-                  <Linkedin className="size-6" />
+                  <Linkedin className="size-5 sm:size-6" />
                 </Button>
               </div>
 
-              <div className="text-xs text-secondary space-y-1">
+              <div className="text-[10px] sm:text-xs text-secondary space-y-1">
                 <p>© The Heaven Fast Food Cafe</p>
                 <p>FSSAI lic no : XXXXXXXXXX</p>
               </div>
             </div>
 
-            <div className="flex justify-evenly col-span-2">
+            <div className="flex order-2 sm:order-2 justify-evenly col-span-2">
               {isPending ? <CmsSkeleton /> :
                 isObject(data?.data) ? (
                   Object.entries(data.data).map(([category, pages]) => (
@@ -105,10 +105,10 @@ export function Footer() {
             </div>
 
             {/* App Download */}
-            <div>
-              <h3 className="font-semibold text-primary mb-4">Download App</h3>
+            <div className="order-3 sm:order-3">
+              <h3 className="font-semibold text-white mb-2 sm:mb-4">Download App</h3>
 
-              <div className="flex flex-row sm:flex-col gap-3">
+              <div className="flex flex-col gap-3">
                 <Button className="justify-start w-fit cursor-pointer text-black gap-2 text-xs sm:text-sm border border-secondary bg-secondary hover:bg-green-100">
                   <svg className="size-5" viewBox="0 0 640 640">
                     <path d="M389.6 298.3L168.9 77L449.7 238.2L389.6 298.3zM111.3 64C98.3 70.8 89.6 83.2 89.6 99.3L89.6 540.6C89.6 556.7 98.3 569.1 111.3 575.9L367.9 319.9L111.3 64zM536.5 289.6L477.6 255.5L411.9 320L477.6 384.5L537.7 350.4C555.7 336.1 555.7 303.9 536.5 289.6zM168.9 563L449.7 401.8L389.6 341.7L168.9 563z" />
