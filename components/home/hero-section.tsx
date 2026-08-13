@@ -9,21 +9,21 @@ const HeroSection = () => {
   return (
     <>
       <section className="container mx-auto px-4 sm:px-6 py-4 sm:py-10">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-12 items-center">
           {/* Left Content */}
-          <div className="space-y-8">
+          <div className="space-y-4  sm:space-y-8">
             <div>
               <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
                 <span className="text-primary">Taste Heaven</span> in Every Bite
               </h2>
-              <p className="text-xl text-muted-foreground leading-relaxed">
+              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
                 Experience the most delicious fast food delivered straight to your door. Fresh ingredients, incredible flavors, and exceptional service.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/menu">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-14 text-base w-full sm:w-auto">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base w-full sm:w-auto">
                   Order Now
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -31,25 +31,25 @@ const HeroSection = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-muted">
-              <div>
-                <p className="text-3xl font-bold text-primary">10K+</p>
-                <p className="text-muted-foreground">Happy Customers</p>
+            <div className="grid grid-cols-3 gap-0 justify-between sm:gap-6 pt-4 sm::pt-8 border-t border-muted">
+              <div className="flex flex-col items-center">
+                <p className="text-2xl sm:text-3xl font-bold text-primary">10K+</p>
+                <p className="text-muted-foreground text-sm sm:text-base">Happy Customers</p>
               </div>
-              <div>
-                <p className="text-3xl font-bold text-primary">10+</p>
-                <p className="text-muted-foreground">Menu Items</p>
+              <div className="flex flex-col items-center">
+                <p className="text-2xl sm:text-3xl font-bold text-primary">10+</p>
+                <p className="text-muted-foreground text-sm sm:text-base">Menu Items</p>
               </div>
-              <div>
-                <p className="text-3xl font-bold text-primary">4.9★</p>
-                <p className="text-muted-foreground">Average Rating</p>
+              <div className="flex flex-col items-center">
+                <p className="text-2xl sm:text-3xl font-bold text-primary">4.9★</p>
+                <p className="text-muted-foreground text-sm sm:text-base">Average Rating</p>
               </div>
             </div>
           </div>
 
           {/* Premium Cafe Hero Visual */}
           <div className="flex items-center justify-center">
-            <div className="relative w-full h-72 sm:h-96 overflow-hidden rounded-[2rem]">
+            <div className="relative w-full h-72 sm:h-96 border border-primary overflow-hidden rounded-[2rem]">
 
               {/* Floating Glow */}
               <div className="absolute -top-10 -right-10 z-0 h-40 w-40 rounded-full bg-primary/30 blur-3xl animate-pulse" />

@@ -96,7 +96,7 @@ export default function Categories({ title, categories }: { title: string, categ
                     href={`/menu/${category.url}`}
                     className="flex flex-col bg-linear-to-t from-secondary to-primary py-2 rounded-xl items-center hover:scale-105 transition"
                   >
-                    <div className="overflow-hidden sm:h-40 w-36 h-36 sm:w-40 rounded-xl shadow-lg">
+                    <div className="overflow-hidden sm:h-40 w-36 h-32 sm:w-40">
                       <SafeImage
                         src={category.image}
                         alt={category.name}
