@@ -70,7 +70,7 @@ export default function Categories({ title, categories }: { title: string, categ
         {/* Slider */}
         <div
           ref={scrollRef}
-          className="flex overflow-x-auto rounded-lg scroll-smooth gap-3 sm:gap-6 scrollbar-hide"
+          className="flex overflow-x-auto rounded-lg scroll-smooth gap-3 sm:gap-3 md:gap-y-6 scrollbar-hide"
         >
           {pages.map((page, index) => (
             <div
@@ -90,7 +90,7 @@ export default function Categories({ title, categories }: { title: string, categ
                     href={`/menu/${category.url}`}
                     className="flex flex-col bg-linear-to-t from-secondary to-primary py-2 rounded-xl items-center hover:scale-105 transition"
                   >
-                    <div className="overflow-hidden sm:h-40 w-36 h-28 sm:w-40">
+                    <div className="overflow-hidden md:h-40 w-36 h-28 sm:w-40">
                       <SafeImage
                         src={category.image}
                         alt={category.name}

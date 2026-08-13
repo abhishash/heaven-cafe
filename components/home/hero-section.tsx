@@ -11,19 +11,19 @@ const HeroSection = () => {
       <section className="container mx-auto px-4 sm:px-6 py-4 sm:py-10">
         <div className="grid md:grid-cols-2 gap-6 sm:gap-12 items-center">
           {/* Left Content */}
-          <div className="space-y-4  sm:space-y-8">
+          <div className="space-y-4 sm:space-y-8">
             <div>
-              <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
+              <h2 className="text-xl md:text-6xl font-bold text-foreground mb-1 sm:mb-4">
                 <span className="text-primary">Taste Heaven</span> in Every Bite
               </h2>
-              <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
+              <p className="text-sm md:text-lg sm:text-xl text-muted-foreground leading-relaxed">
                 Experience the most delicious fast food delivered straight to your door. Fresh ingredients, incredible flavors, and exceptional service.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/menu">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base w-full sm:w-auto">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-10 sm:h-12 text-base w-full sm:w-auto">
                   Order Now
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
