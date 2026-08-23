@@ -1,6 +1,6 @@
 const CategorySkeleton = ({ length = 4, title }: { length?: number, title: string }) => {
     return (
-        <div className="space-y-8">
+        <div className="space-y-4 sm:space-y-8">
             <h2 className="text-2xl px-2 sm:text-3xl text-primary font-bold">
                 {title}
             </h2>
@@ -9,7 +9,7 @@ const CategorySkeleton = ({ length = 4, title }: { length?: number, title: strin
                 {[...Array(length)].map((_, i) => (
                     <div
                         key={i}
-                        className="bg-white rounded-xl shadow p-4 flex flex-col items-center animate-pulse"
+                        className="bg-white rounded-xl shadow p-2 sm:p-4 flex flex-col items-center animate-pulse"
                     >
                         {/* Image Skeleton */}
                         <div className="w-24 h-24 rounded-sm bg-primary/50 mb-3"></div>

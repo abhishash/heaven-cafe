@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
-import Categpries from "@/components/home/categories";
+import Categpries, { CategoryComponent } from "@/components/home/categories";
 import ImageCarousel from "@/components/shared/image-carousel";
 import { fetchHandler, Methods } from "@/lib/fetch-handler";
 import {
@@ -25,6 +25,7 @@ import { Suspense } from "react";
 import CategorySkeleton from "@/components/home/placeholder/category-skeleton";
 import { SafeImage } from "@/components/shared/safe-image";
 import PermotionBanner from "@/components/home/permotion-banner";
+import ProductCarousel from "@/components/shared/product-carousel";
 
 export default async function Home() {
   const homePageBanners = await fetchHandler<{
@@ -42,23 +43,6 @@ export default async function Home() {
     data: BannerDataTypes[];
   } = homePageBanners;
 
-  const categoryResponse = await fetchHandler<CategoryResponse>({
-    ...(CATEGORIES as {
-      endpoint: string;
-      method: Methods;
-    }),
-  });
-
-  const res = await fetchHandler<{
-    data: ProductsDataTypes[];
-  }>({
-    ...(HOMEPAGE_PRODUCTS as {
-      endpoint: string;
-      method: Methods;
-    }),
-  });
-
-  const { data }: { data: ProductsDataTypes[] } = res;
 
   const promotionalRes = await fetchHandler<{
     data: { name: string; url_link: string; image: string }[];
@@ -77,14 +61,9 @@ export default async function Home() {
       ) : null}
       {/* main category section */}
       <Suspense
-        fallback={<CategorySkeleton title="Order our best food options" />}
+        fallback={<CategorySkeleton title="Our Menu" />}
       >
-        {isArray(categoryResponse?.data) ? (
-          <Categpries
-            title="Order our best food options"
-            categories={categoryResponse?.data}
-          />
-        ) : null}
+        <CategoryComponent />
       </Suspense>
 
       {/* Hero Section */}
@@ -94,22 +73,7 @@ export default async function Home() {
       <PermotionBanner promotionalsData={promotionalsData} />
 
       {/* Favorite And Extra Product Banners */}
-      <Suspense fallback={"loading...."}>
-        {data?.map((item, index) => (
-          <section key={index} className="pb-6 sm:pb-20 pt-2 sm:pt-6 md:pt-10 px-4 sm:px-6">
-            <div className="container mx-auto">
-              <h2 className="sm:text-2xl text-xl md:text-3xl font-bold sm:mb-6 mb-2 md::mb-12 text-primary text-balance">
-                {item?.name}
-              </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {item?.products?.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            </div>
-          </section>
-        ))}
-      </Suspense>
+      <ProductCarousel />
 
       {/* Call to Action */}
       <section className="sm:px-6 lg:px-8 px-3" >

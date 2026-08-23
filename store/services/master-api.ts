@@ -1,4 +1,5 @@
-import { ADDRESSES } from "@/lib/constants";
+import { ADDRESSES, CATEGORIES, HOMEPAGE_PRODUCTS } from "@/lib/constants";
+import { Category, CategoryResponse, ProductsDataTypes } from "@/lib/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getSession } from "next-auth/react";
 const APIENDPOINT = process.env.API_ENDPOINT;
@@ -37,7 +38,23 @@ export const api = createApi({
             }),
             transformResponse: (response: FAQResponse) => response?.data,
         }),
+
+        getCategories: builder.query<Category[], void>({
+            query: () => ({
+                url: CATEGORIES?.endpoint,
+                method: CATEGORIES?.method,
+            }),
+            transformResponse: (response: CategoryResponse) => response?.data,
+        }),
+
+        getProducts: builder.query<ProductsDataTypes[], void>({
+            query: () => ({
+                url: HOMEPAGE_PRODUCTS?.endpoint,
+                method: HOMEPAGE_PRODUCTS?.method,
+            }),
+            transformResponse: (response: any) => response?.data,
+        }),
     })
 })
 
-export const { useGetFAQQuery } = api;
+export const { useGetFAQQuery, useGetCategoriesQuery, useGetProductsQuery } = api;

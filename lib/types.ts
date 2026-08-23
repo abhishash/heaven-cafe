@@ -58,7 +58,6 @@ export interface Category {
   name: string;
   image: string;
   subCategories?: SubCategory[];
-  subcategories?:  SubCategory[]
 }
 
 /* API Response */
