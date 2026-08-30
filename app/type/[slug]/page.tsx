@@ -1,5 +1,5 @@
 import { CMS } from "@/lib/constants";
-import { fetchHandler, methods } from "@/lib/fetch-handler";
+import { fetchHandler, Methods } from "@/lib/fetch-handler";
 import { CmsResponse } from "@/lib/types";
 import type { Metadata } from "next";
 export const revalidate = 3600;
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             title: page?.meta_title || page?.name,
             description: page?.meta_description || page?.name,
             type: "article",
-            url: `${process.env.NEXT_PUBLIC_SITE_URL}/${params.urlkey}`,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/${params?.urlkey}`,
         },
 
         twitter: {
@@ -41,7 +41,7 @@ export async function generateStaticParams() {
     const res = await fetchHandler<CmsResponse>({
         ...(CMS as {
             endpoint: string;
-            method: methods;
+            method: Methods;
         }),
     });
 
