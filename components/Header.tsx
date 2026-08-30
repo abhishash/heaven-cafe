@@ -6,7 +6,7 @@ const OrderTypeModal = dynamic(() => import("./pop-up/Order-type-modal"));
 const DineDeliveryToggle = dynamic(() => import("./shared/delivery-toggle"));
 
 import Link from "next/link";
-import { Bell, Compass, Heart, MenuIcon, NotebookPen, ShoppingCart, User, UserIcon, UtensilsCrossed, Wallet } from "lucide-react";
+import { Bell, Compass, Heart, MenuIcon, NotebookPen, Search, ShoppingCart, User, UserIcon, UtensilsCrossed, Wallet } from "lucide-react";
 import Image from "next/image";
 import { SearchBar } from "./Search-bar";
 import { useSession } from "next-auth/react";
@@ -64,7 +64,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
+    <header className="bg-primary shadow-none sm:shadow-2xl pr-2 fixed top-0 w-full z-50 ">
       {/* Bell Ring Animation CSS */}
       <style>{`
         @keyframes ring {
@@ -133,9 +133,9 @@ export default function Header() {
       </nav>
       {/* Mobile Navigation */}
       {/* ✅ TOP NAV */}
-      <div className="sm:hidden sticky top-0  shadow-sm">
+      <div className="sm:hidden sticky top-0 shadow-none">
         {/* Top Row */}
-        <div className="flex items-center justify-between pl-0 pr-0 pb-1 pt-3">
+        <div className="flex items-center justify-between pl-0 pr-0 pb-3 sm:pb-1 pt-3">
           {/* Logo */}
           <Link href="/">
             <Image
@@ -159,14 +159,14 @@ export default function Header() {
 
         </div>
 
-        <div
+        {/* <div
           className={`px-2 z-40 transition-[max-height,opacity] duration-300 ${showSearch
             ? "max-h-20 opacity-100 pb-3"
             : "max-h-0 opacity-0 pb-0 pointer-events-none"
             }`}
         >
           <SearchBar placeholder="Search products..." />
-        </div>
+        </div> */}
 
         {/* ✅ BOTTOM NAV (FIXED) */}
         <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
@@ -222,9 +222,9 @@ export default function Header() {
             <Link
               href="/customer/orders"
               className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/customer")
-        ? "text-primary font-semibold bg-primary/10"
-        : "text-gray-500 bg-transparent"
-        }`}
+                ? "text-primary font-semibold bg-primary/10"
+                : "text-gray-500 bg-transparent"
+                }`}
             >
               <User size={22} />
               <span>Profile</span>
@@ -290,17 +290,12 @@ export function NotificationBell({ isMobile }: { isMobile?: boolean }) {
 
   if (isMobile) {
     return (
-      <Link href="/notification" className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/notification")
+      <Link href="/search" className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/notification")
         ? "text-primary font-semibold bg-primary/10"
         : "text-gray-500 bg-transparent"
         }`}>
-        <Bell size={22} className="animate-ring" />
-        {notificationCount > 0 && (
-          <span className="absolute -top-1 right-3 bg-primary text-white shadow-2xl text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-            {notificationCount}
-          </span>
-        )}
-        Notification
+        <Search size={22} />
+        Search
       </Link>
     );
   }

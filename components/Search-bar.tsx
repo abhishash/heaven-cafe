@@ -5,7 +5,7 @@ import { Search, Loader2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { fetchHandler, methods } from "@/lib/fetch-handler";
+import { fetchHandler, Methods } from "@/lib/fetch-handler";
 import { SEARCH_PRODUCTS } from "@/lib/constants";
 import { ProductDataTypesList } from "@/lib/types";
 import Link from "next/link";
@@ -39,7 +39,7 @@ export function SearchBar({
     queryFn: () =>
       fetchHandler({
         endpoint: `${SEARCH_PRODUCTS.endpoint}?q=${debouncedQuery}`,
-        method: SEARCH_PRODUCTS.method as methods,
+        method: SEARCH_PRODUCTS.method as Methods,
       }),
     enabled: debouncedQuery.length >= 2,
     staleTime: 1000 * 60,
