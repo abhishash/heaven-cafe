@@ -48,7 +48,7 @@ export async function generateStaticParams() {
     const cmsurl = res?.data;
     const pages = Object.values(cmsurl).flat();
     return pages.map((page: any) => ({
-        urlkey: page.url,
+        urlkey: page?.url ?? "",
     }));
 }
 
