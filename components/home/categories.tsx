@@ -123,7 +123,7 @@ export default function Categories({
             href={`/menu/${category.url}`}
             className="
               flex-none
-              w-[calc(40%-6px)]
+              w-[calc(35%-6px)]
               sm:w-[160px]
               md:w-[180px]
               overflow-hidden
@@ -136,7 +136,7 @@ export default function Categories({
             "
           >
             {/* Image */}
-            <div className="h-24 w-full sm:h-32 md:h-36">
+            <div className="h-20 w-full sm:h-32 md:h-36">
               <SafeImage
                 src={category.image}
                 alt={category.name}

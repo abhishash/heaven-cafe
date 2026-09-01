@@ -108,11 +108,11 @@ export default async function Home() {
       </Suspense>
 
       {/* Features Section */}
-      <section className="">
+      <section className="bg-secondary">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20 ">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
             <div className="text-center">
-              <div className="text-4xl flex justify-center mb-4">
+              <div className="text-4xl flex justify-center mb-2">
                 <Image
                   src="/images/delivery-truck.gif"
                   alt="fast-delivery"
@@ -128,7 +128,7 @@ export default async function Home() {
               </p>
             </div>
             <div className="text-center">
-              <div className="text-4xl flex justify-center mb-4">
+              <div className="text-4xl flex justify-center mb-2">
                 <Image
                   src="/images/burger.gif"
                   alt="fast-delivery"
@@ -144,7 +144,7 @@ export default async function Home() {
               </p>
             </div>
             <div className="text-center">
-              <div className="text-4xl flex justify-center mb-4">
+              <div className="text-4xl flex justify-center mb-2">
                 <Image
                   src="/images/wallet.gif"
                   alt="fast-delivery"

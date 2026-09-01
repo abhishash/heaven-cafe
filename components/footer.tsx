@@ -11,7 +11,7 @@ import { isObject } from "@/lib/type-guards";
 import CmsSkeleton from "./placeholder/cms";
 import Image from "next/image";
 
-export function Footer() {
+function Footer() {
 
   const { data, isPending } = useQuery<CmsResponse>({
     queryKey: [`cms-page`],
@@ -130,3 +130,6 @@ export function Footer() {
     </>
   );
 }
+
+
+export default Footer

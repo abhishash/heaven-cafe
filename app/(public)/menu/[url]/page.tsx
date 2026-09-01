@@ -118,10 +118,10 @@ export default async function CatalogPage({ params }: {
               {/* RIGHT PRODUCTS */}
               <div className="min-w-0 mt-4 max-h-[calc(100dvh-160px)] pr-3 overflow-y-scroll">
                 {/* Products will come here */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
                   {isArray(products) ? (
                     products?.map((product: ProductTypes) => (
-                      <ProductCard key={product.id} product={product} />
+                      <ProductCard key={product.id} product={product} isSingle />
                     ))
                   ) : (
                     <div className="col-span-full text-center py-12">

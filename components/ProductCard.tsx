@@ -10,10 +10,12 @@ import { SafeImage } from './shared/safe-image';
 
 interface ProductCardProps {
   product: ProductTypes;
+  isSingle: boolean;
 }
 
 export default function ProductCard({
   product,
+  isSingle
 }: ProductCardProps) {
   const actualPrice = parseFloat(product.ac_price);
   const sellingPrice = parseFloat(product.price);
@@ -21,8 +23,8 @@ export default function ProductCard({
   const discountPercentage =
     actualPrice > sellingPrice
       ? Math.round(
-          ((actualPrice - sellingPrice) / actualPrice) * 100,
-        )
+        ((actualPrice - sellingPrice) / actualPrice) * 100,
+      )
       : 0;
 
   const isOutOfStock =
@@ -47,8 +49,8 @@ export default function ProductCard({
           isOutOfStock
             ? {}
             : {
-                y: -5,
-              }
+              y: -5,
+            }
         }
         transition={{
           duration: 0.25,
@@ -67,10 +69,9 @@ export default function ProductCard({
           shadow-sm
           transition-all
           duration-300
-          ${
-            isOutOfStock
-              ? 'opacity-60 grayscale'
-              : 'hover:border-orange-200 hover:shadow-[0_12px_35px_rgba(0,0,0,0.10)]'
+          ${isOutOfStock
+            ? 'opacity-60 grayscale'
+            : 'hover:border-orange-200 hover:shadow-[0_12px_35px_rgba(0,0,0,0.10)]'
           }
         `}
       >
@@ -90,8 +91,8 @@ export default function ProductCard({
               isOutOfStock
                 ? {}
                 : {
-                    scale: 1.06,
-                  }
+                  scale: 1.06,
+                }
             }
             transition={{
               duration: 0.4,
@@ -112,12 +113,11 @@ export default function ProductCard({
                 25vw
               "
               className={`
-                object-contain
+                object-cover
                 object-center
-                ${
-                  isOutOfStock
-                    ? 'blur-[2px]'
-                    : ''
+                ${isOutOfStock
+                  ? 'blur-[2px]'
+                  : ''
                 }
               `}
             />
@@ -225,19 +225,19 @@ export default function ProductCard({
 
         {/* ================= CONTENT ================= */}
         <div
-          className="
+          className="relative
             flex
             flex-1
             flex-col
             p-3
+            gap-y-1
             sm:p-4
           "
         >
           {/* Product Name */}
           <h3
             className="
-              line-clamp-2
-              min-h-[40px]
+              line-clamp-1
               text-sm
               font-bold
               leading-5
@@ -261,10 +261,10 @@ export default function ProductCard({
             "
           >
             {/* Price */}
-            <div className="min-w-0">
+            <div className="min-w-0 flex items-baseline gap-x-1">
               <div
                 className="
-                  text-base
+                  text-sm
                   font-extrabold
                   tracking-tight
                   text-orange-600
@@ -295,41 +295,49 @@ export default function ProductCard({
                 </div>
               )}
             </div>
-
-            {/* Add Button */}
-            {!isOutOfStock && (
-              <motion.div
-                whileTap={{
-                  scale: 0.92,
-                }}
-                className="
-                  flex
-                  shrink-0
-                  items-center
-                  gap-1
-                  rounded-full
-                  border
-                  border-orange-500
-                  bg-orange-50
-                  px-3
-                  py-1.5
-                  text-xs
-                  font-bold
-                  text-orange-600
-                  transition-all
-                  duration-200
-                  group-hover:bg-orange-500
-                  group-hover:text-white
-                  sm:px-4
-                  sm:py-2
-                  sm:text-sm
-                "
-              >
-                <ShoppingBag className="size-3.5 sm:size-4" />
-                <span>ADD</span>
-              </motion.div>
-            )}
           </div>
+          {/* Add To Cart */}
+          {!isOutOfStock && (
+            <motion.button
+              whileTap={{ scale: 0.92 }}
+              type="button"
+              className={`${isSingle ? "bottom-3 right-2 bg-primary" : "bottom-18 right-1/2 bg-black/20 translate-x-1/2"} absolute z-20 flex
+  items-center
+  justify-center
+  gap-1.5
+  rounded-full
+  border
+  border-white/30
+
+  
+  backdrop-blur-2xl
+  backdrop-saturate-150
+
+  px-4
+  py-2
+
+  text-xs
+  font-bold
+  tracking-wide
+  text-white
+
+  shadow-[0_8px_25px_rgba(0,0,0,0.25)]
+
+  transition-all
+  duration-300
+
+  hover:border-orange-400/70
+  hover:bg-orange-500/80
+
+  sm:px-5
+  sm:py-2.5
+  sm:text-sm
+`}
+            >
+              <ShoppingBag className="size-3.5 sm:size-4" />
+              <span>ADD</span>
+            </motion.button>
+          )}
         </div>
       </motion.div>
     </Link>

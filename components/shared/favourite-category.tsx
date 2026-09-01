@@ -116,7 +116,7 @@ export const CategoriesCarousel = ({ title, subCategories }: ProductCarouselProp
                                 className="min-w-[160px] flex flex-col items-center transition-transform duration-300 hover:scale-105"
                             >
 
-                                <div className="mb-4 h-40 w-40 overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl transition">
+                                <div className="mb-4 h-28 sm:h-40 w-40 overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl transition">
 
                                     <SafeImage
                                         src={category.image}

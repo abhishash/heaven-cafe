@@ -3,6 +3,7 @@ import {
 } from '@/components/home/categories';
 import { MobileCategoryComponent } from '@/components/home/mobile-categories';
 import CategorySkeleton from '@/components/home/placeholder/category-skeleton';
+import ProductGrid from '@/components/pages/menus/products/product-grid';
 import { Suspense } from 'react';
 
 export default function MenuPage() {
@@ -49,9 +50,9 @@ export default function MenuPage() {
               <MobileCategoryComponent />
 
               {/* RIGHT PRODUCTS */}
-              <div className="min-w-0">
+              <div className="min-w-0 mt-4 max-h-[calc(100dvh-160px)] pr-3 overflow-y-scroll">
                 {/* Products will come here */}
-                <h1>Product Info</h1>
+                <ProductGrid />
               </div>
 
             </div>
