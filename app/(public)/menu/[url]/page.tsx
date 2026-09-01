@@ -10,6 +10,7 @@ import { isObject } from 'framer-motion'
 import { Suspense } from 'react'
 import CategorySkeleton from '@/components/home/placeholder/category-skeleton'
 import { CategoryComponent } from '@/components/home/categories'
+import { MobileCategoryComponent } from '@/components/home/mobile-categories'
 
 
 export default async function CatalogPage({ params }: {
@@ -32,44 +33,109 @@ export default async function CatalogPage({ params }: {
   const categories: Category[] = productResponse?.categories ?? [];
 
   return (
-    <main className="bg-gray-50 py-6 sm:py-12 px-4">
-      <div className="container mx-auto">
-        {/* main category section */}
+    <>
+      {/* ================= DESKTOP ================= */}
+      <main
+        className="
+                hidden
+                min-h-[calc(100dvh-260px)]
+                bg-gradient-to-b
+                from-orange-50
+                via-white
+                to-amber-50
+                py-4
+                sm:block
+              "
+      >
         <Suspense
           fallback={<CategorySkeleton title="Our Menu" />}
         >
           <CategoryComponent />
         </Suspense>
-        
-        {/* Category Filter */}
-        <Suspense fallback="loading...">
-          <div className="mb-5 sm:mb-10">
-            <div className='flex items-center gap-4'>
-              <BackPath />
-              <h2 className="text-lg font-semibold text-gray-700">{categories?.[0]?.name}</h2>
-            </div>
-            {
-              isObject(categories?.[0]) ? <div className="flex flex-nowrap no-scrollbar hide-scrollbar scrollbar-none overflow-x-auto gap-2"> <>
-                <CategoryFilter categories={categories?.[0]?.subcategories as Category[]} />
-              </>
-              </div> : ""
-            }
-          </div>
-        </Suspense>
 
-        {/* Products Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {isArray(products) ? (
-            products?.map((product: ProductTypes) => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          ) : (
-            <div className="col-span-full text-center py-12">
-              <p className="text-gray-500 text-lg">No products found in this category</p>
+      </main>
+
+      <main className="bg-gray-50 py-6 sm:py-12 px-4 hidden">
+        <div className="container mx-auto">
+          {/* main category section */}
+          <Suspense
+            fallback={<CategorySkeleton title="Our Menu" />}
+          >
+            <CategoryComponent />
+          </Suspense>
+
+          {/* Category Filter */}
+          <Suspense fallback="loading...">
+            <div className="mb-5 sm:mb-10">
+              <div className='flex items-center gap-4'>
+                <BackPath />
+                <h2 className="text-lg font-semibold text-gray-700">{categories?.[0]?.name}</h2>
+              </div>
+              {
+                isObject(categories?.[0]) ? <div className="flex flex-nowrap no-scrollbar hide-scrollbar scrollbar-none overflow-x-auto gap-2"> <>
+                  <CategoryFilter categories={categories?.[0]?.subcategories as Category[]} />
+                </>
+                </div> : ""
+              }
             </div>
-          )}
+          </Suspense>
+
+          {/* Products Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {isArray(products) ? (
+              products?.map((product: ProductTypes) => (
+                <ProductCard key={product.id} product={product} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">No products found in this category</p>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+
+      {/* ================= MOBILE ================= */}
+      <main
+        className="
+              min-h-[calc(100dvh-260px)]
+              bg-gradient-to-b
+              from-orange-50
+              via-white
+              to-amber-50
+              sm:hidden
+            "
+      >
+        <div className="mx-auto container">
+          <Suspense
+            fallback={<CategorySkeleton title="Our Menu" />}
+          >
+            <div className="grid grid-cols-[90px_1fr] gap-3">
+
+              {/* LEFT CATEGORIES */}
+              <MobileCategoryComponent />
+
+              {/* RIGHT PRODUCTS */}
+              <div className="min-w-0 mt-4 max-h-[calc(100dvh-160px)] pr-3 overflow-y-scroll">
+                {/* Products will come here */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {isArray(products) ? (
+                    products?.map((product: ProductTypes) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))
+                  ) : (
+                    <div className="col-span-full text-center py-12">
+                      <p className="text-gray-500 text-lg">No products found in this category</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </Suspense>
+        </div>
+      </main>
+    </>
+
   )
 }

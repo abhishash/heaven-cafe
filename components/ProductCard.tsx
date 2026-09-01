@@ -1,80 +1,334 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { ArrowUpRight, ShoppingBag } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ProductTypes } from '@/lib/types';
-import { imageBaseUrl, placeholderImg } from '@/lib/constants';
 import { formatPrice } from '@/lib/utils';
-import HtmlRender from './shared/html-render';
 import { SafeImage } from './shared/safe-image';
 
 interface ProductCardProps {
   product: ProductTypes;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
-  const discountPercentage = Math.round(
-    ((parseFloat(product.ac_price) - parseFloat(product.price)) /
-      parseFloat(product.ac_price)) *
-    100,
-  );
+export default function ProductCard({
+  product,
+}: ProductCardProps) {
+  const actualPrice = parseFloat(product.ac_price);
+  const sellingPrice = parseFloat(product.price);
 
-  const isOutOfStock = parseInt(product?.in_stock as string) <= 0;
+  const discountPercentage =
+    actualPrice > sellingPrice
+      ? Math.round(
+          ((actualPrice - sellingPrice) / actualPrice) * 100,
+        )
+      : 0;
 
+  const isOutOfStock =
+    parseInt(product?.in_stock as string) <= 0;
 
   return (
-    <Link href={isOutOfStock ? "#" : `/product/${product.url}`}
-      className={isOutOfStock ? "pointer-events-none" : ""}>
+    <Link
+      href={
+        isOutOfStock
+          ? '#'
+          : `/product/${product.url}`
+      }
+      className={`
+        group block h-full
+        ${isOutOfStock ? 'pointer-events-none' : ''}
+      `}
+    >
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        whileHover={isOutOfStock ? {} : { y: -6 }}
-        transition={{ duration: 0.3 }}
-        className={`bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden cursor-pointer h-full flex flex-col 
-        ${isOutOfStock ? "opacity-60 grayscale" : ""}`}
+        whileHover={
+          isOutOfStock
+            ? {}
+            : {
+                y: -5,
+              }
+        }
+        transition={{
+          duration: 0.25,
+          ease: 'easeOut',
+        }}
+        className={`
+          relative
+          flex
+          h-full
+          flex-col
+          overflow-hidden
+          rounded-2xl
+          border
+          border-slate-100
+          bg-white
+          shadow-sm
+          transition-all
+          duration-300
+          ${
+            isOutOfStock
+              ? 'opacity-60 grayscale'
+              : 'hover:border-orange-200 hover:shadow-[0_12px_35px_rgba(0,0,0,0.10)]'
+          }
+        `}
       >
-        {/* Image */}
-        <div className="relative w-full h-32 sm:h-50 bg-gray-100 overflow-hidden">
+        {/* ================= IMAGE ================= */}
+        <div
+          className="
+            relative
+            h-36
+            w-full
+            overflow-hidden
+            bg-linear-to-t from-primary to-primary/10
+            sm:h-52
+          "
+        >
           <motion.div
-            whileHover={isOutOfStock ? {} : { scale: 1.08 }}
-            transition={{ duration: 0.3 }}
-            className="w-full h-full"
+            whileHover={
+              isOutOfStock
+                ? {}
+                : {
+                    scale: 1.06,
+                  }
+            }
+            transition={{
+              duration: 0.4,
+              ease: 'easeOut',
+            }}
+            className="relative h-full w-full"
           >
             <SafeImage
               src={product.image}
-              alt={product?.name ?? "Product Image"}
-              className={`object-fill sm:object-cover object-top ${isOutOfStock ? "blur-[1px]" : ""}`}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              fill />
+              alt={
+                product?.name ??
+                'Product Image'
+              }
+              fill
+              sizes="
+                (max-width: 640px) 50vw,
+                (max-width: 1024px) 33vw,
+                25vw
+              "
+              className={`
+                object-contain
+                object-center
+                ${
+                  isOutOfStock
+                    ? 'blur-[2px]'
+                    : ''
+                }
+              `}
+            />
           </motion.div>
+
+          {/* Image Gradient */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-x-0
+              bottom-0
+              h-20
+              bg-gradient-to-t
+              from-black/25
+              to-transparent
+            "
+          />
+
+          {/* Discount */}
+          {discountPercentage > 0 &&
+            !isOutOfStock && (
+              <Badge
+                className="
+                  absolute
+                  left-2
+                  top-2
+                  rounded-full
+                  border
+                  border-white/30
+                  bg-orange-500/95
+                  px-2.5
+                  py-1
+                  text-[10px]
+                  font-bold
+                  text-white
+                  shadow-sm
+                  backdrop-blur-md
+                  hover:bg-orange-500
+                  sm:left-3
+                  sm:top-3
+                  sm:text-xs
+                "
+              >
+                {discountPercentage}% OFF
+              </Badge>
+            )}
+
+          {/* Out Of Stock */}
           {isOutOfStock && (
-            <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+            <Badge
+              className="
+                absolute
+                left-2
+                top-2
+                rounded-full
+                bg-red-500/95
+                px-2.5
+                py-1
+                text-[10px]
+                font-semibold
+                text-white
+                shadow-sm
+                backdrop-blur-md
+                sm:left-3
+                sm:top-3
+                sm:text-xs
+              "
+            >
               Out of Stock
             </Badge>
           )}
 
-          {discountPercentage && !isOutOfStock && (
-            <Badge className="absolute top-2 right-2 bg-orange-500 hover:bg-orange-600">
-              {discountPercentage} % Off
-            </Badge>
+          {/* Quick View Icon */}
+          {!isOutOfStock && (
+            <div
+              className="
+                absolute
+                right-2
+                top-2
+                flex
+                h-8
+                w-8
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-white/40
+                bg-white/80
+                text-slate-700
+                opacity-0
+                shadow-sm
+                backdrop-blur-md
+                transition-all
+                duration-200
+                group-hover:opacity-100
+                sm:right-3
+                sm:top-3
+              "
+            >
+              <ArrowUpRight className="size-4" />
+            </div>
           )}
         </div>
 
-        {/* Content */}
-        <div className="p-2 sm:p-4 flex-1 flex flex-col">
-          <h3 className="font-bold text-sm sm:text-lg text-gray-800 line-clamp-2">
+        {/* ================= CONTENT ================= */}
+        <div
+          className="
+            flex
+            flex-1
+            flex-col
+            p-3
+            sm:p-4
+          "
+        >
+          {/* Product Name */}
+          <h3
+            className="
+              line-clamp-2
+              min-h-[40px]
+              text-sm
+              font-bold
+              leading-5
+              text-slate-800
+              transition-colors
+              group-hover:text-primary
+              sm:text-base
+              sm:leading-6
+            "
+          >
             {product.name}
           </h3>
-          <div className="flex items-center justify-between mt-2 sm:mt-4">
-            <span className="text-xl sm:text-2xl font-bold text-orange-600">
-              {formatPrice(parseInt(product.price), "INR")}
-            </span>
+          {/* Bottom */}
+          <div
+            className="
+              mt-auto
+              flex
+              items-end
+              justify-between
+              gap-2
+            "
+          >
+            {/* Price */}
+            <div className="min-w-0">
+              <div
+                className="
+                  text-base
+                  font-extrabold
+                  tracking-tight
+                  text-orange-600
+                  sm:text-xl
+                "
+              >
+                {formatPrice(
+                  parseInt(product.price),
+                  'INR',
+                )}
+              </div>
 
-            <span className="text-xs font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded">
-              {product.brand}
-            </span>
+              {actualPrice > sellingPrice && (
+                <div
+                  className="
+                    mt-0.5
+                    text-[10px]
+                    font-medium
+                    text-slate-400
+                    line-through
+                    sm:text-xs
+                  "
+                >
+                  {formatPrice(
+                    parseInt(product.ac_price),
+                    'INR',
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Add Button */}
+            {!isOutOfStock && (
+              <motion.div
+                whileTap={{
+                  scale: 0.92,
+                }}
+                className="
+                  flex
+                  shrink-0
+                  items-center
+                  gap-1
+                  rounded-full
+                  border
+                  border-orange-500
+                  bg-orange-50
+                  px-3
+                  py-1.5
+                  text-xs
+                  font-bold
+                  text-orange-600
+                  transition-all
+                  duration-200
+                  group-hover:bg-orange-500
+                  group-hover:text-white
+                  sm:px-4
+                  sm:py-2
+                  sm:text-sm
+                "
+              >
+                <ShoppingBag className="size-3.5 sm:size-4" />
+                <span>ADD</span>
+              </motion.div>
+            )}
           </div>
         </div>
       </motion.div>
