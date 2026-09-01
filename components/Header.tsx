@@ -175,7 +175,7 @@ export default function Header() {
             {/* Explore */}
             <Link
               href="/"
-              className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname === "/"
+              className={`flex flex-col rounded-xl px-2 py-1.5 items-center text-xs ${pathname === "/"
                 ? "text-primary font-semibold bg-primary/10"
                 : "text-gray-500 bg-transparent"
                 }`}
@@ -187,7 +187,7 @@ export default function Header() {
             {/* Menu */}
             <Link
               href="/menu"
-              className={`flex flex-col rounded-md px-3 py-1.5 items-center text-xs ${pathname.startsWith("/menu")
+              className={`flex flex-col rounded-xl px-3 py-1.5 items-center text-xs ${pathname.startsWith("/menu")
                 ? "text-primary font-semibold bg-primary/10"
                 : "text-gray-500 bg-transparent"
                 }`}
@@ -202,7 +202,7 @@ export default function Header() {
             {/* Cart */}
             <Link
               href="/cart"
-              className={`flex flex-col rounded-md px-4 py-1.5 items-center text-xs ${pathname.startsWith("/cart")
+              className={`flex flex-col rounded-xl px-4 py-1.5 items-center text-xs ${pathname.startsWith("/cart")
                 ? "text-primary font-semibold bg-primary/10"
                 : "text-gray-500 bg-transparent"
                 }`}
@@ -221,7 +221,7 @@ export default function Header() {
             {/* Profile / Login */}
             <Link
               href="/customer/orders"
-              className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/customer")
+              className={`flex flex-col rounded-xl px-2 py-1.5 items-center text-xs ${pathname.startsWith("/customer")
                 ? "text-primary font-semibold bg-primary/10"
                 : "text-gray-500 bg-transparent"
                 }`}
@@ -290,7 +290,7 @@ export function NotificationBell({ isMobile }: { isMobile?: boolean }) {
 
   if (isMobile) {
     return (
-      <Link href="/search" className={`flex flex-col rounded-md px-2 py-1.5 items-center text-xs ${pathname.startsWith("/notification")
+      <Link href="/search" className={`flex flex-col rounded-xl px-2 py-1.5 items-center text-xs ${pathname.startsWith("/search")
         ? "text-primary font-semibold bg-primary/10"
         : "text-gray-500 bg-transparent"
         }`}>
