@@ -69,7 +69,7 @@ const ProductCarousel = () => {
                     lg:w-[260px]
                   "
                 >
-                  <ProductCard product={product} />
+                  <ProductCard isSingle={false} product={product} />
                 </div>
               ))}
             </div>
