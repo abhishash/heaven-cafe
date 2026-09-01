@@ -37,8 +37,8 @@ const Loading = () => {
                         cy="110"
                         r="90"
                         stroke="#FED7AA"
-                        stroke-width="10"
-                        stroke-dasharray="30 18"
+                        strokeWidth="10"
+                        strokeDasharray="30 18"
                     >
                         <animateTransform
                             attributeName="transform"
@@ -85,8 +85,8 @@ const Loading = () => {
                     <path
                         d="M68 98C80 88 92 106 104 98C116 90 128 106 152 96"
                         stroke="#22C55E"
-                        stroke-width="8"
-                        stroke-linecap="round"
+                        strokeWidth="8"
+                        strokeLinecap="round"
                     />
 
                     {/* <!-- Patty --> */}

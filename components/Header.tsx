@@ -169,7 +169,7 @@ export default function Header() {
         </div> */}
 
         {/* ✅ BOTTOM NAV (FIXED) */}
-        <div className="sm:hidden fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+        <div className="sm:hidden fixed bottom-2 max-w-[96vw] mx-auto left-[2vw] -translate-x-[0.5vw] w-full rounded-3xl bg-white/50 backdrop-blur-[30px] backdrop-saturate-150 border border-white/40 shadow-lg z-50">
           <div className="flex justify-around items-center py-2">
 
             {/* Explore */}

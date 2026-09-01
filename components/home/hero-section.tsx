@@ -23,7 +23,7 @@ const HeroSection = () => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/menu">
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground h-10 sm:h-12 text-base w-full sm:w-auto">
+                <Button size="lg" className="bg-primary cursor-pointer hover:bg-primary/90 text-primary-foreground h-10 sm:h-12 text-base w-full sm:w-auto">
                   Order Now
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>

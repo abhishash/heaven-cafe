@@ -5,9 +5,10 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { ProductTypes } from '@/lib/types';
-import { imageBaseUrl } from '@/lib/constants';
+import { imageBaseUrl, placeholderImg } from '@/lib/constants';
 import { formatPrice } from '@/lib/utils';
 import HtmlRender from './shared/html-render';
+import { SafeImage } from './shared/safe-image';
 
 interface ProductCardProps {
   product: ProductTypes;
@@ -41,14 +42,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             transition={{ duration: 0.3 }}
             className="w-full h-full"
           >
-            <Image
-              src={`${imageBaseUrl}${product.image}`}
-              alt={product.name}
-              fill
-              className={`object-fill sm:object-cover object-top ${isOutOfStock ? "blur-[1px]" : ""
-                }`}
+            <SafeImage
+              src={product.image}
+              alt={product?.name ?? "Product Image"}
+              className={`object-fill sm:object-cover object-top ${isOutOfStock ? "blur-[1px]" : ""}`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
+              fill />
           </motion.div>
           {isOutOfStock && (
             <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">

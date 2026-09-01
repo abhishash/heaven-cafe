@@ -1,7 +1,10 @@
+import { CategoryComponent } from '@/components/home/categories';
+import CategorySkeleton from '@/components/home/placeholder/category-skeleton';
 import BackPath from '@/components/shared/back-path';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Coffee, Flame, Leaf, UtensilsCrossed } from 'lucide-react';
+import { Suspense } from 'react';
 
 type MenuItem = {
   name: string;
@@ -236,14 +239,8 @@ export default function MenuPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-orange-50 via-white to-amber-50 px-4 py-12">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex items-center gap-4">
-          <BackPath />
-          <p className="text-sm font-medium uppercase tracking-[0.3em] text-orange-600">
-            Heaven Cafe
-          </p>
-        </div>
 
-        <section className="overflow-hidden rounded-[2rem] bg-primary px-6 py-10 text-white shadow-xl md:px-10">
+        <section className="overflow-hidden rounded-[2rem] bg-primary px-6 py-6 text-white shadow-xl md:px-10">
           <div className="grid gap-8 lg:grid-cols-[1.4fr_0.8fr] lg:items-end">
             <div>
               <Badge className="mb-4 rounded-full bg-white/10 px-4 py-1.5 text-orange-200 hover:bg-white/10">
@@ -282,35 +279,15 @@ export default function MenuPage() {
           </div>
         </section>
 
-        <Tabs defaultValue="cafe" className="mt-10 gap-6">
-          <TabsList className="h-auto w-full flex-wrap gap-2 rounded-2xl bg-white p-2 shadow-sm sm:w-fit">
-            <TabsTrigger
-              value="cafe"
-              className="min-w-32 rounded-xl px-5 py-3 data-[state=active]:bg-orange-500 data-[state=active]:text-white"
-            >
-              <Coffee className="size-4" />
-              Cafe Menu
-            </TabsTrigger>
-            <TabsTrigger
-              value="restaurant"
-              className="min-w-32 rounded-xl px-5 py-3 data-[state=active]:bg-orange-500 data-[state=active]:text-white"
-            >
-              <UtensilsCrossed className="size-4" />
-              Restaurant Menu
-            </TabsTrigger>
-          </TabsList>
+        {/* main category section */}
+        <Suspense
+          fallback={<CategorySkeleton title="Our Menu" />}
+        >
+          <CategoryComponent />
+        </Suspense>
 
+        <Tabs defaultValue="cafe" className="mt-10 gap-6">
           <TabsContent value="cafe" className="space-y-6">
-            <div className="flex flex-wrap gap-3 text-sm">
-              <Badge className="rounded-full bg-orange-100 px-3 py-1 text-orange-700 hover:bg-orange-100">
-                <Coffee className="mr-1 size-3.5" />
-                Barista Favorites
-              </Badge>
-              <Badge className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-700 hover:bg-emerald-100">
-                <Leaf className="mr-1 size-3.5" />
-                Fresh Ingredients
-              </Badge>
-            </div>
             <div className="grid gap-6 xl:grid-cols-3">
               {cafeMenu.map((section) => (
                 <MenuSectionCard key={section.title} section={section} />

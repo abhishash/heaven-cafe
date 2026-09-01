@@ -59,6 +59,7 @@ export default async function Home() {
       {isArray(homePageBannerLists) ? (
         <ImageCarousel options={homePageBannerLists} />
       ) : null}
+      
       {/* main category section */}
       <Suspense
         fallback={<CategorySkeleton title="Our Menu" />}

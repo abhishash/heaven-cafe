@@ -1,5 +1,5 @@
 import { isArray } from '@/lib/type-guards'
-import { fetchHandler, methods } from '@/lib/fetch-handler'
+import { fetchHandler, Methods } from '@/lib/fetch-handler'
 import { Category, ProductDataTypesList, ProductResponse, ProductTypes, SubCategory } from '@/lib/types'
 import { CATALOG_DETAIL } from '@/lib/constants'
 import ProductCard from '@/components/ProductCard'
@@ -8,6 +8,8 @@ import { notFound } from 'next/navigation'
 import BackPath from '@/components/shared/back-path'
 import { isObject } from 'framer-motion'
 import { Suspense } from 'react'
+import CategorySkeleton from '@/components/home/placeholder/category-skeleton'
+import { CategoryComponent } from '@/components/home/categories'
 
 
 export default async function CatalogPage({ params }: {
@@ -18,7 +20,7 @@ export default async function CatalogPage({ params }: {
 
   const productResponse = await fetchHandler<ProductDataTypesList>({
     endpoint: `${CATALOG_DETAIL.endpoint}/${url}`,
-    method: CATALOG_DETAIL?.method as methods,
+    method: CATALOG_DETAIL?.method as Methods,
   });
 
   const products: ProductTypes[] = productResponse?.data ?? [];
@@ -32,7 +34,13 @@ export default async function CatalogPage({ params }: {
   return (
     <main className="bg-gray-50 py-6 sm:py-12 px-4">
       <div className="container mx-auto">
-
+        {/* main category section */}
+        <Suspense
+          fallback={<CategorySkeleton title="Our Menu" />}
+        >
+          <CategoryComponent />
+        </Suspense>
+        
         {/* Category Filter */}
         <Suspense fallback="loading...">
           <div className="mb-5 sm:mb-10">

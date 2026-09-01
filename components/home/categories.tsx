@@ -102,39 +102,6 @@ export default function Categories({
 
   return (
     <section className="container mx-auto px-4 py-3 sm:py-5">
-      {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-primary sm:text-2xl">
-          {title}
-        </h2>
-
-        <div className="hidden gap-2 sm:flex">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => {
-              pauseAutoScroll();
-              scroll('left');
-              setTimeout(resumeAutoScroll, 5000);
-            }}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => {
-              pauseAutoScroll();
-              scroll('right');
-              setTimeout(resumeAutoScroll, 5000);
-            }}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
-        </div>
-      </div>
-
       {/* Carousel */}
       <div
         ref={scrollRef}
@@ -190,17 +157,17 @@ export default function Categories({
   );
 }
 
-export function CategoryComponent() {
+export function CategoryComponent({ title }: { title?: string }) {
   const { data: categoryResponse, isLoading } = useGetCategoriesQuery();
 
   if (isLoading) {
-    return <CategorySkeleton length={2} title="Our Menu" />
+    return <CategorySkeleton length={2} title={title ?? ""} />
   }
 
   return (
     isArray(categoryResponse) ? (
       <Categories
-        title="Our Menu"
+        title={title ?? ""}
         categories={categoryResponse ?? []}
       />
     ) : null

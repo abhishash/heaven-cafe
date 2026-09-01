@@ -40,53 +40,6 @@ const ProductCarousel = () => {
                 >
                   View All
                 </Link>
-
-                {/* Arrows */}
-                <div className="hidden gap-2 sm:flex">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      document
-                        .getElementById(`products-${index}`)
-                        ?.scrollBy({
-                          left: -500,
-                          behavior: "smooth",
-                        });
-                    }}
-                    className="
-                      flex h-9 w-9 items-center justify-center
-                      rounded-full border
-                      bg-background
-                      transition
-                      hover:bg-muted
-                    "
-                    aria-label="Previous products"
-                  >
-                    ←
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      document
-                        .getElementById(`products-${index}`)
-                        ?.scrollBy({
-                          left: 500,
-                          behavior: "smooth",
-                        });
-                    }}
-                    className="
-                      flex h-9 w-9 items-center justify-center
-                      rounded-full border
-                      bg-background
-                      transition
-                      hover:bg-muted
-                    "
-                    aria-label="Next products"
-                  >
-                    →
-                  </button>
-                </div>
               </div>
             </div>
 

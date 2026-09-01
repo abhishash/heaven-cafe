@@ -200,26 +200,6 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-muted"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-card text-muted-foreground">Or sign up with</span>
-            </div>
-          </div>
-
-          {/* Social Buttons */}
-          <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="h-11 border-muted bg-background hover:bg-muted">
-              <span className="text-lg">🍎</span>
-            </Button>
-            <Button variant="outline" className="h-11 border-muted bg-background hover:bg-muted">
-              <span className="text-lg">📱</span>
-            </Button>
-          </div>
-
           {/* Sign In Link */}
           <p className="text-center text-muted-foreground mt-6">
             Already have an account?{' '}
