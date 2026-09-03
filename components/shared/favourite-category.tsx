@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { Category, CategoryResponse, CmsResponse, FavCategoryResponse, SubCategory } from '@/lib/types';
-import { fetchHandler, methods } from '@/lib/fetch-handler';
+import { fetchHandler, Methods } from '@/lib/fetch-handler';
 import { FAVOURITE_CATEGORIES, HOME_CATEGORIES } from '@/lib/constants';
 import Link from 'next/link';
 import { SafeImage } from './safe-image';
@@ -31,7 +31,7 @@ export default function FavouriteCategory() {
             fetchHandler({
                 ...(FAVOURITE_CATEGORIES as {
                     endpoint: string;
-                    method: methods;
+                    method: Methods;
                 }),
             }),
     });
