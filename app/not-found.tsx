@@ -18,12 +18,12 @@ export default function NotFound() {
         🍕
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pb-2">
         <div className="max-w-2xl mx-auto text-center">
           {/* 404 Error Code */}
-          <div className="mb-8">
+          <div className="mb-4 sm:mb-8">
             <div className="inline-block relative">
-              <h1 className="text-9xl sm:text-[120px] font-black text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent leading-none">
+              <h1 className="text-8xl sm:text-[120px] font-black text-transparent bg-clip-text bg-linear-to-r from-primary via-secondary to-accent leading-none">
                 404
               </h1>
               <div className="absolute inset-0 blur-2xl bg-linear-to-r from-primary/30 via-secondary/30 to-accent/30 -z-10"></div>
@@ -31,20 +31,20 @@ export default function NotFound() {
           </div>
 
           {/* Main Message */}
-          <div className="mb-8">
-            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+          <div className="mb-4 sm:mb-8">
+            <h2 className="text-xl sm:text-5xl font-bold text-foreground mb-4">
               Oops! This Meal Is Out of Stock
             </h2>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-6">
+            <p className="text-base sm:text-xl text-muted-foreground mb-6">
               We can't find the page you're looking for. It seems like this menu item has been discontinued!
             </p>
           </div>
 
           {/* Decorative Icon */}
-          <div className="mb-12 flex justify-center">
+          <div className="mb-6 sm:mb-12 flex justify-center">
             <div className="relative">
-              <div className="flex items-center justify-center w-32 h-32 sm:w-40 sm:h-40 bg-linear-to-br from-secondary/20 to-accent/20 rounded-full">
-                <ChefHat className="w-16 h-16 sm:w-20 sm:h-20 text-primary animate-pulse" />
+              <div className="flex items-center justify-center w-28 h-28 sm:w-40 sm:h-40 bg-linear-to-br from-secondary/20 to-accent/20 rounded-full">
+                <ChefHat className="w-12 h-12 sm:w-20 sm:h-20 text-primary animate-pulse" />
               </div>
               <div className="absolute -top-2 -right-2 text-4xl animate-spin" style={{ animationDuration: '3s' }}>
                 ⚠️
@@ -68,26 +68,7 @@ export default function NotFound() {
               <MapPin className="w-5 h-5" />
               View Menu
             </Link>
-          </div>
-
-          {/* Helpful Info */}
-          <div className="mt-16 p-8 bg-white rounded-2xl border-2 border-accent shadow-lg">
-            <h3 className="text-xl font-bold text-foreground mb-4">Need Help?</h3>
-            <ul className="text-muted-foreground space-y-2 text-left inline-block">
-              <li className="flex items-center gap-2">
-                <span className="text-accent font-bold">•</span>
-                Check our full menu for available items
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-accent font-bold">•</span>
-                Visit our contact page if you have questions
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="text-accent font-bold">•</span>
-                Explore our special deals and combos
-              </li>
-            </ul>
-          </div>
+          </div>          
         </div>
       </div>
     </main>
