@@ -1,16 +1,16 @@
 import { isArray } from '@/lib/type-guards'
 import { fetchHandler, Methods } from '@/lib/fetch-handler'
-import { Category, ProductDataTypesList, ProductResponse, ProductTypes, SubCategory } from '@/lib/types'
+import { Category, ProductDataTypesList, ProductResponse, ProductTypes } from '@/lib/types'
 import { CATALOG_DETAIL } from '@/lib/constants'
 import ProductCard from '@/components/ProductCard'
 import CategoryFilter from '@/components/shared/category-filter'
-import { notFound } from 'next/navigation'
 import BackPath from '@/components/shared/back-path'
 import { isObject } from 'framer-motion'
 import { Suspense } from 'react'
 import CategorySkeleton from '@/components/home/placeholder/category-skeleton'
 import { CategoryComponent } from '@/components/home/categories'
 import { MobileCategoryComponent } from '@/components/home/mobile-categories'
+import NotFound from '@/components/shared/not-found'
 
 
 export default async function CatalogPage({ params }: {
@@ -25,10 +25,6 @@ export default async function CatalogPage({ params }: {
   });
 
   const products: ProductTypes[] = productResponse?.data ?? [];
-
-  if (!isArray(products)) {
-    return notFound();
-  }
 
   const categories: Category[] = productResponse?.categories ?? [];
 
@@ -84,12 +80,10 @@ export default async function CatalogPage({ params }: {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {isArray(products) ? (
               products?.map((product: ProductTypes) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard isSingle={true} key={product.id} product={product} />
               ))
             ) : (
-              <div className="col-span-full text-center py-12">
-                <p className="text-gray-500 text-lg">No products found in this category</p>
-              </div>
+              <NotFound />
             )}
           </div>
         </div>
@@ -124,9 +118,7 @@ export default async function CatalogPage({ params }: {
                       <ProductCard key={product.id} product={product} isSingle />
                     ))
                   ) : (
-                    <div className="col-span-full text-center py-12">
-                      <p className="text-gray-500 text-lg">No products found in this category</p>
-                    </div>
+                    <NotFound />
                   )}
                 </div>
               </div>
@@ -136,6 +128,5 @@ export default async function CatalogPage({ params }: {
         </div>
       </main>
     </>
-
   )
 }
