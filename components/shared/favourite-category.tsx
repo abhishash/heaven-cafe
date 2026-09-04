@@ -73,26 +73,6 @@ export const CategoriesCarousel = ({ title, subCategories }: ProductCarouselProp
                     <h2 className="text-2xl sm:text-3xl text-primary font-bold">
                         {title}
                     </h2>
-
-                    <div className="hidden sm:flex gap-2">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="rounded-md"
-                            onClick={scrollLeft}
-                        >
-                            <ChevronLeft className="h-5 w-5" />
-                        </Button>
-
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="rounded-md"
-                            onClick={scrollRight}
-                        >
-                            <ChevronRight className="h-5 w-5" />
-                        </Button>
-                    </div>
                 </div>
 
                 {/* Scroll Container */}
@@ -113,26 +93,24 @@ export const CategoriesCarousel = ({ title, subCategories }: ProductCarouselProp
                             <Link
                                 href={`/menu/${category?.url}`}
                                 key={category.url}
-                                className="min-w-[160px] flex flex-col items-center transition-transform duration-300 hover:scale-105"
+                                className="flex-none w-[calc(35%-6px)] sm:w-[160px] md:w-[180px] overflow-hidden rounded-xl bg-gradient-to-t from-secondary to-primary transition-transform hover:scale-105"
                             >
 
-                                <div className="mb-4 h-28 sm:h-40 w-40 overflow-hidden rounded-xl bg-white shadow-lg hover:shadow-xl transition">
-
+                                <div className="h-20 w-full sm:h-32 md:h-36">
                                     <SafeImage
                                         src={category.image}
                                         alt={category.name}
-                                        width={40}
-                                        height={40}
-                                        className="h-full w-full object-fill"
+                                        width={180}
+                                        height={180}
+                                        className="h-full w-full object-contain"
                                     />
                                 </div>
 
-                                <h3 className="text-center text-lg font-medium text-slate-800">
+                                {/* Name */}
+                                <h3 className="truncate px-2 py-2 text-center text-sm font-medium sm:text-base">
                                     {category.name}
                                 </h3>
-
                             </Link>
-
                         ))}
 
                     </div>
