@@ -5,7 +5,7 @@ import Link from "next/link"
 const NotFound = () => {
     return (
         <div className="col-span-full">
-            <div className="relative flex py-4 min-h-[calc(100dvh - 160px)] flex-col items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-b from-orange-50/80 via-white to-white text-center">
+            <div className="relative flex py-4 min-h-[calc(100vh-180px)] flex-col items-center justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-orange-50/80 via-white to-white text-center">
 
                 {/* Decorative circles */}
                 <div className="pointer-events-none absolute -left-20 -top-20 h-56 w-56 rounded-full bg-orange-100/60 blur-3xl" />
@@ -56,7 +56,7 @@ const NotFound = () => {
 
                         <Link
                             href="/"
-                            className="rounded-full border border-gray-200 bg-white px-7 py-3.5 text-sm font-semibold text-gray-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-600"
+                            className="rounded-full w-full border border-gray-200 bg-white px-7 py-3.5 text-sm font-semibold text-gray-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-600"
                         >
                             Go Home
                         </Link>
