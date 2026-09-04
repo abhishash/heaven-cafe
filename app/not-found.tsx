@@ -18,7 +18,7 @@ export default function NotFound() {
         🍕
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pb-2">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pb-2 sm:py-16">
         <div className="max-w-2xl mx-auto text-center">
           {/* 404 Error Code */}
           <div className="mb-4 sm:mb-8">
