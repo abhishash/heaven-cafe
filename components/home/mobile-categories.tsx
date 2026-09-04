@@ -125,7 +125,6 @@ export default function Categories({
                                 className={`
                                     mt-1.5
                                     w-full
-                                    truncate
                                     px-1
                                     text-center
                                     text-[10px]

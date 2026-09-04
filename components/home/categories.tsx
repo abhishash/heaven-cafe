@@ -128,15 +128,12 @@ export default function Categories({
               md:w-[180px]
               overflow-hidden
               rounded-xl
-              bg-gradient-to-t
-              from-secondary
-              to-primary
               transition-transform
               hover:scale-105
             "
           >
             {/* Image */}
-            <div className="h-20 w-full sm:h-32 md:h-36">
+            <div className="h-20 w-full py-2 bg-gradient-to-t from-secondary to-primary sm:h-32 md:h-36">
               <SafeImage
                 src={category.image}
                 alt={category.name}
@@ -147,7 +144,7 @@ export default function Categories({
             </div>
 
             {/* Name */}
-            <h3 className="truncate px-2 py-2 text-center text-sm font-medium sm:text-base">
+            <h3 className="px-2 py-2 text-center text-sm font-medium sm:text-base">
               {category.name}
             </h3>
           </Link>
