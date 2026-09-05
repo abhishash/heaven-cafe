@@ -126,7 +126,7 @@ export default function CustomerHeader() {
       </nav>
       {/* Mobile Navigation */}
       {/* ✅ TOP NAV */}
-      <div className="sm:hidden sticky top-0  shadow-sm">
+      <div className="sm:hidden py-2 sticky top-0  shadow-sm">
         {/* Top Row */}
         <div className="flex items-center justify-between pl-0 pr-0 pb-1 pt-3">
           {/* Logo */}
@@ -141,24 +141,12 @@ export default function CustomerHeader() {
             />
           </Link>
           {/* Toggle (Dine / Delivery) */}
-          {
-            isMobile ? <div className="">
+          {isMobile ? <div className="">
               <div className="w-full">
                 {/* Your existing toggle */}
                 <DineDeliveryToggle />
               </div>
-            </div> : null
-          }
-
-        </div>
-
-        <div
-          className={`px-2 z-40 transition-[max-height,opacity] duration-300 ${showSearch
-            ? "max-h-20 opacity-100 pb-3"
-            : "max-h-0 opacity-0 pb-0 pointer-events-none"
-            }`}
-        >
-          <SearchBar placeholder="Search products..." />
+            </div> : null}
         </div>
       </div>
     </header>

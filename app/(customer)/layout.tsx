@@ -1,7 +1,7 @@
 import { BottomNavigation } from "@/components/customer/BottomNavigation";
 import { CustomerLayout } from "@/components/customer/CustomerLayout";
 import CustomerHeader from "@/components/customer/layout/CustomerHeader";
-import { Footer } from "@/components/footer";
+import Footer from "@/components/footer";
 import Header from "@/components/Header";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,6 +1,6 @@
 import { Product } from '@/lib/products';
 import { ProductResponse } from '@/lib/types';
-import { fetchHandler, methods } from '@/lib/fetch-handler';
+import { fetchHandler, Methods } from '@/lib/fetch-handler';
 import { PRODUCTS_DETAIL } from '@/lib/constants';
 import ProductImageGallery from '@/components/product/product-image-gallery';
 import ProductInfo from '@/components/product/product-Info';
@@ -18,7 +18,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   
    const productResponse = await fetchHandler<ProductResponse>({
     endpoint: `${PRODUCTS_DETAIL.endpoint}/${url}`,
-    method: PRODUCTS_DETAIL?.method as methods,
+    method: PRODUCTS_DETAIL?.method as Methods,
   });
 
   const product : Product = productResponse?.data ;

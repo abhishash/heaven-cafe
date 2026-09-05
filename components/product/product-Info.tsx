@@ -17,7 +17,7 @@ import { isObject } from "@/lib/type-guards";
 import LoginModal from "../customer/modal/LoginModal";
 import { FieldValues } from "react-hook-form";
 import Spinner from "../shared/spinner";
-
+import { useAddToCartProductMutation } from "@/store/services/master-api";
 
 interface ProductInfoProps {
   product: Product;
@@ -26,26 +26,13 @@ interface ProductInfoProps {
 
 const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
-  const [customization, setCustomization] = useState('');
   const [openLogin, setOpenLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();
   const dispatch = useDispatch();
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: (payload: {
-      product_id: number;
-      qty: number;
-      type: "custom" | "remove" | "add";
-    }) =>
-      fetchHandler({
-        endpoint: "cart/add",
-        method: "POST",
-        data: payload,
-        token: session?.user?.accessToken,
-      }),
-  });
+  const [ mutateAsync, { isLoading : isPending } ] = useAddToCartProductMutation();
 
   const handleAddToCart = async () => {
     if (!isObject(session?.user)) {
@@ -59,7 +46,7 @@ const ProductInfo = ({ product, productUrl }: ProductInfoProps) => {
       type: "custom",
     }).then((res) => {
       if (res?.status) {
-        dispatch(addToCart({ ...res?.data, customization }));
+        dispatch(addToCart({ ...res?.data }));
       } else {
         toast.warning(res?.message);
       }

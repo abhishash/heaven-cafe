@@ -57,11 +57,11 @@ export default function LoginPage() {
     <div className="w-full max-w-md">
       {/* Logo and Header */}
       <div className="text-center my-4 sm:mb-4">
-        <Link href="/" className="flex justify-center items-center gap-2">
+        <div className="flex justify-center items-center gap-2">
           <div className="text-primary-foreground font-bold text-2xl">
             <Image src="/logo/header-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />
           </div>
-        </Link>
+        </div>
         <p className="text-muted-foreground mt-2">Welcome back! Sign in to your account</p>
       </div>
 

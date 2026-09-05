@@ -202,7 +202,7 @@ export default function Header() {
             {/* Cart */}
             <Link
               href="/cart"
-              className={`flex flex-col rounded-xl px-4 py-1.5 items-center text-xs ${pathname.startsWith("/cart")
+              className={`flex relative flex-col rounded-xl px-4 py-1.5 items-center text-xs ${pathname.startsWith("/cart")
                 ? "text-primary font-semibold bg-primary/10"
                 : "text-gray-500 bg-transparent"
                 }`}
@@ -210,7 +210,7 @@ export default function Header() {
               <ShoppingCart size={22} />
 
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-2 bg-primary text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
+                <span className="absolute -top-1 right-0 bg-primary text-white text-xs w-6 h-6 flex items-center justify-center rounded-full">
                   {totalItems}
                 </span>
               )}

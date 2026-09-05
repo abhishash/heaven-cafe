@@ -7,6 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { ProductTypes } from '@/lib/types';
 import { formatPrice } from '@/lib/utils';
 import { SafeImage } from './shared/safe-image';
+import { useAddToCartProductMutation } from '@/store/services/master-api';
+import { toast } from 'sonner';
+import { addToCart } from '@/lib/redux/slice/cartSlice';
+import { useDispatch } from 'react-redux';
 
 interface ProductCardProps {
   product: ProductTypes;
@@ -17,6 +21,10 @@ export default function ProductCard({
   product,
   isSingle
 }: ProductCardProps) {
+
+  const [mutateAsync, { isLoading: isPending }] = useAddToCartProductMutation();
+  const dispatch = useDispatch();
+
   const actualPrice = parseFloat(product.ac_price);
   const sellingPrice = parseFloat(product.price);
 
@@ -31,12 +39,7 @@ export default function ProductCard({
     parseInt(product?.in_stock as string) <= 0;
 
   return (
-    <Link
-      href={
-        isOutOfStock
-          ? '#'
-          : `/product/${product.url}`
-      }
+    <div
       className={`
         group block h-full
         ${isOutOfStock ? 'pointer-events-none' : ''}
@@ -100,27 +103,33 @@ export default function ProductCard({
             }}
             className="relative h-full w-full"
           >
-            <SafeImage
-              src={product.image}
-              alt={
-                product?.name ??
-                'Product Image'
-              }
-              fill
-              sizes="
+            <Link href={
+              isOutOfStock
+                ? '#'
+                : `/product/${product.url}`
+            } >
+              <SafeImage
+                src={product.image}
+                alt={
+                  product?.name ??
+                  'Product Image'
+                }
+                fill
+                sizes="
                 (max-width: 640px) 50vw,
                 (max-width: 1024px) 33vw,
                 25vw
               "
-              className={`
+                className={`
                 object-cover
                 object-center
                 ${isOutOfStock
-                  ? 'blur-[2px]'
-                  : ''
-                }
+                    ? 'blur-[2px]'
+                    : ''
+                  }
               `}
-            />
+              />
+            </Link>
           </motion.div>
 
           {/* Image Gradient */}
@@ -301,38 +310,21 @@ export default function ProductCard({
             <motion.button
               whileTap={{ scale: 0.92 }}
               type="button"
-              className={`${isSingle ? "bottom-3 right-2 bg-primary" : "bottom-18 right-1/2 bg-black/20 translate-x-1/2"} absolute z-20 flex
-  items-center
-  justify-center
-  gap-1.5
-  rounded-full
-  border
-  border-white/30
-
-  
-  backdrop-blur-2xl
-  backdrop-saturate-150
-
-  px-4
-  py-2
-
-  text-xs
-  font-bold
-  tracking-wide
-  text-white
-
-  shadow-[0_8px_25px_rgba(0,0,0,0.25)]
-
-  transition-all
-  duration-300
-
-  hover:border-orange-400/70
-  hover:bg-orange-500/80
-
-  sm:px-5
-  sm:py-2.5
-  sm:text-sm
-`}
+              onClick={async () => await mutateAsync({
+                product_id: product.id,
+                qty: 1,
+                type: 'add',
+              }).then((res) => {
+                if (res?.data?.status) {
+                  dispatch(addToCart({ ...res?.data?.data }));
+                } else {
+                  toast.warning(res?.data?.message);
+                }
+              }).catch((err) => {
+                toast.error(err?.message);
+              })}
+              disabled={isPending}
+              className={`${isSingle ? "bottom-3 right-2 bg-primary" : "bottom-18 right-1/2 bg-black/20 translate-x-1/2"} disabled:opacity-80 absolute z-20 flex items-center justify-center gap-1.5 rounded-full border border-white/30 backdrop-blur-2xl backdrop-saturate-150 px-4 py-2 text-xs font-bold tracking-wide text-white shadow-[0_8px_25px_rgba(0,0,0,0.25)] transition-all duration-300 hover:border-orange-400/70 hover:bg-orange-500/80 sm:px-5 sm:py-2.5 sm:text-sm`}
             >
               <ShoppingBag className="size-3.5 sm:size-4" />
               <span>ADD</span>
@@ -340,6 +332,6 @@ export default function ProductCard({
           )}
         </div>
       </motion.div>
-    </Link>
+    </div>
   );
 }

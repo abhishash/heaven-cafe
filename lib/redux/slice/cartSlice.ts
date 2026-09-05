@@ -1,5 +1,5 @@
 import { CART_DETAILS } from "@/lib/constants";
-import { fetchHandler, methods } from "@/lib/fetch-handler";
+import { fetchHandler, Methods } from "@/lib/fetch-handler";
 import {
   CartItem,
   CartItemPayload,
@@ -30,7 +30,7 @@ export const fetchCart = createAsyncThunk(
   ) => {
     const res = await fetchHandler({
       endpoint: CART_DETAILS?.endpoint,
-      method: CART_DETAILS?.method as methods,
+      method: CART_DETAILS?.method as Methods,
       token: accessToken
     });
 

@@ -5,14 +5,14 @@ import { getSession } from "next-auth/react";
 const APIENDPOINT = process.env.API_ENDPOINT;
 
 type FAQItem = {
-  name: string;
-  description: string;
+    name: string;
+    description: string;
 };
 
 type FAQResponse = {
-  status: boolean;
-  message: string;
-  data: FAQItem[];
+    status: boolean;
+    message: string;
+    data: FAQItem[];
 };
 
 export const api = createApi({
@@ -62,7 +62,20 @@ export const api = createApi({
             }),
             transformResponse: (response: any) => response?.data,
         }),
+
+        addToCartProduct: builder.mutation<any, {
+            product_id: number;
+            qty: number; type: "custom" | "remove" | "add";
+        }>({
+            query: (payload) => ({
+                url: "cart/add",
+                method: "POST",
+                body: payload
+            }),
+            transformResponse: (response: any) => response,
+            // invalidatesTags: ["user"], // refetch user/cards after update
+        }),
     })
 })
 
-export const { useGetFAQQuery, useGetCategoriesQuery, useGetProductsQuery, useGetAllProductQuery } = api;
+export const { useGetFAQQuery, useGetCategoriesQuery, useGetProductsQuery, useGetAllProductQuery, useAddToCartProductMutation } = api;
