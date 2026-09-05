@@ -11,6 +11,7 @@ import CategorySkeleton from '@/components/home/placeholder/category-skeleton'
 import { CategoryComponent } from '@/components/home/categories'
 import { MobileCategoryComponent } from '@/components/home/mobile-categories'
 import NotFound from '@/components/shared/not-found'
+import WelcomeBanner from '@/components/shared/welcome-banner'
 
 
 export default async function CatalogPage({ params }: {
@@ -48,6 +49,21 @@ export default async function CatalogPage({ params }: {
         >
           <CategoryComponent />
         </Suspense>
+        <div
+          className="container mx-auto min-w-0 px-4 pb-12 pr-3"
+        >
+          <WelcomeBanner />
+          {/* Products Grid */}
+          <div className="grid grid-cols-2 mt-4 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {isArray(products) ? (
+              products?.map((product: ProductTypes) => (
+                <ProductCard isSingle={true} key={product.id} product={product} />
+              ))
+            ) : (
+              <NotFound />
+            )}
+          </div>
+        </div>
 
       </main>
 
