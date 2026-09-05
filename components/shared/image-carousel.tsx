@@ -5,6 +5,7 @@ import Image from "next/image";
 import { imageBaseUrl } from "@/lib/constants";
 import { BannerDataTypes } from "@/lib/types";
 import { Shimmer } from "./shimmer";
+import Link from "next/link";
 
 interface ImageCarouselProps {
   options: BannerDataTypes[];
@@ -113,7 +114,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
               key={index}
               className={`absolute inset-0 rounded-2xl overflow-hidden transition-opacity duration-700 ${isActive ? "opacity-100" : "opacity-0"}`}
             >
-              <div className="relative h-full w-full">
+              <Link href={img?.link} className="relative h-full w-full">
                 <Shimmer className="h-full w-full" />
 
                 <Image
@@ -124,7 +125,7 @@ const ImageCarousel: FC<ImageCarouselProps> = ({ options: images }) => {
                   priority={index === 0}
                   sizes="100vw"
                 />
-              </div>
+              </Link>
             </div>
           );
         })}

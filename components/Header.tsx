@@ -6,7 +6,7 @@ const OrderTypeModal = dynamic(() => import("./pop-up/Order-type-modal"));
 const DineDeliveryToggle = dynamic(() => import("./shared/delivery-toggle"));
 
 import Link from "next/link";
-import { Bell, Compass, Heart, MenuIcon, NotebookPen, Search, ShoppingCart, User, UserIcon, UtensilsCrossed, Wallet } from "lucide-react";
+import { Bell, Compass, Heart, NotebookPen, Search, ShoppingCart, User, UserIcon, UtensilsCrossed, Wallet } from "lucide-react";
 import Image from "next/image";
 import { SearchBar } from "./Search-bar";
 import { useSession } from "next-auth/react";
@@ -252,22 +252,7 @@ export function UserSection() {
         className="text-primary-foreground hover:opacity-80 transition"
       >
         <UserIcon size={24} />
-      </Link>
-
-      {/* Cart / Count Badge */}
-      <div className="relative">
-        <h2 className="flex items-center gap-2 border text-nowrap py-1 font-semibold bg-white text-primary px-3 border-white rounded-md text-sm">
-          <Wallet size={18} className="text-red-500" />
-          :{" "}
-          {isLoggedIn
-            ? isLoading
-              ? "0"
-              : data?.points
-                ? parseInt(data?.points.toString())
-                : "0"
-            : "0"}
-        </h2>
-      </div>
+      </Link>      
     </div>
   );
 }

@@ -13,7 +13,8 @@ export interface ProductsDataTypes {
 export interface BannerDataTypes {
   id: number,
   name: string,
-  image: string
+  image: string,
+  link: string,
 }
 
 export interface HomePageDataTypes {
