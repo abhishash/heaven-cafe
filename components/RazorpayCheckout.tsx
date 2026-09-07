@@ -65,7 +65,7 @@ export default function RazorpayCheckout({
       return;
     }
 
-    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+    if (!process.env.RAZORPAY_KEY_ID) {
       const message = "Razorpay public key is not configured.";
       setError(message);
       onError(message);
@@ -106,7 +106,7 @@ export default function RazorpayCheckout({
       // =========================
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: process.env.RAZORPAY_KEY_ID,
         order_id: orderResponse.orderId,
         amount: orderResponse.amount,
         currency: orderResponse.currency,

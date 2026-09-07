@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             title: page?.meta_title || page?.name,
             description: page?.meta_description || page?.name,
             type: "article",
-            url: `${process.env.NEXT_PUBLIC_SITE_URL}/${params?.urlkey}`,
+            url: `${process.env.SITE_URL}/${params?.urlkey}`,
         },
 
         twitter: {
@@ -48,7 +48,7 @@ export async function generateStaticParams() {
     const cmsurl = res?.data;
     const pages = Object.values(cmsurl).flat();
     return pages.map((page: any) => ({
-        urlkey: page?.url ?? "",
+        urlkey: page?.url,
     }));
 }
 
