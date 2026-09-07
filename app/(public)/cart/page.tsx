@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { SquarePen } from 'lucide-react';
 import AddressPopUp from '@/components/checkout/modal/address-pop';
 import { useGetAddressesQuery } from '@/store/services/address-api';
+import MobileFooter from '@/components/shared/layout/mobile-footer';
 
 export default function CartPage() {
   const [open, setOpen] = useState(false);
@@ -61,7 +62,7 @@ export default function CartPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-4 sm:py-12 px-4">
+    <main className="min-h-screen bg-gray-50 pt-4 pb-16 sm:py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-xl sm:text-4xl font-bold mb-2 sm:mb-8 text-gray-800">Your Cart</h1>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-8">
@@ -164,11 +165,11 @@ export default function CartPage() {
                       Proceed to Checkout
                     </Button>
                 }
-
               </div>
               {isDineIn && <TableNumber setOpen={setOpen} open={open} />}
               <AddressPopUp setOpen={setShowAddress} open={showAddress} addresses={data?.data} refetch={refetch} />
             </div>
+            <MobileFooter />
           </div>
         </div>
       </div>
