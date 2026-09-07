@@ -29,11 +29,13 @@ export interface ProductTypes {
   ac_price: string;
   stock: number | null;
   in_stock: "0" | "1";
+  category: string | null;
   summer_id: number;
   slug: string | null;
   discount: string | null;
   brand: string;
   short_description: string;
+  description: string;
   id: number;
 }
 

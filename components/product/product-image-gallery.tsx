@@ -5,14 +5,14 @@ import { GalleryImage } from "@/lib/types";
 import Image from "next/image";
 import { imageBaseUrl } from "@/lib/constants";
 
-export default function ProductImageGallery({ images, thumbnailImg }: { images: GalleryImage[], thumbnailImg: string }) {
+export default function ProductImageGallery({ thumbnailImg }: { thumbnailImg: string }) {
 
   const [isLoading, setIsLoading] = useState(true);
 
   return (
 
     <div className="flex items-start justify-center">
-      <div className="relative w-full h-72 sm:h-96 bg-gray-100 rounded-lg overflow-hidden">
+      <div className="relative w-full h-64 sm:h-96 bg-gray-100 rounded-lg overflow-hidden">
         <Image
           src={`${imageBaseUrl}/${thumbnailImg}`}
           alt="Product image"

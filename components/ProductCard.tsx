@@ -36,7 +36,7 @@ export default function ProductCard({
       : 0;
 
   const isOutOfStock =
-    parseInt(product?.in_stock as string) <= 0;
+    parseInt(product?.in_stock as string) <= 0 || product?.stock as number <= 0;
 
   return (
     <div
@@ -321,7 +321,7 @@ export default function ProductCard({
                   toast.warning(res?.data?.message);
                 }
               }).catch((err) => {
-                toast.error(err?.message);
+                toast.error(err?.data.message);
               })}
               disabled={isPending}
               className={`${isSingle ? "bottom-3 right-2 bg-primary" : "bottom-18 right-1/2 bg-black/20 translate-x-1/2"} disabled:opacity-80 absolute z-20 flex items-center justify-center gap-1.5 cursor-pointer disabled:cursor-not-allowed rounded-full border border-white/30 backdrop-blur-2xl backdrop-saturate-150 px-4 py-2 text-xs font-bold tracking-wide text-white shadow-[0_8px_25px_rgba(0,0,0,0.25)] transition-all duration-300 hover:border-orange-400/70 hover:bg-orange-500/80 sm:px-5 sm:py-2.5 sm:text-sm`}

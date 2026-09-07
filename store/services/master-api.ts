@@ -72,8 +72,6 @@ export const api = createApi({
                 method: "POST",
                 body: payload
             }),
-            transformResponse: (response: any) => response,
-            // invalidatesTags: ["user"], // refetch user/cards after update
         }),
     })
 })
