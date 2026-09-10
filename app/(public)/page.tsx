@@ -167,7 +167,7 @@ export default async function Home() {
       {/* =========================================
                   BOTTOM BRANDING
               ========================================== */}
-      <div className="mb-16">
+      <div className="mb-16 sm:hidden block">
         <MobileFooter />
       </div>
     </>

@@ -1,7 +1,7 @@
 {
-  "name": "FastBite - Fast Food E-Commerce",
-  "short_name": "FastBite",
-  "description": "Order delicious fast food online. Burgers, chicken, sides, and more delivered fast.",
+  "name": "Heaven Cafe - Fast Food E-Commerce",
+  "short_name": "Heaven Cafe",
+  "description": "Order delicious fast food online. Burgers, sides, and more delivered fast.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
