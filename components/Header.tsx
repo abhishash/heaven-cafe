@@ -64,7 +64,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="bg-primary shadow-none sm:shadow-2xl pr-2 fixed top-0 w-full z-50 ">
+    <header className="bg-primary shadow-2xl pr-2 fixed top-0 w-full z-50 ">
       {/* Bell Ring Animation CSS */}
       <style>{`
         @keyframes ring {
