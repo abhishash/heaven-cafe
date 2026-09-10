@@ -24,7 +24,7 @@ export default function LoyalityPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with brush stroke */}
-      <div className="relative bg-white w-full">
+      <div className="relative -mt-2 bg-white w-full">
         {/* Orange brush stroke background */}
         <div className="h-32 sm:h-36 bg-gradient-to-r from-primary via-secondary to-primary relative overflow-hidden">
           <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 1228 180" preserveAspectRatio="none">

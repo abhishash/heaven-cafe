@@ -105,8 +105,6 @@ export default function CustomerHeader() {
             <NotebookPen />
           </Link>
 
-          {/* <WishlistIcon /> */}
-
           <NotificationBell />
           {/* <UserCard /> */}
           <Link href="/cart" className="relative">
@@ -223,46 +221,6 @@ export function NotificationBell({ isMobile }: { isMobile?: boolean }) {
       {notificationCount > 0 && (
         <span className="absolute -top-2 -right-2 bg-primary text-white shadow-2xl text-[11px] sm:text-[11px] font-bold rounded-full sm:w-5 w-5 h-5 sm:h-5 flex items-center justify-center border border-white">
           {notificationCount}
-        </span>
-      )}
-    </Link>
-  );
-}
-
-export function WishlistIcon({ isMobile }: { isMobile?: boolean }) {
-  const { data: session } = useSession();
-  const { data } = useQuery({
-    queryKey: ['wishlist'],
-    queryFn: () => fetchHandler({
-      endpoint: 'wishlist',
-      method: 'GET',
-      token: session?.user?.accessToken,
-    }),
-    enabled: !!session?.user?.accessToken,
-  });
-
-  const wishlistCount = data?.data?.length || 0;
-
-  if (isMobile) {
-    return (
-      <Link href="/wishlist" className="flex flex-col items-center relative text-xs">
-        <Heart size={22} />
-        {wishlistCount > 0 && (
-          <span className="absolute -top-1 right-3 bg-primary text-white shadow-2xl text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-            {wishlistCount}
-          </span>
-        )}
-        Wishlist
-      </Link>
-    );
-  }
-
-  return (
-    <Link href="/wishlist" className="relative">
-      <Heart className="text-primary-foreground hover:opacity-80 transition" size={24} />
-      {wishlistCount > 0 && (
-        <span className="absolute -top-2 -right-2 bg-primary text-white shadow-2xl text-[11px] sm:text-xs font-bold rounded-full sm:w-5 w-5 h-5 sm:h-5 flex items-center justify-center border border-white">
-          {wishlistCount}
         </span>
       )}
     </Link>

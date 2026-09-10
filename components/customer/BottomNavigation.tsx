@@ -83,12 +83,12 @@ export function BottomNavigation() {
                 key={item.href}
                 href={item.href}
                 className={`flex flex-col items-center justify-center flex-1 h-full transition-colors ${active
-                  ? 'border-t-2 border-primary'
-                  : 'hover:text-foreground'
+                  ? 'border-t-2 border-primary text-primary'
+                  : 'hover:text-foreground text-slate-900'
                   }`}
               >
-                <Icon className="w-6 h-6 mb-1 text-primary" />
-                <span className="text-xs font-medium text-primary">{item.label}</span>
+                <Icon className="w-6 h-6 mb-1" />
+                <span className="text-xs font-medium">{item.label}</span>
               </Link>
             );
           })}

@@ -9,8 +9,6 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'sonner';
-// import CreditCard from '@/components/shared/credit-card';
-// import { formatExpiry } from '@/lib/utils';
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import EditProfileModal, { ProfileData } from '@/components/customer/modal/EditProfileModal';
@@ -26,6 +24,7 @@ export default function ProfilePage() {
     phone: '+1 (555) 123-4567',
     gender: 'male',
     image: undefined,
+    email: "",
   });
   const [imagePreview, setImagePreview] = useState<string>('')
 
@@ -110,10 +109,10 @@ export default function ProfilePage() {
 
   return (
     <>
-      <div className="px-4 mt-10 mb-10 sm:my-0">
+      <div className="px-4 mt-0 mb-10 sm:my-0">
         {/* Header */}
-        <div className="mb-4 sm:mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">My Profile</h1>
+        <div className="mb-4 sticky top-18 bg-white py-2 sm:mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground">My Profile</h1>
           <p className="text-muted-foreground">Manage your account settings and preferences</p>
         </div>
 

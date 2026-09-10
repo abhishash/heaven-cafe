@@ -26,6 +26,7 @@ import CategorySkeleton from "@/components/home/placeholder/category-skeleton";
 import { SafeImage } from "@/components/shared/safe-image";
 import PermotionBanner from "@/components/home/permotion-banner";
 import ProductCarousel from "@/components/shared/product-carousel";
+import MobileFooter from "@/components/shared/layout/mobile-footer";
 
 export default async function Home() {
   const homePageBanners = await fetchHandler<{
@@ -59,7 +60,7 @@ export default async function Home() {
       {isArray(homePageBannerLists) ? (
         <ImageCarousel options={homePageBannerLists} />
       ) : null}
-      
+
       {/* main category section */}
       <Suspense
         fallback={<CategorySkeleton title="Our Menu" />}
@@ -162,6 +163,13 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* =========================================
+                  BOTTOM BRANDING
+              ========================================== */}
+      <div className="mb-16">
+        <MobileFooter />
+      </div>
     </>
   );
 }

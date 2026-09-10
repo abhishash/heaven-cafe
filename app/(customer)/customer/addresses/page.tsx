@@ -37,7 +37,7 @@ export default function AddressesPage() {
   };
 
   return (
-    <div className="px-4 mt-10 mb-6 sm:mb-0 sm:mt-0">
+    <div className="px-4 mt-4 mb-6 sm:mb-0 sm:mt-0">
       {/* Header */}
       <div className="mb-4 sm:mb-8">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
