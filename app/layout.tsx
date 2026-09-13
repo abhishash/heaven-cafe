@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 import QueryProvider from './providers/query-provider'
@@ -17,11 +17,6 @@ const geist = Geist({
 export const metadata: Metadata = {
   manifest: '/manifest.json',
   themeColor: '#000000',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    viewportFit: 'cover',
-  },
   title: 'Heaven Cafe - Fast Food E-Commerce',
   description: 'Order delicious fast food online. Burgers, chicken, sides, and more delivered fast.',
   generator: 'v0.app',
@@ -29,6 +24,13 @@ export const metadata: Metadata = {
     icon: '/favicon.png',
     apple: '/favicon.png',
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#000000',
 }
 
 export default async function RootLayout({
