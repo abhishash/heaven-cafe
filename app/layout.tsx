@@ -17,6 +17,11 @@ const geist = Geist({
 export const metadata: Metadata = {
   manifest: '/manifest.json',
   themeColor: '#000000',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    viewportFit: 'cover',
+  },
   title: 'Heaven Cafe - Fast Food E-Commerce',
   description: 'Order delicious fast food online. Burgers, chicken, sides, and more delivered fast.',
   generator: 'v0.app',
