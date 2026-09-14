@@ -150,7 +150,7 @@ export default function RegisterPage() {
                 <Input
                   id="phone"
                   type="tel"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder="+917906XXXXXX"
                   {...register("phone", { required: "Phone is required" })}
                   className="pl-10 bg-background border-muted focus:border-primary h-12"
                   required

@@ -52,131 +52,159 @@ export default function LoginPage() {
     }
   };
   return (
+    <main className="relative min-h-[100dvh] w-full overflow-hidden">
 
+      {/* Background Image */}
+      <div className="absolute block sm:hidden inset-0">
+        <Image
+          src="/images/fast-food-bg.png"
+          alt="Heaven Cafe"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
 
-    <div className="w-full max-w-md">
-      {/* Logo and Header */}
-      <div className="text-center my-4 sm:mb-4">
-        <div className="flex justify-center items-center gap-2">
-          <div className="text-primary-foreground font-bold text-2xl">
-            <Image src="/logo/header-logo.png" className='' priority={true} alt='main-logo' width={160} height={120} />
-          </div>
-        </div>
-        <p className="text-muted-foreground mt-2">Welcome back! Sign in to your account</p>
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-secondary/55" />
+
+        {/* Extra gradient for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 via-secondary/40 to-secondary/70" />
       </div>
 
-      {/* Login Card */}
-      <Card className="border-2 border-muted shadow-lg">
-        <div className="p-4 sm:p-8">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Email Field */}
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-foreground font-semibold">
-                Email Address
-              </Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  {...register("email", { required: "Email is required" })}
-                  className="pl-10 bg-background border-muted focus:border-primary h-12"
-                  required
-                />
-              </div>
-            </div>
+      {/* Login Content */}
+      <div className="relative z-10 flex min-h-[100dvh] w-full items-center justify-center px-4 py-6 sm:px-6">
 
-            {/* Password Field */}
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-foreground font-semibold">
-                Password
-              </Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
-                  className="pl-10 pr-10 bg-background border-muted focus:border-primary h-12"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-            </div>
+        <div className="mx-auto w-full max-w-md">
 
-            {/* Remember & Forgot */}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 accent-primary" />
-                <span className="text-sm text-muted-foreground">Remember me</span>
-              </label>
-              <Link
-                href="/forget-password"
-                className="text-sm text-primary hover:text-secondary transition-colors font-medium"
-              >
-                Forgot password?
-              </Link>
-            </div>
-
-            {/* Login Button */}
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base transition-all duration-200"
+          {/* Logo / Header */}
+          <div className="mb-5 text-center sm:mb-7">
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </form>
+              <Image
+                src="/logo/header-logo.png"
+                alt="Heaven Cafe"
+                width={150}
+                height={90}
+                priority
+                className="h-auto w-[125px] sm:w-[150px]"
+              />
+            </Link>
 
-          {/* Divider */}
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-muted"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-card text-muted-foreground">Or continue with</span>
-            </div>
+            <h1 className="mt-2 text-xl font-bold tracking-tight text-primary sm:text-2xl">
+              Welcome Back
+            </h1>
+
+            <p className="mt-1 text-sm text-black/75">
+              Sign in to continue to Heaven Cafe
+            </p>
           </div>
 
-          {/* Sign Up Link */}
-          <p className="text-center text-muted-foreground mt-6">
-            Don't have an account?{' '}
+          {/* Login Card */}
+          <Card className="overflow-hidden rounded-2xl border border-white/20 bg-background/95 shadow-2xl backdrop-blur-md">
+            <div className="p-5 sm:p-8">
+
+              {/* YOUR FORM HERE */}
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {/* Email Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-foreground font-semibold">
+                    Email Address
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="you@example.com"
+                      {...register("email", { required: "Email is required" })}
+                      className="pl-10 bg-background border-muted focus:border-primary h-12"
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Password Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-foreground font-semibold">
+                    Password
+                  </Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      {...register("password", {
+                        required: "Password is required",
+                      })}
+                      className="pl-10 pr-10 bg-background border-muted focus:border-primary h-12"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Remember & Forgot */}
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" className="w-4 h-4 accent-primary" />
+                    <span className="text-sm text-muted-foreground">Remember me</span>
+                  </label>
+                  <Link
+                    href="/forget-password"
+                    className="text-sm text-primary hover:text-secondary transition-colors font-medium"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+
+                {/* Login Button */}
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-base transition-all duration-200"
+                >
+                  {loading ? 'Signing in...' : 'Sign In'}
+                </Button>
+              </form>
+
+            </div>
+          </Card>
+
+          {/* Terms */}
+          <p className="mx-auto mt-5 max-w-sm px-2 text-center text-[11px] leading-5 text-black/70 sm:mt-6 sm:text-xs">
+            By signing in, you agree to our{" "}
             <Link
-              href="/register"
-              className="text-primary hover:text-secondary font-semibold transition-colors"
+              href="/terms"
+              className="font-medium text-primary hover:underline"
             >
-              Sign up
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/privacy-policy"
+              className="font-medium text-primary hover:underline"
+            >
+              Privacy Policy
             </Link>
+            .
           </p>
+
         </div>
-      </Card>
-
-      {/* Footer */}
-      <p className="text-center text-xs text-muted-foreground mt-6">
-        By signing in, you agree to our{' '}
-        <Link href="#" className="hover:underline">
-          Terms of Service
-        </Link>{' '}
-        and{' '}
-        <Link href="#" className="hover:underline">
-          Privacy Policy
-        </Link>
-      </p>
-    </div>
-
+      </div>
+    </main>
   );
 }

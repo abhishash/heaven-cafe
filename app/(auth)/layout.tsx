@@ -38,7 +38,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             </div>
 
             {/* Right Side Form */}
-            <div className="flex items-center justify-center p-2 sm:p-6">
+            <div className="flex items-center justify-center p-0 sm:p-6">
                 {children}
             </div>
 
