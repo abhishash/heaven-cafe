@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useGetLoyalityPointQuery } from '@/store/services/wallet-point-api'
+import { useRedeemWalletMutation } from '@/store/services/customer-api'
 
 export default function LoyalityPage() {
   const [timeFilter, setTimeFilter] = useState('Last 3 month')
@@ -18,6 +19,7 @@ export default function LoyalityPage() {
 
   const timeOptions = ['Last 3 month', 'Last 6 months', 'Last year', 'All time']
   const { data: loyaltyPoints, isLoading } = useGetLoyalityPointQuery();
+  const [redeemWallet, { isLoading: isRedeamPoint }] = useRedeemWalletMutation();
   const availablePoints = loyaltyPoints?.available_points || 0;
   const pointsHistory = loyaltyPoints?.points || [];
 
@@ -59,7 +61,17 @@ export default function LoyalityPage() {
       <div className="w-full px-6 max-h-[80dvh] no-scrollbar overflow-y-auto py-2">
         <div className="flex items-center justify-between mt-2 mb-4">
           <h2 className="text-2xl font-bold text-primary">History</h2>
-
+          {/* Time filter dropdown */}
+          <div className="relative">
+            <button
+              onClick={ async () => {
+                await redeemWallet({ points: availablePoints });
+              }}
+              className="w-full cursor-pointer text-left px-4 py-3 hover:bg-primary/10 first:rounded-t-lg last:rounded-b-lg transition-colors"
+            >
+              Redeem Points
+            </button>
+          </div>
           {/* Time filter dropdown */}
           <div className="relative">
             <button
@@ -87,6 +99,7 @@ export default function LoyalityPage() {
               </div>
             )}
           </div>
+
         </div>
 
         {/* Transaction list */}

@@ -48,7 +48,16 @@ export const userApi = createApi({
                 body,
             }),
         }),
+        redeemWallet: builder.mutation<any, { points: number }>({
+            query: (
+                body
+            ) => ({
+                url: `/wallet/redeem`,
+                method: "POST",
+                body,
+            }),
+        }),
     })
 })
 
-export const { useGetUserDetailQuery, useGetUserCardsQuery, useSetPrimaryCardMutation, useApplyCardMutation, useEditProfileMutation } = userApi;
+export const { useGetUserDetailQuery, useGetUserCardsQuery, useSetPrimaryCardMutation, useApplyCardMutation, useEditProfileMutation, useRedeemWalletMutation } = userApi;
