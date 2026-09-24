@@ -41,7 +41,6 @@ export default function LoyalityPage() {
 
         {/* Content container */}
         <div className="flex flex-col items-center justify-center pt-8 relative z-10 -mt-32">
-          {/* Crown icon */}
           <div className="mb-6 flex items-center justify-center w-20 h-20 bg-yellow-400 rounded-full border-4 border-yellow-300 shadow-lg">
             <svg
               className="w-12 h-12 text-yellow-600"
@@ -52,8 +51,15 @@ export default function LoyalityPage() {
             </svg>
           </div>
 
-          {/* Points and title */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{availablePoints} Coins</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-1">
+            {availablePoints} Coins
+          </h1>
+
+          <p className="text-sm text-gray-500">
+            {availablePoints > 0
+              ? 'Use your coins to redeem rewards'
+              : 'You currently have no coins'}
+          </p>
         </div>
       </div>
 
@@ -64,12 +70,18 @@ export default function LoyalityPage() {
           {/* Time filter dropdown */}
           <div className="relative">
             <button
-              onClick={ async () => {
+              disabled={availablePoints <= 0 || isRedeamPoint}
+              onClick={async () => {
+                if (availablePoints <= 0) return;
+
                 await redeemWallet({ points: availablePoints });
               }}
-              className="w-full cursor-pointer text-left px-4 py-3 hover:bg-primary/10 first:rounded-t-lg last:rounded-b-lg transition-colors"
+              className={`px-4 py-2 rounded-full font-semibold transition-colors ${availablePoints > 0 && !isRedeamPoint
+                ? 'bg-primary text-white hover:bg-primary/90 cursor-pointer'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}
             >
-              Redeem Points
+              {isRedeamPoint ? 'Redeeming...' : 'Redeem Points'}
             </button>
           </div>
           {/* Time filter dropdown */}
@@ -103,34 +115,69 @@ export default function LoyalityPage() {
         </div>
 
         {/* Transaction list */}
-        <div className="space-y-1">
-          {
-            isLoading ? "Loading..." : pointsHistory?.map((transaction) => (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <p className="text-gray-500">Loading history...</p>
+          </div>
+        ) : pointsHistory?.length > 0 ? (
+          <div className="space-y-2">
+            {pointsHistory.map((transaction) => (
               <div
                 key={transaction.id}
-                className="flex items-center justify-between px-4 py-4 rounded-sm bg-white border-gray-200 border-2 border-dotted transition-shadow"
+                className="flex items-center justify-between px-4 py-4 rounded-lg bg-white border border-gray-200 shadow-sm"
               >
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 text-base">{transaction?.order_no} || {transaction?.created_at ? new Date(transaction?.created_at).toLocaleDateString('en-US', { day: 'numeric', year: 'numeric', month: 'long' }) : "N/A"} </h3>
-                  <p className="text-gray-500 text-sm">  </p>
-                  <p className='text-gray-500 text-sm'>{transaction?.description}</p>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 text-base">
+                    {transaction?.order_no || 'Transaction'}
+                  </h3>
+
+                  <p className="text-gray-500 text-sm">
+                    {transaction?.created_at
+                      ? new Date(transaction.created_at).toLocaleDateString(
+                        'en-US',
+                        {
+                          day: 'numeric',
+                          year: 'numeric',
+                          month: 'long',
+                        }
+                      )
+                      : 'N/A'}
+                  </p>
+
+                  {transaction?.description && (
+                    <p className="text-gray-500 text-sm mt-1">
+                      {transaction.description}
+                    </p>
+                  )}
                 </div>
 
-                {/* Points badge */}
                 <div
                   className={`flex items-center justify-center w-12 h-12 rounded-full font-bold text-lg ml-4 ${transaction.type === 'debit'
-                    ? 'bg-gray-400 text-white'
-                    : 'bg-yellow-400 text-yellow-700 border-2 border-yellow-300'
+                      ? 'bg-gray-400 text-white'
+                      : 'bg-yellow-400 text-yellow-700 border-2 border-yellow-300'
                     }`}
                 >
-                  <span className="text-center">
-                    {transaction?.points}
-                  </span>
+                  {transaction.points}
                 </div>
               </div>
-            ))
-          }
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-xl border border-dashed border-gray-300 py-12 px-6 text-center">
+            <div className="mx-auto mb-4 flex items-center justify-center w-16 h-16 rounded-full bg-yellow-50">
+              <span className="text-3xl">🪙</span>
+            </div>
+
+            <h3 className="text-lg font-semibold text-gray-900">
+              No Loyalty Points Yet
+            </h3>
+
+            <p className="text-sm text-gray-500 mt-2 max-w-sm mx-auto">
+              Complete an order and start earning coins. Your loyalty points
+              will appear here.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

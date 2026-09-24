@@ -38,7 +38,7 @@ export const orderApi = createApi({
   endpoints: (builder) => ({
     
     getOrders: builder.query<OrdersResponse, string>({
-      query: (status) => `${ORDERS.endpoint}/${status}`,
+      query: (status) => `${ORDERS.endpoint}${status}`,
 
       // ✅ Typed response
       transformResponse: (response: OrdersResponse) => response,

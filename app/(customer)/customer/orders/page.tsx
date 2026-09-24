@@ -47,7 +47,7 @@ export default function OrdersPage() {
   const [filter, setFilter] = useState<FilterStatus>('all');
 
   const { data, isLoading } = useGetOrdersQuery(
-    filter === 'all' ? '' : filter
+    filter === 'all' ? '' : `/${filter}`
   );
 
   const orders = data?.data;
