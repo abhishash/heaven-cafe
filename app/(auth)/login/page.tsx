@@ -184,6 +184,19 @@ export default function LoginPage() {
             </div>
           </Card>
 
+          {/* Register Option */}
+          <div className="mt-5 text-center">
+            <p className="text-sm text-black/70">
+              Don't have an account?{" "}
+              <Link
+                href="/register"
+                className="font-semibold text-primary hover:text-secondary hover:underline transition-colors"
+              >
+                Create an account
+              </Link>
+            </p>
+          </div>
+
           {/* Terms */}
           <p className="mx-auto mt-5 max-w-sm px-2 text-center text-[11px] leading-5 text-black/70 sm:mt-6 sm:text-xs">
             By signing in, you agree to our{" "}
